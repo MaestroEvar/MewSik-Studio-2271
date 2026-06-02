@@ -1,0 +1,6 @@
+.app-timeline {
+  grid-area: timeline;
+  background-color: #ffffff;
+  padding: 12px;
+  overflow-y: auto; /* Если треков будет много, появится аккуратная прокрутка */
+}

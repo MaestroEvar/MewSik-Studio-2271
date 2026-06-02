@@ -1,0 +1,6 @@
+.app-patterns {
+  grid-area: patterns;
+  background-color: #e0e0e0;
+  border-top: 2px solid #000000; /* Черная линия сверху */
+  padding: 12px;
+}

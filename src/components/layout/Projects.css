@@ -1,0 +1,9 @@
+.app-projects {
+  grid-area: projects;
+  background-color: #e0e0e0; 
+  border-right: 2px solid #000000; 
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
