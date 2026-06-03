@@ -3,14 +3,14 @@
 }
 
 .category-section {
-    margin-bottom: 20px;
+    margin-bottom: 28px;
 }
 
 .category-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     padding: 4px 8px;
     background: #e0e0e0;
     border-radius: 4px;
@@ -20,7 +20,7 @@
 .container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 20px;
     width: 100%;
 }
 
@@ -31,7 +31,7 @@
     display: block;
     cursor: pointer;
     border-radius: 8px;
-    padding: 8px;
+    padding: 12px;
     transition: background 0.2s;
 }
 
@@ -40,13 +40,14 @@
 }
 
 .card img {
-    width: 100%;
+    width: 70%;
     border-radius: 8px;
     display: block;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1/0.5;
+    margin: 0 auto;
 }
 
 .card p {
     font-size: 12px;
-    margin-top: 4px;
-}
+    margin-top: 8px;
+}   

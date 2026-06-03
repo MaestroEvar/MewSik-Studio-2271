@@ -10,3 +10,5 @@ db.version(1).stores({
 dbSL.version(1).stores({
     cats: '++id, name, category, png_path, sound_path'
 });
+
+await dbSL.cats.clear();
