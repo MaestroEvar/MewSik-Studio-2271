@@ -1,28 +1,152 @@
+/* ===== КОНТЕЙНЕР БЛОКА PATTERNS ===== */
 .app-patterns {
   grid-area: patterns;
-  background-color: #e0e0e0;
-  border-top: 2px solid #000000; /* Черная линия сверху */
-  padding: 12px;
-}
-.app-patterns {
-  grid-area: patterns;
-  background-color: #e0e0e0;
+  background-color: #141414;
   border-top: 2px solid #000000;
-  padding: 12px;
-}
-/* Стили для кнопки перехода */
-.nav-page-button {
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #fff;
-  border: 2px solid #000;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
 }
 
-.nav-page-button:hover {
-  background-color: #f51c1c; /* При наведении кнопка меняет цвет */
-  color: white;
+/* ===== КНОПКА "СОЗДАТЬ ПАТТЕРН +" ===== */
+.patterns-create-btn {
+  width: 100%;
+  padding: 11px 0;
+  flex-shrink: 0;
+
+  background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+
+  box-shadow: 0 3px 12px rgba(124, 58, 237, 0.45);
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+.patterns-create-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(124, 58, 237, 0.6);
+}
+
+.patterns-create-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+}
+
+/* ===== ПОЛЕ ПАТТЕРНОВ ===== */
+/* Рамка под список карточек - занимает всё оставшееся место */
+.patterns-field {
+  flex: 1;
+  border: 1.5px solid #2a2a2a;
+  border-radius: 8px;
+  background-color: #1a1a1a;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+/* ===== ГОРИЗОНТАЛЬНЫЙ СПИСОК КАРТОЧЕК ===== */
+.patterns-list {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  padding: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  align-items: center;
+  width: 100%;
+}
+
+/* Стилизованный скроллбар под тёмный фон */
+.patterns-list::-webkit-scrollbar        { height: 4px; }
+.patterns-list::-webkit-scrollbar-track  { background: #1a1a1a; border-radius: 2px; }
+.patterns-list::-webkit-scrollbar-thumb  { background: #444444; border-radius: 2px; }
+.patterns-list::-webkit-scrollbar-thumb:hover { background: #666666; }
+
+/* ===== КАРТОЧКА ПАТТЕРНА ===== */
+.pattern-card {
+  flex-shrink: 0;
+  width: 108px;
+  background-color: #242424;
+  border: 1.5px solid #333333;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+}
+
+.pattern-card:hover {
+  border-color: var(--card-accent, #7c3aed);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+}
+
+/* Тонкая цветная полоска-акцент по верхнему краю карточки */
+.pattern-card-bar {
+  height: 4px;
+  background-color: var(--card-accent, #7c3aed);
+  flex-shrink: 0;
+}
+
+/* ===== МИНИ-СЕТКА 16 ШАГОВ ===== */
+/* 4x4 точек - визуальный отпечаток паттерна */
+.pattern-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  grid-template-rows: repeat(5, 1fr); 
+  gap: 3px;
+  padding: 2px 2px 1px 2px;
+}
+
+/* Одна точка-шаг */
+.pattern-mini-step {
+  aspect-ratio: 1;                /* Всегда квадратная */
+  border-radius: 1px;
+  background-color: #383838;
+  transition: background-color 0.1s;
+}
+
+/* Активный шаг — цвет берётся из пропа color через inline-style */
+.pattern-mini-step.active {
+  opacity: 0.9;
+}
+
+/* Название паттерна */
+.pattern-card-name {
+  padding: 5px 8px 8px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #cdcbcb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== ПОДСКАЗКА ПУСТОГО ПОЛЯ ===== */
+.patterns-empty-hint {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: #444444;
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.patterns-empty-icon {
+  font-size: 26px;
+  opacity: 0.4;
 }

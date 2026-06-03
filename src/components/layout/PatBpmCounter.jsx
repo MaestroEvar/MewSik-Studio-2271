@@ -3,7 +3,7 @@ import { editorStore } from '../../app/store/editorStore';
 import './PatBpmCounter.css';
 
 export default function PatBpmCounter() {
-  // Достаем глобальный bpm и функцию его изменения из storeEditor
+  // Достаем глобальный bpm и функцию его изменения из нашего Store
   const { bpm, setBpm } = editorStore();
 
   const handleIncrement = () => {
@@ -16,22 +16,22 @@ export default function PatBpmCounter() {
 
   const handleInputChange = (e) => {
     const value = Number(e.target.value);
-    // Ограничим пределы BPM 
+    // Ограничим разумные пределы BPM (например, от 20 до 300)
     if (value >= 20 && value <= 300) {
       setBpm(value);
     } else if (e.target.value === '') {
-      setBpm(''); 
+      setBpm(''); // Позволяем временно стереть цифру при вводе
     }
   };
 
   const handleBlur = () => {
     // Если пользователь оставил поле пустым и кликнул мимо, возвращаем дефолт
-    if (!bpm) setBpm(80);
+    if (!bpm) setBpm(120);
   };
 
   return (
     <div className="pat-bpm-counter">
-      <span className="">BPM</span>
+      <span className="bpm-label">BPM</span>
       <div className="bpm-display-zone">
         <button className="bpm-arrow-btn" onClick={handleDecrement}>−</button>
         <input 

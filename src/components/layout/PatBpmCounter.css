@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #282828; 
+  background-color: #222222; /* Темное окошко приборов */
   border: 2px solid #000000;
   border-radius: 6px;
   padding: 4px 8px;
@@ -10,8 +10,8 @@
 }
 
 .bpm-label {
-  color: #dd9933;
-  font-size: 13px;
+  color: #dd9933; /* Твой фирменный оранжевый акцент */
+  font-size: 11px;
   font-weight: bold;
   font-family: monospace;
   text-transform: uppercase;
@@ -50,7 +50,7 @@
   outline: none;
 }
 
-/* Убираем стандартные стрелочки */
+/* Убираем стандартные стрелочки у инпута типа number */
 .bpm-input::-webkit-outer-spin-button,
 .bpm-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
