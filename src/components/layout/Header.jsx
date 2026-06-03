@@ -1,6 +1,6 @@
 import React from 'react';
 import './Header.css';
-
+import PatBpmCounter from './PatBpmCounter';
 export default function Header() {
   return (
     <header className="app-header">
@@ -19,15 +19,7 @@ export default function Header() {
 
         {/* Контейнер для счетчика BPM */}
         <div className="bpm-container">
-          <span className="bpm-label">BPM</span>
-          <div className="bpm-display">
-            <span className="bpm-value">120</span>
-            {/* Стрелочки вверх/вниз для изменения темпа */}
-            <div className="bpm-arrows">
-              <span className="bpm-arrow">▲</span>
-              <span className="bpm-arrow">▼</span>
-            </div>
-          </div>
+          <PatBpmCounter />
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PatBpmCounter from './PatBpmCounter';
 export default function PatHeader() {
   return (
     <header className="pat-header">
@@ -14,6 +14,8 @@ export default function PatHeader() {
             <polygon points="8,5 19,12 8,19" />
           </svg>
         </button>
+        {/*Счетчик BPM*/}
+        <PatBpmCounter />
       </div>
 
       <div className="pat-header-right">

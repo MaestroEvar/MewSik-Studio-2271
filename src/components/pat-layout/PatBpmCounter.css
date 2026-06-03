@@ -1,0 +1,61 @@
+.pat-bpm-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #222222; /* Темное окошко приборов */
+  border: 2px solid #000000;
+  border-radius: 6px;
+  padding: 4px 8px;
+  height: 34px;
+}
+
+.bpm-label {
+  color: #dd9933; /* Твой фирменный оранжевый акцент */
+  font-size: 11px;
+  font-weight: bold;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+
+.bpm-display-zone {
+  display: flex;
+  align-items: center;
+}
+
+.bpm-arrow-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 6px;
+  transition: color 0.1s;
+}
+
+.bpm-arrow-btn:hover {
+  color: #dd9933;
+}
+
+/* Стилизуем инпут внутри табло */
+.bpm-input {
+  width: 45px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  outline: none;
+}
+
+/* Убираем стандартные стрелочки у инпута типа number */
+.bpm-input::-webkit-outer-spin-button,
+.bpm-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.bpm-input[type=number] {
+  -moz-appearance: textfield;
+}
