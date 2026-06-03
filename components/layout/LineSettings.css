@@ -1,6 +1,0 @@
-.app-linesettings {
-  grid-area: settings;
-  background-color: #e0e0e0;
-  border-left: 2px solid #000000; /* Черная линия слева */
-  padding: 12px;
-}

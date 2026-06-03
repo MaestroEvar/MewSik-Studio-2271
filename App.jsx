@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import StudioPage from './pages/StudioPage';
-import PatRedactor from './pages/PatRedactor';
+import ColorPage from './pages/PatRedactor';
 
 export default function App() {
-  // Теперь у нас снова 2 экрана: 'studio' и 'patterns'
+  // Храним имя текущей активной страницы. По умолчанию - 'studio'
   const [currentPage, setCurrentPage] = useState('studio');
 
-  if (currentPage === 'patterns') {
-    return <PatRedactor onBackToStudio={() => setCurrentPage('studio')} />;
+  // В зависимости от значения в переменной currentPage, возвращаем нужную страницу
+  if (currentPage === 'colors') {
+    return <ColorPage onBack={() => setCurrentPage('studio')} />;
   }
 
-  return <StudioPage onNavigate={() => setCurrentPage('patterns')} />;
+  // Если не colors, значит по умолчанию показываем студию
+  return <StudioPage onNavigate={() => setCurrentPage('colors')} />;
 }
