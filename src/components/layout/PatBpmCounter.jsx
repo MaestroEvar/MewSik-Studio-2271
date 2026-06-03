@@ -31,7 +31,7 @@ export default function PatBpmCounter() {
 
   return (
     <div className="pat-bpm-counter">
-      <span className="bpm-label">BPM</span>
+      <span className="">BPM</span>
       <div className="bpm-display-zone">
         <button className="bpm-arrow-btn" onClick={handleDecrement}>−</button>
         <input 
