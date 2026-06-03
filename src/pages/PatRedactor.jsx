@@ -1,18 +1,56 @@
-import React from 'react';
-import './PatRedactor.css';
+import React, { useState } from 'react';
+import PatHeader from '../components/pat-layout/PatHeader';
+import PatSidebar from '../components/pat-layout/PatSidebar';
+import PatTrackRow from '../components/pat-layout/PatTrackRow';
+import Library from '../components/pat-layout/Library';
+import './PatRedactor.css'; // Общие стили для сетки и раскладки остаются тут
 
-// props.onBack - это функция-колбэк, при вызове вернет нас назад
-export default function PatRedactor({ onBack }) {
+export default function PatRedactor({ onBackToStudio }) {
+  const tracks = ['Kick Drum', 'Snare', 'Closed Hat', 'Open Hat', 'Clap'];
+  
+  const [volumes, setVolumes] = useState([50, 50, 50, 50, 50]);
+
+  const handleVolumeChange = (index, newValue) => {
+    const updatedVolumes = [...volumes];
+    updatedVolumes[index] = Number(newValue);
+    setVolumes(updatedVolumes);
+  };
+
   return (
-    <div className="color-page-container">
-      {/* Кнопка возврата*/}
-      <button className="back-button" onClick={onBack}>
-        ← Вернуться в студию
-      </button>
-      
-      <div className="blocks-wrapper">
-        <div className="color-block red-block">Красный блок</div>
-        <div className="color-block blue-block">Синий блок</div>
+    <div className="pat-redactor-container">
+      {/* Шапка */}
+      <PatHeader />
+
+      <div className="pat-workspace">
+        {/* 2. Левая колонка со звуками и кнопкой возврата */}
+        <PatSidebar 
+          tracks={tracks} 
+          onBackToStudio={onBackToStudio} 
+        />
+
+        {/* 3. Правая часть экрана, разделенная на дорожки и библиотеку */}
+        <div className="pat-right-content">
+          
+          {/* Верхняя половина: дорожки секвенсора */}
+          <main className="pat-tracks-area">
+            <div className="sequencer-table">
+              {tracks.map((trackName, trackIndex) => (
+                <PatTrackRow 
+                  key={trackIndex}
+                  trackIndex={trackIndex}
+                  volume={volumes[trackIndex]}
+                  onVolumeChange={(val) => handleVolumeChange(trackIndex, val)}
+                />
+              ))}
+            </div>
+          </main>
+
+          {/* Нижняя половина: страница библиотеки */}
+          <section className="pat-library-area">
+            <Library />
+          </section>
+
+        </div>
       </div>
     </div>
   );

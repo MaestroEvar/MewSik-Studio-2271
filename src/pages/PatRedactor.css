@@ -1,53 +1,242 @@
-/* ЭТОТ CSS ФАЙЛ ВРЕМЕННЫЙ. Пока что редактор ппатернов это просто два блока. Их нужно будет удалить и сделать нормальный шаблон*/
-/* Мы пока просто разбираемся как переключатся во вкладках react*/
-.color-page-container {
+/*Потом необходимо разбить на несколько css и переместить в pat-layout*/
+
+/* Базовый контейнер страницы */
+.pat-redactor-container {
   width: 100vw;
   height: 100vh;
-  background-color: #111010; 
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 55px 1fr;
+  background-color: #1a1a1a;
+  color: #000000;
+  user-select: none;
 }
 
-.back-button {
-  padding: 10px 20px;
-  background-color: #dddada;
-  border: 2px solid #000000;
-  border-radius: 6px;
-  cursor: pointer;
+/* --- ШАПКА PAT-HEADER --- */
+.pat-header {
+  background-color: #e0e0e0;
+  border-bottom: 2px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 10;
+}
+
+.pat-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pat-header-emoji {
+  font-size: 24px;
+}
+
+.pat-header-title {
+  font-size: 18px;
   font-weight: bold;
-  align-self: flex-start; /* Кнопка не растягивается во всю ширину */
-  margin-bottom: 20px;
 }
 
-.back-button:hover {
-  background-color: #ffffff;
-}
-
-/* Обертка для двух блоков */
-.blocks-wrapper {
-  display: flex;
-  gap: 20px;
-  flex: 1; /* Занимает всё оставшееся место по высоте */
-}
-
-.color-block {
-  flex: 1; /* Ровно делит экран 50/50 */
+.pat-play-button {
+  background: none;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 24px;
+  padding: 6px;
+  border-radius: 50%;
+  transition: transform 0.1s ease;
+}
+.pat-play-button:hover { transform: scale(1.15); }
+
+.pat-header-right {
+  display: flex;
+  gap: 10px;
+}
+
+.pat-icon-button {
+  background: none;
+  border: none;
   font-weight: bold;
-  border-radius: 12px;
-  border: 3px solid #000;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.red-block {
-  background-color: #e71414;
+/* --- РАБОЧАЯ ОБЛАСТЬ --- */
+.pat-workspace {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  height: 100%;
+  overflow: hidden;
 }
 
-.blue-block {
-  background-color: #0e64ec;
+/* --- ЛЕВАЯ КОЛОНКА --- */
+.pat-sounds-sidebar {
+  background-color: #dcdcdc;
+  border-right: 2px solid #000000;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 12px 12px 12px;
+}
+
+.sidebar-title {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 35px; /* Идеальное выравнивание под начало таблицы */
+  text-transform: uppercase;
+  border-bottom: 2px solid #000000;
+  padding-bottom: 5px;
+}
+
+.sidebar-sounds-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-sound-item {
+  height: 42px;
+  margin-bottom: -2px;
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  border: 2px solid #000000;
+  border-radius: 4px 0 0 4px;
+  padding-left: 10px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.sidebar-buttons-container {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+/*Кнопки снизу колонки*/
+.sidebar-btn {
+  padding: 10px;
+  border: 2px solid #000000;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-add-sound { background-color: #bbf7d0; }
+.btn-add-sound:hover { background-color: #86efac; }
+.btn-back-main { background-color: #f3f4f6; }
+.btn-back-main:hover { background-color: #e5e7eb; }
+
+
+/*Центральная часть: Таблица Секвенсора */
+.pat-tracks-area {
+  background-color: #ffffff;
+  padding: 77px 20px 40px 0; 
+  overflow-y: auto;
+}
+
+.sequencer-table {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Обновленный ряд: теперь тут 3 колонки (Номер, Сетка, Громкость) */
+.pat-track-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 180px; 
+  align-items: center;
+  margin-bottom: -2px;
+}
+
+/* СТИЛИ КЛЕТКИ С НОМЕРОМ ДОРОЖКИ */
+.track-number-cell {
+  height: 42px;
+  background-color: #dd9933;
+  border: 2px solid #000000;
+  margin-right: 0px; 
+  margin-bottom: -2px; 
+  margin-left:-2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: #000000;
+  box-sizing: border-box;
+}
+
+/* Сетка нот из 16 колонок */
+.track-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+}
+
+/* Одиночный нотный блок */
+.step-block {
+  height: 42px;
+  border: 2px solid #000000;
+  margin-right: -2px;
+  margin-bottom: -2px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.step-accent {
+  background-color: #e2e8f0;
+}
+
+.step-normal {
+  background-color: #cbd5e1;
+}
+
+/* Жирные линии долей,каждые 4 шага */
+.quarter-border {
+  border-right: 4px solid #000000 !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Зона управления громкостью */
+.track-volume-zone {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 20px;
+  height: 42px;
+}
+
+.volume-slider {
+  flex: 1;
+  cursor: pointer;
+  accent-color: #222222;
+}
+
+.volume-number {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 15px;
+  width: 30px;
+  text-align: right;
+}
+/* Настройка правой зоны: делим пространство по вертикали */
+.pat-right-content {
+  display: grid;
+  grid-template-rows: auto 1fr; /* Дорожки занимают всё свободное место (1fr), а Библиотека снизу жестко 300px */
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Корректируем зону дорожек */
+.pat-tracks-area {
+  background-color: #ffffff;
+  padding: 20px 20px 3px 0; /* Уменьшили верхний отступ с 40px до 20px, чтобы было компактнее */
+  overflow-y: auto; /* Если дорожек станет много, скроллиться будет только сетка, не сдвигая библиотеку */
+}
+
+/* Зона встроенной библиотеки */
+.pat-library-area {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
 }

@@ -25,7 +25,7 @@ body,
      - Центарльна TimeLine - Заполняет весь оставшийся центр 
      - Правая LineSettings - ширина 250 
   */
-  grid-template-columns: 200px 1fr 250px;
+  grid-template-columns: 200px 1 fr 250px;
   /* 3 строки:
      - Верхняя Header
      - Средняя Timeline

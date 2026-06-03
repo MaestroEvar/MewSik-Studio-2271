@@ -1,17 +1,14 @@
-import Header from './components/layout/Header';
-import LineSettings from './components/layout/LineSettings';
-import Patterns from './components/layout/Patterns';
-import TimeLine from './components/layout/TimeLine';
-import Projects from './components/layout/Projects';
+import React, { useState } from 'react';
+import StudioPage from './pages/StudioPage';
+import PatRedactor from './pages/PatRedactor';
+
 export default function App() {
-  return (
-    <div className="app-container">
-      <Header />
-      <Projects />
-      <TimeLine />
-      <LineSettings />
-      <Patterns />
-    </div>
-  );
+  // Теперь у нас снова 2 экрана: 'studio' и 'patterns'
+  const [currentPage, setCurrentPage] = useState('studio');
+
+  if (currentPage === 'patterns') {
+    return <PatRedactor onBackToStudio={() => setCurrentPage('studio')} />;
+  }
+
+  return <StudioPage onNavigate={() => setCurrentPage('patterns')} />;
 }
-// Это пока только заглушка
