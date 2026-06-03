@@ -1,0 +1,42 @@
+
+/* Общие настройки чтобы UI занимал весь экран*/
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+/*Главный контейнер на весь экран. Будет хранить в себе все элементы UI*/
+.app-container{
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  /* 3 колонки:
+     - Левая Projects - ширина 200 
+     - Центарльна TimeLine - Заполняет весь оставшийся центр 
+     - Правая LineSettings - ширина 250 
+  */
+  grid-template-columns: 200px 1 fr 250px;
+  /* 3 строки:
+     - Верхняя Header
+     - Средняя Timeline
+     - Нижняя Patterns
+  */
+  grid-template-rows: 60px 1fr 250px;
+
+  /*Описываем схему сетки grid*/
+  grid-template-areas: 
+    "header   header   header"
+    "projects timeline settings"
+    "projects patterns settings";
+}
+
