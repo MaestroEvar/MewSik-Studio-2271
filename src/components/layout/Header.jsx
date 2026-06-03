@@ -1,6 +1,7 @@
 import React from 'react';
 import './Header.css';
 import PatBpmCounter from './PatBpmCounter';
+import catLogo from '../sprites/boss.png';
 export default function Header() {
   return (
     <header className="app-header">
@@ -10,7 +11,7 @@ export default function Header() {
         <div className="logo-container">
           {/* Картиночка кота.*/}
           <img 
-            src="../sprites/boss.png" 
+            src={catLogo}
             alt="Mew Logo" 
             className="cat-img" 
             onError={(e) => e.target.style.display = 'none'} 
