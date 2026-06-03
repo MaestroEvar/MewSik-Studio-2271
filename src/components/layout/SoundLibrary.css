@@ -1,45 +1,26 @@
-.sound_library h1 {
-    font-size: 2rem;
-    font-weight: 400;
-    text-align: center;
+.sound_library {
+    width: 100%;
+}
+
+.category-section {
     margin-bottom: 20px;
 }
 
-.sound_library .container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    margin: 0 auto;
-    width: 50%;
-}
-
-.sound_library .card {
-    text-align: center;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    cursor: pointer;
-}
-
-.sound_library .card img {
-    width: 100%;
-    border-radius: 12px;
-    display: block;
-    aspect-ratio: 1/1;
-}
-
-.sound_library .card p {
-    font-size: 1.5rem;
-    font-weight: 400;
-    text-align: center;
-    margin-top: 20px;
+.category-title {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    display: inline-block;
 }
 
 .container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
     width: 100%;
 }
 
@@ -49,8 +30,9 @@
     color: inherit;
     display: block;
     cursor: pointer;
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 8px;
+    padding: 8px;
+    transition: background 0.2s;
 }
 
 .card:hover {
@@ -59,13 +41,12 @@
 
 .card img {
     width: 100%;
-    border-radius: 12px;
+    border-radius: 8px;
     display: block;
     aspect-ratio: 1/1;
 }
 
 .card p {
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 10px;
+    font-size: 12px;
+    margin-top: 4px;
 }

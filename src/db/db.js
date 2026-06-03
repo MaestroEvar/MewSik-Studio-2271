@@ -8,5 +8,5 @@ db.version(1).stores({
 });
 
 dbSL.version(1).stores({
-    cats: '++id, name, png_path, sound_path'
+    cats: '++id, name, category, png_path, sound_path'
 });
