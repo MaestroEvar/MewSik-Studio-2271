@@ -1,0 +1,37 @@
+.sound_library h1 {
+    font-size: 2rem;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sound_library .container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin: 0 auto;
+    width: 50%;
+}
+
+.sound_library .card {
+    text-align: center;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    cursor: pointer;
+}
+
+.sound_library .card img {
+    width: 100%;
+    border-radius: 12px;
+    display: block;
+    aspect-ratio: 1/1;
+}
+
+.sound_library .card p {
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 20px;
+}
