@@ -8,7 +8,7 @@ db.version(1).stores({
 });
 
 dbSL.version(1).stores({
-    cats: '++id, name, category, png_path, sound_path'
+    cats: '++id, name, category, png_path, sounds'
 });
 
 await dbSL.cats.clear();

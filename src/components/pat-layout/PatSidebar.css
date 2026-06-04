@@ -148,3 +148,16 @@
 .btn-back-main:hover {
   background-color: #e5e7eb;
 }
+
+.selected-cat-img {
+  width: 90%;
+  border-radius: 8px;
+  aspect-ratio: 1/0.5;
+  object-fit: cover;
+}
+
+.cat-name {
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
