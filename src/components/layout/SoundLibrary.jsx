@@ -27,6 +27,7 @@ export default function SoundLibrary() {
 
     useEffect(() => {               
         async function loadCats() { 
+            await dbSL.cats.clear();
             if (loaded.current) return;
             loaded.current = true;
             const cnt = await dbSL.cats.count();
