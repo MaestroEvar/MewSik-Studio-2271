@@ -275,3 +275,37 @@
   color: #ffffff;
   box-shadow: 0 3px 10px rgba(124, 58, 237, 0.4);
 }
+
+.project_edit_input {
+  flex: 1;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 3px;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 12px;
+  outline: none;
+  min-width: 0;
+}
+
+.edit_btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.edit_btn:hover {
+  opacity: 1;
+}
+
+.edit_btn.save {
+  opacity: 1;
+  font-size: 14px;
+  font-weight: bold;
+}

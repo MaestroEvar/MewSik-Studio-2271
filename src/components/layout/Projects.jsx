@@ -39,6 +39,8 @@ export default function Projects() {
   const [showModal, setShowModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [selectedId, setSelectedId] = useState(null); // ID выбранного проекта
+  const [editingId, setEditingId] = useState(null);               // Id проекта для редактирования
+  const [editName, setEditName] = useState('');                   // Название для редактирования
 
   const projects = useLiveQuery(
     () => db.projects.toArray(), []
@@ -84,6 +86,27 @@ export default function Projects() {
   const handleCloseModal = () => {
     setShowModal(false);
     setNewProjectName('');
+  };
+
+  const handleStartEdit = ((e, project) => {                 // Начало редактирования названия проекта
+    e.stopPropagation();                                          // Метод, который останавливает события до того, пока пользователь не сохранит изменения
+    setEditingId(project.id);
+    setEditName(project.name);
+  });
+
+  const handleSaveEdit = async (e) => {                           // Сохраняем новое название
+    e.stopPropagation();
+    const name = editName.trim();
+    if (!name) return;
+    await db.projects.update(editingId, { name });
+    setEditingId(null);
+    setEditName('');
+  };
+
+  const handleCancelEdit = (e) => {                               // Отмена редактирования
+    e.stopPropagation();
+    setEditingId(null);
+    setEditName('');
   };
 
   return (
@@ -134,7 +157,44 @@ export default function Projects() {
               </svg>
 
               {/* Название */}
-              <span className="project_name">{project.name}</span>
+              {editingId === project.id ? (
+                <input
+                    className="project_edit_input"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSaveEdit(e);
+                      if (e.key === 'Escape') handleCancelEdit(e);
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    autoFocus
+                />
+              ) : (
+                  <span className="project_name">{project.name}</span>
+              )}
+
+              {editingId === project.id ? (
+                  <button
+                    className="edit_btn save"
+                    onClick={handleSaveEdit}
+                    title="Сохранить"
+                  >
+                    ✓
+                  </button>
+              ) : (
+                <button
+                  className="edit_btn"
+                  onClick={(e) => handleStartEdit(e, project)}
+                  title="Переименовать"
+                >
+                    <svg width="12" height="12" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor"
+                      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                      <path d="m15 5 4 4" />
+                    </svg>
+                </button>
+              )}
 
               {/* Кнопка удаления*/}
               <button
