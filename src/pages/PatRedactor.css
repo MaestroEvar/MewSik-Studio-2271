@@ -86,111 +86,27 @@
   padding: 20px 12px 12px 12px;
 }
 
-
-
-/*Центральная часть: Таблица Секвенсора */
-.pat-tracks-area {
-  background-color: #ffffff;
-  padding: 77px 20px 40px 0; 
-  overflow-y: auto;
-}
-
+/* Центральная часть: Таблица Секвенсора.
+   Тёплый кремовый фон под кошачьи дорожки вместо холодного белого. */
 .sequencer-table {
   display: flex;
   flex-direction: column;
 }
 
-/* Обновленный ряд: теперь тут 3 колонки (Номер, Сетка, Громкость) */
-.pat-track-row {
-  display: grid;
-  grid-template-columns: 40px 1fr 180px; 
-  align-items: center;
-  margin-bottom: -2px;
-}
-
-/* СТИЛИ КЛЕТКИ С НОМЕРОМ ДОРОЖКИ */
-.track-number-cell {
-  height: 42px;
-  background-color: #dd9933;
-  border: 2px solid #000000;
-  margin-right: 0px; 
-  margin-bottom: -2px; 
-  margin-left:-2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  color: #000000;
-  box-sizing: border-box;
-}
-
-/* Сетка нот из 16 колонок */
-.track-steps-grid {
-  display: grid;
-  grid-template-columns: repeat(16, 1fr);
-}
-
-/* Одиночный нотный блок */
-.step-block {
-  height: 42px;
-  border: 2px solid #000000;
-  margin-right: -2px;
-  margin-bottom: -2px;
-  cursor: pointer;
-  box-sizing: border-box;
-}
-
-.step-accent {
-  background-color: #e2e8f0;
-}
-
-.step-normal {
-  background-color: #cbd5e1;
-}
-
-/* Жирные линии долей,каждые 4 шага */
-.quarter-border {
-  border-right: 4px solid #000000 !important;
-  position: relative;
-  z-index: 2;
-}
-
-/* Зона управления громкостью */
-.track-volume-zone {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-left: 20px;
-  height: 42px;
-}
-
-.volume-slider {
-  flex: 1;
-  cursor: pointer;
-  accent-color: #222222;
-}
-
-.volume-number {
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  font-size: 15px;
-  width: 30px;
-  text-align: right;
-}
 /* Настройка правой зоны: делим пространство по вертикали */
 .pat-right-content {
   display: grid;
-  grid-template-rows: auto 1fr; 
+  grid-template-rows: auto 1fr;
   height: 100%;
   overflow: hidden;
 }
 
-/* Корректируем зону дорожек */
+/* Зона дорожек. Тёмный графитовый фон под студийную панель.
+   Верхний отступ небольшой - воздух сверху создаёт SequencerControls. */
 .pat-tracks-area {
-  background-color: #ffffff;
-  padding: 20px 20px 3px 0;
-  overflow-y: auto; 
+  background-color: #16171a;
+  padding: 16px 0 10px 16px;
+  overflow-y: auto;
 }
 
 /* Зона встроенной библиотеки */

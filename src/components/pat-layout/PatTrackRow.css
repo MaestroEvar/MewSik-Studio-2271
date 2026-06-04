@@ -1,0 +1,191 @@
+/* ============================================================
+   PatTrackRow - студийный кошачий секвенсор
+   Тёмная приборная панель: графит, сталь, янтарный акцент
+   (отсылка к кошачьим глазам). Серьёзный тон, без пластика.
+   ============================================================ */
+
+/* Локальные переменные палитры дорожек */
+.pat-track-row {
+  --st-bg:      #1e2024;  /* графитовый фон ряда */
+  --st-panel:   #26282d;  /* панель клеток */
+  --st-cell:    #2f3137;  /* клетка-шаг */
+  --st-cell-2:  #34373d;  /* акцентная группа клеток */
+  --st-line:    #15161a;  /* разделители, тени */
+  --st-edge:    #3a3d44;  /* светлые грани */
+  --amber:      #d9a441;  /* фирменный янтарь (кошачий глаз) */
+  --amber-d:    #a87b2c;  /* приглушённый янтарь */
+  --txt:        #c8ccd2;  /* основной текст */
+  --txt-dim:    #6f747c;  /* приглушённый текст */
+
+  display: grid;
+  grid-template-columns: 46px 1fr 188px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+/* ---- Клетка с номером дорожки ---- */
+.track-number-cell {
+  height: 40px;
+  background: var(--st-panel);
+  border: 1px solid var(--st-line);
+  border-left: 2px solid var(--amber-d);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.track-number-value {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: var(--txt-dim);
+}
+
+/* ---- Сетка нот из 16 колонок ---- */
+.track-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 2px;
+  padding: 3px;
+  background: var(--st-line);
+  border: 1px solid var(--st-line);
+  border-radius: 4px;
+}
+
+/* ---- Одиночная пустая клетка-шаг ---- */
+.step-block {
+  height: 36px;
+  border-radius: 2px;
+  cursor: pointer;
+  box-sizing: border-box;
+  border-top: 1px solid var(--st-edge);
+  transition: background 0.12s ease, box-shadow 0.12s ease;
+}
+
+/* Чередование групп по 4 шага: едва заметная разница светлоты */
+.step-accent {
+  background: var(--st-cell-2);
+}
+
+.step-normal {
+  background: var(--st-cell);
+}
+
+/* Сильная доля (1-й шаг каждой четверти) - тонкая янтарная засечка слева */
+.beat-start {
+  border-left: 2px solid var(--amber-d);
+}
+
+/* При наведении клетка подсвечивается янтарём изнутри */
+.step-block:hover {
+  background: #3c3f46;
+  box-shadow: inset 0 0 0 1px var(--amber-d);
+}
+
+/* Граница доли каждые 4 шага - чуть больший зазор */
+.quarter-border {
+  margin-right: 4px;
+}
+
+/* ---- Зона громкости ---- */
+.track-volume-zone {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 2px;
+}
+
+/* Обёртка нужна, чтобы поверх инпута расположить голову кота */
+.volume-slider-wrap {
+  position: relative;
+  flex: 1;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+/* Дорожка ползунка: тёмный жёлоб с янтарной заливкой пройденной части.
+   Заливку рисуем линейным градиентом по --val. */
+.volume-slider {
+  width: 100%;
+  height: 4px;
+  margin: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background:
+    linear-gradient(var(--amber), var(--amber)) 0 / var(--val, 50%) 100% no-repeat,
+    var(--st-line);
+  border-radius: 3px;
+  outline: none;
+}
+
+/* Прячем стандартный бегунок, но оставляем зону захвата */
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  cursor: grab;
+}
+.volume-slider::-webkit-slider-thumb:active { cursor: grabbing; }
+
+.volume-slider::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: none;
+  cursor: grab;
+}
+
+/* ---- Кошачья голова-бегунок поверх инпута ---- */
+/* pointer-events: none, чтобы клики проходили на реальный инпут под ней */
+.cat-thumb {
+  position: absolute;
+  top: 50%;
+  left: var(--val, 50%);
+  width: 26px;
+  height: 26px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cat-thumb-svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Силуэт головы: сталь с тонкой гранью */
+.cat-thumb-svg .cat-silhouette {
+  fill: #babfc7;
+  stroke: var(--st-line);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+/* Глаза-щёлочки светятся янтарём */
+.cat-thumb-svg .cat-eye {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+/* Цифра громкости */
+.volume-number {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  font-size: 13px;
+  width: 30px;
+  text-align: right;
+  color: var(--txt);
+}

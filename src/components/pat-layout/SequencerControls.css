@@ -1,0 +1,98 @@
+/* ============================================================
+   SequencerControls - панель над дорожками секвенсора
+   Та же студийная палитра: графит, сталь, янтарный акцент.
+   ============================================================ */
+
+.seq-controls {
+  --st-panel:  #26282d;
+  --st-line:   #15161a;
+  --st-edge:   #3a3d44;
+  --amber:     #d9a441;
+  --amber-d:   #a87b2c;
+  --txt:       #c8ccd2;
+  --txt-dim:   #6f747c;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  margin: 0 16px 14px 0;
+  background: var(--st-panel);
+  border: 1px solid var(--st-line);
+  border-top: 1px solid var(--st-edge);
+  border-radius: 5px;
+}
+
+/* ---- Заголовок секции ---- */
+.seq-controls-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Янтарная вертикальная засечка-маркер слева от названия */
+.seq-title-bar {
+  width: 3px;
+  height: 16px;
+  background: var(--amber);
+  border-radius: 2px;
+}
+
+.seq-title-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--txt);
+}
+
+.seq-title-sub {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--txt-dim);
+}
+
+/* ---- Кнопки управления ---- */
+.seq-controls-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Общая база кнопок: строгая, плоская, с тонкой гранью */
+.seq-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.seq-btn:active { transform: translateY(1px); }
+
+/* Play - основная, янтарная заливка */
+.seq-btn-play {
+  background: var(--amber);
+  border: 1px solid var(--amber-d);
+  color: #1e2024;
+}
+.seq-btn-play:hover {
+  background: #e6b454;
+}
+
+/* Save - вторичная, тёмная с янтарным контуром при наведении */
+.seq-btn-save {
+  background: #2f3137;
+  border: 1px solid var(--st-edge);
+  color: var(--txt);
+}
+.seq-btn-save:hover {
+  border-color: var(--amber-d);
+  color: var(--amber);
+}

@@ -23,7 +23,7 @@ export default function PatSidebar({ onBackToStudio }) {
   const handlePlaySound = async (sound) => {                                // Воспроизведение звуков
     await initAudio();
 
-    if (playingId === sound.id) {                                           // Если уже играет — остановить
+    if (playingId === sound.id) {                                           // Если уже играет - остановить
       if (playerRef.current) {
         playerRef.current.stop();
         playerRef.current.dispose();
