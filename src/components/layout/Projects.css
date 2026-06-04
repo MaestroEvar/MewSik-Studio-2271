@@ -1,92 +1,203 @@
+/* Контейнер блока PROJECTS ===== */
 .app-projects {
   grid-area: projects;
-  background-color: #e0e0e0; 
-  border-right: 2px solid #000000; 
-  padding: 0px;
+  background-color: #141414;
+  border-right: 2px solid #000000;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  overflow: hidden;
 }
 
+/* Шапка: кнопка + счётчик ===== */
 .create_project {
-  border: 2px solid #000000;
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  padding: 10px 10px 0 10px;
+  border-bottom: 1.5px solid #2a2a2a;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding: 5px;
-  align-items: center;
+  align-items: stretch;
+  gap: 0;
 }
 
+/* Кнопка "create project +" */
 .create_project a {
   text-decoration: none;
-  color: #000000;
+  user-select: none;
+  color: #ffffff;
+  background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+  border-radius: 8px;
+  padding: 9px 12px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.4);
+  transition: opacity 0.15s, transform 0.1s;
 }
 
+.create_project a:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.create_project a:active {
+  transform: translateY(0);
+}
+
+/* Состояние когда слоты заполнены - кнопка серая */
 .create_project a.disabled {
-    pointer-events: none;
-    user-select: none;
+  pointer-events: none;
+  user-select: none;
+  background: #2a2a2a;
+  box-shadow: none;
+  color: #555555;
 }
 
+/* Счётчик */
+.project_counter {
+  text-align: center;
+  font-size: 10px;
+  color: #666666;
+  padding: 5px 0 7px 0;
+  letter-spacing: 0.3px;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+/* Когда все слоты заняты - счётчик становится красным */
+.project_counter.limit {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* Список проектов */
 .projects {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+  padding: 0 8px 8px 8px;
+  overflow-y: auto;
 }
 
+.projects::-webkit-scrollbar       { width: 3px; }
+.projects::-webkit-scrollbar-track { background: #1a1a1a; }
+.projects::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 2px; }
+
+/* Карточка проекта */
 .project_item {
-  padding: 6px 8px;
-  background-color: #ccc;
-  border: 1px solid #000000;
-  border: 1px solid #000000;
-  border-radius: 4px;
+  padding: 8px 10px;
+  background-color: var(--project-color, #242424);
+  border: 1.5px solid #333333;
+  border-radius: 8px;
+  user-select: none;
   cursor: pointer;
-  font-size: 14px;
-  transition:  0.2s;
-  color: #000;
-  margin-left: 5px;
-  margin-right: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #cccccc;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
+/* Белый оверлей поверх карточки при выборе*/
+.project_item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0);/* По умолчанию прозрачный */
+  border-radius: inherit;
+  pointer-events: none;/* Можно кликать сквозь него*/
+  transition: background 0.2s;
+}
+
+/* При наведении - карточка светлеет, а рамка фиолетовая */
 .project_item:hover {
-  background-color: #d0d0d0;
+  border-color: #7c3aed;
+  transform: translateX(2px);
 }
 
-.project_counter {
-  text-align: center;
-  font-size: 11px;
-  padding: 2px 0 6px 0;
+.project_item:hover::before {
+  background: rgba(255, 255, 255, 0.08);/* Лёгкое осветление */
 }
 
+/* При наведении - кнопка удаления становится видимой */
+.project_item:hover .delete_btn {
+  color: #888888;
+}
+
+/* Выбранный проект */
+.project_item.selected {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 1px #7c3aed,
+              0 4px 16px rgba(124, 58, 237, 0.35);
+  transform: translateX(3px);
+}
+
+.project_item.selected::before {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.project_item.selected .delete_btn {
+  color: #888888;
+}
+
+/* Иконка ноты - только декоративная, приглушена */
+.project_note_icon {
+  opacity: 0.3;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+
+/* При наведении и выборе иконка слегка проявляется */
+.project_item:hover .project_note_icon,
+.project_item.selected .project_note_icon {
+  opacity: 0.55;
+}
+
+/* Название проекта*/
+.project_name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Кнопка удаления */
 .delete_btn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 2px;
+  padding: 3px;
   display: flex;
   align-items: center;
-  color: #000;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #333333;
+  border-radius: 4px;
+  transition: color 0.15s, background-color 0.15s;
 }
 
+/* При наведении на саму кнопку - кнопа удаления красная */
 .delete_btn:hover {
-  color: brown;
+  color: #ef4444 !important;/* !important чтобы перебить наведение карточки */
+  background-color: rgba(239, 68, 68, 0.15);
 }
 
+/* Модальное окно */
 .modal_overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,30 +205,41 @@
 }
 
 .modal_content {
-  background: #fff;
+  background: #1e1e1e;
+  border: 1.5px solid #333333;
   padding: 24px;
-  border-radius: 12px;
+  border-radius: 14px;
   min-width: 320px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
 }
 
 .modal_content h3 {
   margin: 0 0 16px 0;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #eeeeee;
+  letter-spacing: 0.3px;
 }
 
 .modal_input {
   width: 100%;
   padding: 10px 12px;
-  border: 2px solid #ccc;
+  background: #2a2a2a;
+  border: 1.5px solid #3a3a3a;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 14px;
+  color: #eeeeee;
   outline: none;
   box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.modal_input::placeholder {
+  color: #555555;
 }
 
 .modal_input:focus {
-  border-color: #000;
+  border-color: #7c3aed;
 }
 
 .modal_buttons {
@@ -131,25 +253,25 @@
   padding: 8px 20px;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.modal_btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
 }
 
 .modal_btn.cancel {
-  background: #e0e0e0;
-  color: #333;
-}
-
-.modal_btn.cancel:hover {
-  background: #ccc;
+  background: #2a2a2a;
+  color: #999999;
+  border: 1.5px solid #3a3a3a;
 }
 
 .modal_btn.create {
-  background: #000;
-  color: #fff;
-}
-
-.modal_btn.create:hover {
-  background: #333;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.4);
 }

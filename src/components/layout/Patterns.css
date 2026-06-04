@@ -1,4 +1,4 @@
-/* ===== КОНТЕЙНЕР БЛОКА PATTERNS ===== */
+/*  Контейнер блока PATTERNS  */
 .app-patterns {
   grid-area: patterns;
   background-color: #141414;
@@ -10,22 +10,20 @@
   overflow: hidden;
 }
 
-/* ===== КНОПКА "СОЗДАТЬ ПАТТЕРН +" ===== */
+/* Кнопка "СОЗДАТЬ ПАТТЕРН +" */
 .patterns-create-btn {
   width: 100%;
   padding: 11px 0;
   flex-shrink: 0;
-
+  user-select: none;
   background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
   color: #ffffff;
   border: none;
   border-radius: 8px;
-
   font-size: 13px;
   font-weight: bold;
   letter-spacing: 0.6px;
   cursor: pointer;
-
   box-shadow: 0 3px 12px rgba(124, 58, 237, 0.45);
   transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
 }
@@ -41,8 +39,7 @@
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
 }
 
-/* ===== ПОЛЕ ПАТТЕРНОВ ===== */
-/* Рамка под список карточек - занимает всё оставшееся место */
+/* Поле для паттернов */
 .patterns-field {
   flex: 1;
   border: 1.5px solid #2a2a2a;
@@ -53,7 +50,7 @@
   align-items: stretch;
 }
 
-/* ===== ГОРИЗОНТАЛЬНЫЙ СПИСОК КАРТОЧЕК ===== */
+/* Горизонтальный список карточек */
 .patterns-list {
   display: flex;
   flex-direction: row;
@@ -61,22 +58,23 @@
   padding: 10px;
   overflow-x: auto;
   overflow-y: hidden;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
 }
 
-/* Стилизованный скроллбар под тёмный фон */
-.patterns-list::-webkit-scrollbar        { height: 4px; }
-.patterns-list::-webkit-scrollbar-track  { background: #1a1a1a; border-radius: 2px; }
-.patterns-list::-webkit-scrollbar-thumb  { background: #444444; border-radius: 2px; }
-.patterns-list::-webkit-scrollbar-thumb:hover { background: #666666; }
+/* Стилизованный скроллбар под тёмный фон(завайбкоджено, я не знал как сделать скролл, но теперь знаю)*/
+.patterns-list::-webkit-scrollbar { height: 4px; }
+.patterns-list::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 2px; }
+.patterns-list::-webkit-scrollbar-thumb { background: #464646; border-radius: 2px; }
+.patterns-list::-webkit-scrollbar-thumb:hover { background: #656464; }
 
-/* ===== КАРТОЧКА ПАТТЕРНА ===== */
+/* Карточка Паттерна */
 .pattern-card {
   flex-shrink: 0;
+  user-select: none;
   width: 108px;
   background-color: #242424;
-  border: 1.5px solid #333333;
+  border: 1.5px solid #323131;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -91,15 +89,14 @@
   box-shadow: 0 4px 14px rgba(0,0,0,0.5);
 }
 
-/* Тонкая цветная полоска-акцент по верхнему краю карточки */
+/* Цветная полоска по верхнему краю карточки */
 .pattern-card-bar {
   height: 4px;
   background-color: var(--card-accent, #7c3aed);
   flex-shrink: 0;
 }
 
-/* ===== МИНИ-СЕТКА 16 ШАГОВ ===== */
-/* 4x4 точек - визуальный отпечаток паттерна */
+/* Мини-сетка 16 шагов ===== */
 .pattern-mini-grid {
   display: grid;
   grid-template-columns: repeat(16, 1fr);
@@ -110,13 +107,12 @@
 
 /* Одна точка-шаг */
 .pattern-mini-step {
-  aspect-ratio: 1;                /* Всегда квадратная */
+  aspect-ratio: 1;/* Всегда квадратная */
   border-radius: 1px;
   background-color: #383838;
   transition: background-color 0.1s;
 }
 
-/* Активный шаг — цвет берётся из пропа color через inline-style */
 .pattern-mini-step.active {
   opacity: 0.9;
 }
@@ -132,7 +128,7 @@
   text-overflow: ellipsis;
 }
 
-/* ===== ПОДСКАЗКА ПУСТОГО ПОЛЯ ===== */
+/* Подсказка пустого поля(пока нет) */
 .patterns-empty-hint {
   margin: auto;
   display: flex;
