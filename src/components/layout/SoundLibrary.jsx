@@ -26,7 +26,8 @@ export default function SoundLibrary() {
     const setSelectedCat = editorStore((state) => state.setSelectedCat); // Для загрузки котов из библиотеки в PatRedactor
 
     useEffect(() => {               
-        async function loadCats() { 
+        async function loadCats() {
+            await dbSL.cats.clear();                                // Не трогайте эту строчку, она не дает котам дублироваться
             if (loaded.current) return;
             loaded.current = true;
             const cnt = await dbSL.cats.count();
