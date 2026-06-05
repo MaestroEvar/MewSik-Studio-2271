@@ -147,8 +147,17 @@ export default function SoundLibrary() {
                                         e.preventDefault();
                                         setSelectedCat(cat);
                                     }} className='card'>
-                                    {/* Контейнер с картинкой кота. Рамка красится цветом роли. */}
+                                    {/* Контейнер с картинкой кота */}
                                     <div className='card-cat-frame'>
+                                        {/*рисованые ушки*/}
+                                        <svg className='card-cat-ear card-cat-ear--left' viewBox='0 0 36 38' xmlns='http://www.w3.org/2000/svg'>
+                                            <path className='ear-outer' d='M-6,38 L18,0 L42,38 Z' />
+                                            <path className='ear-inner' d='M2,36 L18,9 L35,36 Z' />
+                                        </svg>
+                                        <svg className='card-cat-ear card-cat-ear--right' viewBox='0 0 36 38' xmlns='http://www.w3.org/2000/svg'>
+                                            <path className='ear-outer' d='M-6,38 L18,0 L42,38 Z' />
+                                            <path className='ear-inner' d='M2,36 L18,9 L35,36 Z' />
+                                        </svg>
                                         <img 
                                             src={cat.png_path} 
                                             alt={cat.name}

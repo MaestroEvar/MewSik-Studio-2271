@@ -87,7 +87,7 @@ export default function Projects() {
   return (
     <div className={`app-projects${collapsed ? ' collapsed' : ''}`}>
 
-      {/* Кнопка разворота с иконкой ноты — видна когда панель свёрнута */}
+      {/* Кнопка разворота */}
       {collapsed && (
         <button
           className="projects-toggle-btn-note"
@@ -112,7 +112,7 @@ export default function Projects() {
             onClick={toggleCollapse}
             title="Свернуть панель"
           >
-            −
+            -
           </button>
         </div>
         {/* Кнопка создания + счётчик */}
