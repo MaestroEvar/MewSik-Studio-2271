@@ -1,3 +1,4 @@
+/* Основной контейнер timeline*/
 .app-timeline {
     grid-area: timeline;
     background-color: #222222;
@@ -7,6 +8,7 @@
     flex-direction: column;
 }
 
+/* Верхняя панель с номерами блоков и с интервалами */
 .timeline_header {
     display: flex;
     height: 40px;
@@ -15,6 +17,7 @@
     border-bottom: 1px solid #333;
 }
 
+/* Один блок в шапке с номером и делением интервалов на 1/16*/
 .header_block {
     flex: 1;
     display: flex;
@@ -27,6 +30,7 @@
     position: relative;
 }
 
+/* Пустой спейсер(пустота) слева для выравнивания header с track_label */
 .header_label_spacer {
     width: 37px;
     min-width: 37px;
@@ -34,16 +38,19 @@
     border-right: 1px solid #2a2a2a;
 }
 
+/* Убирает правую границу у последнего блока */
 .header_block:last-child {
     border-right: none;
 }
 
+/* Основной номер блока */
 .block_number_main {
     font-size: 12px;
     font-weight: bold;
     color: #888;
 }
 
+/* Контейнер для разделения интервалов внутри блока */
 .header_subdivisions {
     display: flex;
     width: 100%;
@@ -51,6 +58,7 @@
     margin-top: 2px;
 }
 
+/* Одна метка разделения */
 .header_sub_mark {
     flex: 1;
     display: flex;
@@ -60,12 +68,14 @@
     color: #444;
 }
 
+/* Контейнер для всех треков */
 .timeline_tracks {
     display: flex;
     flex-direction: column;
     flex: 1;
 }
 
+/* Один трек(дорожка) */
 .timeline_track {
     display: flex;
     align-items: stretch;
@@ -75,10 +85,12 @@
     min-height: 0;
 }
 
+/* Убирает нижнюю границу у последнего трека */
 .timeline_track:last-child {
     border-bottom: none;
 }
 
+/* Блок с номером трека */
 .track_label {
     width: 36px;
     min-width: 36px;
@@ -89,12 +101,14 @@
     border-right: 1px solid #444;
 }
 
+/* Номер трека(дорожки) */
 .track_number {
     font-size: 10px;
     font-weight: bold;
     color: #888;
 }
 
+/* Область с блоками и паттернами */
 .track_content {
     flex: 1;
     position: relative;
@@ -102,12 +116,14 @@
     min-width: 0;
 }
 
+/* Контейнер для блоков */
 .track_blocks {
     display: flex;
     width: 100%;
     height: 100%;
 }
 
+/* Один блок */
 .track_block {
     flex: 1;
     display: flex;
@@ -119,18 +135,22 @@
     overflow: hidden;
 }
 
+/* Подсветка блока при наведении */
 .track_block:hover {
     background: rgba(255, 255, 255, 0.02);
 }
 
+/* Убирает правую границу у последнего блока */
 .track_block:last-child {
     border-right: none;
 }
 
+/* Блок с которого начинается бит */
 .track_block.beat_start {
     border-left: 2px solid #555;
 }
 
+/* Маленький номер блока внутри трека */
 .block_number {
     position: absolute;
     bottom: 2px;
@@ -140,6 +160,7 @@
     z-index: 1;
 }
 
+/* Контейнер для интервалов внутри блока */
 .sub_divisions_container {
     display: flex;
     width: 100%;
@@ -149,6 +170,7 @@
     left: 0;
 }
 
+/* Один интервал */
 .sub_division {
     border-right: 1px solid rgba(255, 255, 255, 0.03);
     display: flex;
@@ -158,19 +180,23 @@
     transition: background-color 0.1s;
 }
 
+/* Убирает правую границу у последнего интервала */
 .sub_division:last-child {
     border-right: none;
 }
 
+/* Интервал занятый паттерном */
 .sub_division.occupied {
     cursor: default;
 }
 
+/* Подсветка интервала при наведении */
 .sub_division.hover_preview {
     background-color: rgba(124, 58, 237, 0.1);
     border-right: 1px solid rgba(124, 58, 237, 0.2);
 }
 
+/* Отдельный слой для паттернов, чтобы не было слияния блока и паттерна */
 .track_patterns_layer {
     position: absolute;
     top: 0;
@@ -181,10 +207,12 @@
     z-index: 5;
 }
 
+/* Сами паттерны кликабельны */
 .track_patterns_layer .placed_pattern_full {
     pointer-events: auto;
 }
 
+/* Размещённый паттерн */
 .placed_pattern_full {
     position: absolute;
     top: 2px;
@@ -207,17 +235,20 @@
     pointer-events: auto;
 }
 
+/* Выбранный паттерн */
 .placed_pattern_full.selected {
     outline: 2px solid #ffffff;
     outline-offset: -1px;
     z-index: 3;
 }
 
+/* Подсветка паттерна при наведении */
 .placed_pattern_full:hover {
     filter: brightness(1.3);
     z-index: 4;
 }
 
+/* Анимация появления паттерна */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -229,6 +260,7 @@
     }
 }
 
+/* Панель с выбранным паттерном */
 .selected-pattern-bar {
     display: flex;
     align-items: center;
@@ -240,6 +272,7 @@
     flex-shrink: 0;
 }
 
+/* Кнопка отмены */
 .clear-btn {
     background: none;
     border: none;
@@ -252,24 +285,29 @@
     transition: opacity 0.15s;
 }
 
+/* Подсветка кнопки отмены при наведении */
 .clear-btn:hover {
     opacity: 1;
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Ширина скроллбара(полоска браузера, чтобы прокручивать содержимое не попавшее в экран) */
 .timeline_tracks::-webkit-scrollbar {
     width: 4px;
 }
 
+/* Дорожка скроллбара */
 .timeline_tracks::-webkit-scrollbar-track {
     background: #1a1a1a;
 }
 
+/* Ползунок скроллбара */
 .timeline_tracks::-webkit-scrollbar-thumb {
     background: #464646;
     border-radius: 2px;
 }
 
+/* Подсветка ползунка при наведении */
 .timeline_tracks::-webkit-scrollbar-thumb:hover {
     background: #656464;
 }
