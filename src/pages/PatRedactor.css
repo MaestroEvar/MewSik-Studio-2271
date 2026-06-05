@@ -11,7 +11,7 @@
   user-select: none;
 }
 
-/* --- ШАПКА PAT-HEADER --- */
+/* Шапка */
 .pat-header {
   background-color: #e4e1e1;
   border-bottom: 2px solid #000000;
@@ -69,7 +69,7 @@
   cursor: pointer;
 }
 
-/* --- РАБОЧАЯ ОБЛАСТЬ --- */
+/* Рабочая область --- */
 .pat-workspace {
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -77,9 +77,9 @@
   overflow: hidden;
 }
 
-/* --- ЛЕВАЯ КОЛОНКА --- */
+/* Левая колонка */
 .pat-sounds-sidebar {
-  background-color: #dcdcdc;
+  background-color: #2d2e33;
   border-right: 2px solid #000000;
   display: flex;
   flex-direction: column;

@@ -10,6 +10,7 @@ export default function PatSidebar({ onBackToStudio }) {
   const selectedSounds = editorStore((state) => state.selectedSounds);      // Его звуки
   const [playingId, setPlayingId] = useState(null);                         // ID играющего звука
   const playerRef = useRef(null);                                           // Ссылка на плеер
+  const [favorites, setFavorites] = useState({});                          // Локальный визуал звёздочек (id -> true/false)
 
   useEffect(() => {
     if (playerRef.current) {
@@ -19,6 +20,17 @@ export default function PatSidebar({ onBackToStudio }) {
     }
     setPlayingId(null);
   }, [selectedCat]);
+
+  // Класс роли для всей панели. Меняется в зависимости от категории кота.
+  // Если кот не выбран - нейтральный класс без цвета роли.
+  const roleClass = selectedCat
+    ? `cat-role-${selectedCat.category.toLowerCase()}`
+    : 'cat-role-none';
+
+  // Переключение визуала звёздочки (только цвет, никакой логики избранного)
+  const toggleFavorite = (id) => {
+    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const handlePlaySound = async (sound) => {                                // Воспроизведение звуков
     await initAudio();
@@ -49,14 +61,20 @@ export default function PatSidebar({ onBackToStudio }) {
 };
 
   return (
-    <aside className="pat-sounds-sidebar">
+    // Класс роли красит панель в цвет категории кота через CSS-переменную
+    <aside className={`pat-sounds-sidebar ${roleClass}`}>
 
       {/* Заголовок колонки */}
       <div className="sidebar-title">Tracks & Sounds</div>
 
-      {/* ===== МЕНЮ КОТА ===== */}
+      {/* Меню кота */}
       {/* Рамка: картинка выбранного кота + список его звуков */}
       <div className="cat-menu-box">
+
+      {/* Бейдж категории кота - подсвечивает текущую роль */}
+      {selectedCat && (
+        <div className="cat-role-badge">{selectedCat.category}</div>
+      )}
 
       <div className="cat-image-placeholder">
         {selectedCat ? (
@@ -84,19 +102,24 @@ export default function PatSidebar({ onBackToStudio }) {
                     className="sound-btn" title="Прослушать"
                     onClick={() => handlePlaySound(sound)}
                   >{playingId === sound.id ? '■' : '▶'}</button>
-                  <button className="sound-btn" title="В избранное">☆</button>
+                  {/* Звёздочка: по клику переключает жёлтый визуал избранного */}
+                  <button
+                    className={`sound-btn star-btn ${favorites[sound.id] ? 'is-favorite' : ''}`}
+                    title="В избранное"
+                    onClick={() => toggleFavorite(sound.id)}
+                  >{favorites[sound.id] ? '★' : '☆'}</button>
                 </div>
             </div>
         ))
       ) : (
-          <span>Выберите кота</span>
+          <span className="cat-hint">Выберите кота</span>
       )}
 
       </div>
 
       <div className="favorites-divider">Избранное</div>
 
-      {/* ===== СПИСОК ИЗБРАННЫХ ЗВУКОВ ===== */}
+      {/* Список избранных звуков */}
       {/* Пока пустая рамка - наполним когда добавим логику звёздочки */}
       <div className="favorites-box">
         <span className="favorites-empty-hint">
@@ -104,7 +127,7 @@ export default function PatSidebar({ onBackToStudio }) {
         </span>
       </div>
 
-      {/* ===== КНОПКИ ВНИЗУ ===== */}
+      {/* Кнопки снизу */}
       <div className="sidebar-buttons-container">
         <button className="sidebar-btn btn-add-sound">
           + Add sound

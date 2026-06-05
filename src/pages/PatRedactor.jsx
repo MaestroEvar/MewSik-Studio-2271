@@ -4,10 +4,10 @@ import PatSidebar from '../components/pat-layout/PatSidebar';
 import PatTrackRow from '../components/pat-layout/PatTrackRow';
 import SequencerControls from '../components/pat-layout/SequencerControls';
 import Library from '../components/pat-layout/Library';
-import './PatRedactor.css'; // Общие стили для сетки и раскладки остаются тут
+import './PatRedactor.css';
 
 export default function PatRedactor({ onBackToStudio }) {
-  const tracks = ['Kick Drum', 'Snare', 'Closed Hat', 'Open Hat', 'Clap'];
+  const tracks = ['Kick Drum', 'Snare', 'Closed Hat', 'Open Hat', 'Clap']; // Мусор
 
   const [volumes, setVolumes] = useState([50, 50, 50, 50, 50]);
 
@@ -36,7 +36,7 @@ export default function PatRedactor({ onBackToStudio }) {
           <main className="pat-tracks-area">
 
             {/* Панель управления над дорожками: Play и Save.
-                Заполняет пустое пространство между шапкой и сеткой. */}
+            Заполняет пустое пространство между шапкой и сеткой. */}
             <SequencerControls />
 
             <div className="sequencer-table">

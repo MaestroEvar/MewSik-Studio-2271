@@ -1,9 +1,7 @@
 import React from 'react';
 import './PatTrackRow.css';
 
-// Минималистичный силуэт головы кота - бегунок ползунка громкости.
-// Гравированный, без мультяшных деталей: только контур ушей и щёк
-// и пара светящихся глаз-акцентов. Цвета задаются через currentColor и классы.
+// Минималистичный силуэт головы кота - бегунок ползунка громкости. Цвета задаются через currentColor и классы.
 function CatHeadIcon() {
   return (
     <svg viewBox="0 0 32 28" className="cat-thumb-svg" aria-hidden="true">
@@ -12,7 +10,7 @@ function CatHeadIcon() {
         className="cat-silhouette"
         d="M5 3 L11 9 Q16 7 21 9 L27 3 L25 13 Q24 22 16 23 Q8 22 7 13 Z"
       />
-      {/* Глаза-щёлочки, светятся янтарём */}
+      {/* Глаза, цвета янтарь */}
       <path className="cat-eye" d="M11 13 q2 -2 4 0" />
       <path className="cat-eye" d="M17 13 q2 -2 4 0" />
     </svg>
@@ -20,8 +18,7 @@ function CatHeadIcon() {
 }
 
 export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
-  // Массив из 16 шагов. Дорожки оставляем пустыми - заполнять их будет
-  // пользователь через drag-and-drop (dnd-kit), который добавим позже.
+  // Массив из 16 шагов. Дорожки оставляем пустыми - заполнять их будет пользователь через dnd-kit, который добавим позже.
   const totalSteps = Array.from({ length: 16 }, (_, i) => i + 1);
 
   return (
@@ -37,7 +34,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
           звука сможет занимать несколько клеток через grid-column: span N. */}
       <div className="track-steps-grid">
         {totalSteps.map((step) => {
-          // Каждые 4 шага - граница доли (для удобства чтения ритма)
+          // Каждые 4 шага - граница доли
           const isQuarterEnd = step % 4 === 0 && step !== 16;
           // Чередуем группы по 4 шага по светлоте для читаемости такта
           const isGroupAccent = Math.floor((step - 1) / 4) % 2 === 0;
@@ -58,7 +55,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         })}
       </div>
 
-      {/* Зона громкости со строгим ползунком */}
+      {/* Зона громкости*/}
       <div className="track-volume-zone">
         <div className="volume-slider-wrap">
           <input
@@ -68,11 +65,9 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
             max="100"
             value={volume}
             onChange={(e) => onVolumeChange(e.target.value)}
-            // Заливаем пройденную часть дорожки янтарём через CSS-переменную
             style={{ '--val': `${volume}%` }}
           />
-          {/* Голова кота поверх инпута как бегунок.
-              Двигаем через ту же переменную --val. */}
+          {/* Голова кота поверх инпута как бегунок */}
           <span
             className="cat-thumb"
             style={{ '--val': `${volume}%` }}

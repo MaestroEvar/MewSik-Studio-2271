@@ -1,53 +1,93 @@
-/* Заголовок колонки */
-.sidebar-title {
-  font-weight: bold;
-  font-size: 14px;
-  text-transform: uppercase;
-  border-bottom: 2px solid #000000;
-  padding-bottom: 5px;
-  margin-bottom: 12px;
+.pat-sounds-sidebar {
+  --role: #d9a441;
+  --role-dim: rgba(217, 164, 65, 0.16);
+  background-color: #25282d;
+  border-right: 2px solid #000000;
 }
 
-/* ===== БЛОК МЕНЮ КОТА ===== */
-/* Рамка которая объединяет картинку кота и его звуки */
+.pat-sounds-sidebar.cat-role-none  { --role: #6f747c; --role-dim: rgba(111, 116, 124, 0.16); }
+.pat-sounds-sidebar.cat-role-lead  { --role: #a78bfa; --role-dim: rgba(167, 139, 250, 0.18); }
+.pat-sounds-sidebar.cat-role-bass  { --role: #f472b6; --role-dim: rgba(244, 114, 182, 0.18); }
+.pat-sounds-sidebar.cat-role-pad   { --role: #34d399; --role-dim: rgba(52, 211, 153, 0.18); }
+.pat-sounds-sidebar.cat-role-drums { --role: #fbbf24; --role-dim: rgba(251, 191, 36, 0.18); }
+
+/* Заголовок колонки */
+.sidebar-title {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d9a441;
+  border-bottom: 2px solid var(--role);
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  transition: border-color 0.4s ease;
+}
+
+/* Блок меню кота */
+
 .cat-menu-box {
+  position: relative;
   border: 2px solid #000000;
-  border-radius: 6px;
-  background-color: #f0f0f0;
-  padding: 10px;
+  border-radius: 8px;
+  background-color: #26282d;
+  background-image: linear-gradient(var(--role-dim), var(--role-dim));
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  padding: 12px 10px 10px 10px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: background-image 0.4s ease;
 }
 
-/* Заглушка под картинку кота - потом сюда вставим <img> */
+/* Бейдж категории кота в углу меню */
+.cat-role-badge {
+  align-self: flex-start;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #1a1a1a;
+  background: var(--role);
+  padding: 3px 10px;
+  border-radius: 4px;
+  transition: background 0.4s ease;
+}
+
+/* Картинка кота сидит в тёмной рамке с акцентом роли */
 .cat-image-placeholder {
   width: 100%;
   height: 90px;
-  background-color: #c8c7c7;
-  border: 2px dashed #898989;
-  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--role);
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6b6a6a;
+  color: #9a9ea4;
   font-size: 12px;
   font-style: italic;
+  transition: border-color 0.4s ease;
 }
 
 /* Один блок звука кота: название + кнопки */
 .cat-sound-item {
   height: 34px;
-  background-color: #ecebeb;
-  border: 2px solid #adacac;
+  background-color: #2f3137;
+  border: 1px solid #3a3d44;
+  border-left: 3px solid var(--role);
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 8px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #333333;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #c8ccd2;
+  transition: border-color 0.4s ease;
 }
 
 /* Контейнер для двух кнопок внутри блока звука */
@@ -60,39 +100,65 @@
 .sound-btn {
   width: 24px;
   height: 24px;
-  background-color: #ffffff;
-  border: 1.5px solid #838181;
+  background-color: #1e2024;
+  border: 1px solid #3a3d44;
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  color: #c8ccd2;
   font-size: 12px;
-  transition: background-color 0.15s;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .sound-btn:hover {
-  background-color: #dfdbdb;
+  background-color: #34373d;
+  border-color: var(--role);
 }
 
-/* Звёздочка в активном (избранном) состоянии — желтая */
-.sound-btn.is-favorite {
-  color: #d4a017;
+/* Звёздочка в активном состоянии - жёлтая */
+.star-btn.is-favorite {
+  color: #fbbf24;
+  border-color: #fbbf24;
 }
 
-/* ===== РАЗДЕЛИТЕЛЬ СЕКЦИЙ ===== */
+/* Подсказка "выберите кота" */
+.cat-hint {
+  font-size: 12px;
+  font-style: italic;
+  color: #9a9ea4;
+  text-align: center;
+}
+
+/* Имя кота */
+.cat-name {
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: #e4e6ea;
+}
+
+.selected-cat-img {
+  width: 90%;
+  border-radius: 6px;
+  aspect-ratio: 1/0.5;
+  object-fit: cover;
+}
+
+/* Разделитель секций */
 .favorites-divider {
   font-size: 11px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #535151;
+  color: #d9a441;
   border-top: 2px solid #000000;
   padding-top: 8px;
   margin-top: 2px;
 }
 
-/* ===== БЛОК ИЗБРАННОГО ===== */
+/* Поле избранного */
 /* Рамка под список избранных звуков */
 .favorites-box {
   flex: 1;
@@ -116,7 +182,7 @@
   text-align: center;
 }
 
-/* ===== КНОПКИ ВНИЗУ САЙДБАРА ===== */
+/* Кнопки снизу */
 .sidebar-buttons-container {
   margin-top: auto;
   display: flex;
@@ -143,21 +209,8 @@
 }
 
 .btn-back-main {
-  background-color: #f3f4f6;
+  background-color: #4f46e5;
 }
 .btn-back-main:hover {
   background-color: #e5e7eb;
-}
-
-.selected-cat-img {
-  width: 90%;
-  border-radius: 8px;
-  aspect-ratio: 1/0.5;
-  object-fit: cover;
-}
-
-.cat-name {
-  text-align: center;
-  font-weight: bold;
-  font-size: 14px;
 }

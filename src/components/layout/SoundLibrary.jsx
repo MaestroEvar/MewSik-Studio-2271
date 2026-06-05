@@ -27,7 +27,6 @@ export default function SoundLibrary() {
 
     useEffect(() => {               
         async function loadCats() { 
-            await dbSL.cats.clear();
             if (loaded.current) return;
             loaded.current = true;
             const cnt = await dbSL.cats.count();
@@ -137,7 +136,8 @@ export default function SoundLibrary() {
                 const categoryCats = cats.filter(cat => cat.category === category);
                 
                 return (
-                    <div className='category_section' key={category}>
+                    // Класс роли (cat-role-lead и т.д.) задаёт цвет всему разделу через CSS-переменную
+                    <div className={`category_section cat-role-${category.toLowerCase()}`} key={category}>
                         <h3 className='category_title'>{category}</h3>
 
                         <div className='container'>
@@ -146,14 +146,17 @@ export default function SoundLibrary() {
                                         e.preventDefault();
                                         setSelectedCat(cat);
                                     }} className='card'>
-                                    <img 
-                                        src={cat.png_path} 
-                                        alt={cat.name}
-                                        onError={(e) => {
-                                            e.target.src = cnf;
-                                            e.target.alt = "Кота нет.";
-                                        }}
-                                    />
+                                    {/* Контейнер с картинкой кота. Рамка красится цветом роли. */}
+                                    <div className='card-cat-frame'>
+                                        <img 
+                                            src={cat.png_path} 
+                                            alt={cat.name}
+                                            onError={(e) => {
+                                                e.target.src = cnf;
+                                                e.target.alt = "Кота нет.";
+                                            }}
+                                        />
+                                    </div>
                                     <p>{cat.name}</p>
                                 </a>
                             ))}

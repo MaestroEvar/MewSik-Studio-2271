@@ -1,53 +1,100 @@
 .sound_library {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
 }
 
-.category-section {
-    margin-bottom: 28px;
+/* Цвет роли для каждого раздела */
+.cat-role-lead  { --role: #a78bfa; --role-dim: rgba(167, 139, 250, 0.14); }
+.cat-role-bass  { --role: #f472b6; --role-dim: rgba(244, 114, 182, 0.14); }
+.cat-role-pad   { --role: #34d399; --role-dim: rgba(52, 211, 153, 0.14); }
+.cat-role-drums { --role: #fbbf24; --role-dim: rgba(251, 191, 36, 0.14); }
+
+/* Раздел категории */
+.category_section {
+    padding: 14px;
+    border: 1px solid var(--role);
+    border-left: 4px solid var(--role);
+    border-radius: 8px;
+    background: var(--role-dim);
 }
 
-.category-title {
-    font-size: 14px;
-    font-weight: 600;
+/* Заголовок раздела */
+.category_title {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: 12px;
-    padding: 4px 8px;
-    background: #e0e0e0;
+    letter-spacing: 2px;
+    margin: 0 0 14px 0;
+    padding: 4px 12px;
+    color: #1a1a1a;
+    background: var(--role);
     border-radius: 4px;
     display: inline-block;
 }
 
-.container {
+/* Сетка карточек котов */
+.sound_library .container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 16px;
     width: 100%;
+    margin: 0;
 }
 
-.card {
+/* Карточка кота */
+.sound_library .card {
     text-align: center;
     text-decoration: none;
     color: inherit;
     display: block;
     cursor: pointer;
     border-radius: 8px;
-    padding: 12px;
-    transition: background 0.2s;
+    padding: 8px 6px;
+    background: none;
+    transition: transform 0.15s ease;
 }
 
-.card:hover {
-    background: rgba(0, 0, 0, 0.05);
+.sound_library .card:hover {
+    background: none;
+    transform: translateY(-3px);
 }
 
-.card img {
-    width: 70%;
-    border-radius: 8px;
+.card-cat-frame {
+    position: relative;
+    margin: 10px 6px 0 6px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 2px solid var(--role);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.sound_library .card:hover .card-cat-frame {
+    background: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 0 3px var(--role-dim), 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* Картинка кота */
+.sound_library .card img {
+    width: 80%;
+    border-radius: 6px;
     display: block;
-    aspect-ratio: 1/0.5;
+    aspect-ratio: 1/0.55;
+    object-fit: contain;
     margin: 0 auto;
 }
 
-.card p {
+/* Имя кота */
+.sound_library .card p {
     font-size: 12px;
-    margin-top: 8px;
-}   
+    font-weight: 700;
+    margin-top: 10px;
+    color: #d8dade;
+    letter-spacing: 0.3px;
+}
