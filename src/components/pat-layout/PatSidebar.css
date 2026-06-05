@@ -171,7 +171,7 @@
   flex: 1;
   border: 2px solid #000000;
   border-radius: 6px;
-  background-color: #f0efef;
+  background-color: #00000043;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -220,4 +220,65 @@
 }
 .btn-back-main:hover {
   background-color: #e5e7eb;
+}
+
+/* Элемент избранного звука */
+.favorite-item {
+  height: 34px;
+  background-color: #2f3137;
+  border: 1px solid #3a3d44;
+  border-left: 3px solid #fbbf24;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  color: #c8ccd2;
+}
+
+/* Информация об избранном звуке */
+.favorite-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* Имя кота в избранном */
+.favorite-cat-name {
+  font-size: 9px;
+  color: #9a9ea4;
+}
+
+/* Название звука в избранном */
+.favorite-sound-name {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Контейнер кнопок в избранном */
+.favorite-btns {
+  display: flex;
+  gap: 4px;
+}
+
+/* Кнопка удаления из избранного */
+.favorite-remove-btn {
+  color: #ef4444;
+}
+
+.favorite-remove-btn:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+
+/* Избранный звук можно перетащить на дорожку */
+.favorite-item {
+  cursor: grab;
+  touch-action: none;
+}
+
+.favorite-item:active {
+  cursor: grabbing;
 }

@@ -4,6 +4,7 @@ import { editorStore } from '../../app/store/editorStore.js';
 import cnf from '../sprites/Cat_not_found.png';
 import { initAudio, playSound } from '../../audio/engine/toneEngine.js';
 import { useDraggable } from '@dnd-kit/core';
+import { db } from '../../db/db.js';
 
 
 // Один перетаскиваемый звук кота в меню.
@@ -50,14 +51,62 @@ function DraggableSound({ sound, catName, category, isPlaying, onPlay, isFav, on
   );
 }
 
+// Перетаскиваемый избранный звук
+function DraggableFavorite({ fav, isPlaying, onPlay, onRemove }) {        // Делаем так, чтобы звуки из favorite были Draggable
+  const label = `${fav.catName}-${fav.soundName}`;
+
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `fav-${fav.id}`,
+    data: {
+      type: 'sound',
+      label,
+      sound: fav.soundPath,
+      category: fav.catCategory,
+    },
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`favorite-item ${isDragging ? 'is-dragging' : ''}`}
+      {...listeners}
+      {...attributes}
+    >
+      <div className="favorite-info">
+        <span className="favorite-cat-name">{fav.catName}</span>
+        <span className="favorite-sound-name">{fav.soundName}</span>
+      </div>
+      <div className="favorite-btns">
+        <button
+          className="sound-btn" title="Прослушать"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={onPlay}
+        >{isPlaying ? '■' : '▶'}</button>
+        <button
+          className="sound-btn favorite-remove-btn" title="Удалить из избранного"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={onRemove}
+        >✕</button>
+      </div>
+    </div>
+  );
+}
+
 
 export default function PatSidebar({ onBackToStudio }) {  
   const selectedCat = editorStore((state) => state.selectedCat);            // Выбранный кот из библиотеки
   const selectedSounds = editorStore((state) => state.selectedSounds);      // Его звуки
   const [playingId, setPlayingId] = useState(null);                         // ID играющего звука
   const playerRef = useRef(null);                                           // Ссылка на плеер
-  const [favorites, setFavorites] = useState({});                          // Локальный визуал звёздочек (id -> true/false)
+  const [favorites, setFavorites] = useState({});                           // Локальный визуал звёздочек (id -> true/false)
+  const [favoriteList, setFavoriteList] = useState([]);                     // Список избранных звуков
 
+  // Загружаем избранное при монтировании
+  useEffect(() => {
+    loadFavorites();
+  }, []);
+
+  // Останавливаем плеер при смене кота
   useEffect(() => {
     if (playerRef.current) {
       playerRef.current.stop();
@@ -65,17 +114,85 @@ export default function PatSidebar({ onBackToStudio }) {
       playerRef.current = null;
     }
     setPlayingId(null);
-  }, [selectedCat]);
+    loadFavorites();
+}, [selectedCat]);
 
-  // Класс роли для всей панели. Меняется в зависимости от категории кота.
-  // Если кот не выбран - нейтральный класс без цвета роли.
+  const loadFavorites = async () => {                                    // Загрузка избранного из БД
+    const favs = await db.favorites.toArray();
+    setFavoriteList(favs);
+
+    const favMap = {};
+    favs.forEach(fav => {
+      favMap[`${fav.catName}-${fav.soundId}`] = true;                   // Ключ = catName + soundId, чтобы звёздочки горели только для того кота чей звук в избранном
+    });
+    setFavorites(favMap);
+  };
+
   const roleClass = selectedCat
     ? `cat-role-${selectedCat.category.toLowerCase()}`
     : 'cat-role-none';
 
-  // Переключение визуала звёздочки (только цвет, никакой логики избранного)
-  const toggleFavorite = (id) => {
-    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleFavorite = async (sound) => {                               // Добавление/удаление из избранного
+    const existing = await db.favorites.where('soundId').equals(sound.id).first();
+
+    if (existing){
+      await db.favorites.delete(existing.id);
+    } else {
+      await db.favorites.add({
+        soundId : sound.id,
+        soundName: sound.name,
+        soundPath : sound.sound,
+        catName: selectedCat.name,
+        catCategory: selectedCat.category
+      });
+    }
+
+    await loadFavorites();
+  };
+
+  const removeFromFavorites = async (id) => {                             // Удаление из избранного
+    // Останавливаем плеер если удаляемый звук играет
+    if (playingId === `fav-${id}`) {
+      if (playerRef.current) {
+        playerRef.current.stop();
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+      setPlayingId(null);
+    }
+    await db.favorites.delete(id);
+    await loadFavorites();
+  };
+  
+  const handlePlayFavorite = async (soundPath, id) => {                   // Воспроизведение звука из избранного
+    // Используем префикс fav- чтобы не было конфликтов с id звуков кота
+    const favPlayingId = `fav-${id}`;
+    
+    await initAudio();
+
+    if (playingId === favPlayingId){
+      if (playerRef.current){
+        playerRef.current.stop();
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+      setPlayingId(null);
+      return;
+    }
+
+    if (playerRef.current) {
+      playerRef.current.stop();
+      playerRef.current.dispose();
+    }
+
+    const player = playSound(soundPath);
+    playerRef.current = player;
+    setPlayingId(favPlayingId);
+
+    player.onstop = () =>{
+      setPlayingId(null);
+      playerRef.current = null;
+    };
   };
 
   const handlePlaySound = async (sound) => {                                // Воспроизведение звуков
@@ -104,7 +221,7 @@ export default function PatSidebar({ onBackToStudio }) {
       setPlayingId(null);
       playerRef.current = null;
     };
-};
+  };
 
   return (
     // Класс роли красит панель в цвет категории кота через CSS-переменную
@@ -148,8 +265,8 @@ export default function PatSidebar({ onBackToStudio }) {
               category={selectedCat.category}
               isPlaying={playingId === sound.id}
               onPlay={() => handlePlaySound(sound)}
-              isFav={!!favorites[sound.id]}
-              onFav={() => toggleFavorite(sound.id)}
+              isFav={!!favorites[`${selectedCat.name}-${sound.id}`]}
+              onFav={() => toggleFavorite(sound)}
             />
         ))
       ) : (
@@ -161,11 +278,20 @@ export default function PatSidebar({ onBackToStudio }) {
       <div className="favorites-divider">Избранное</div>
 
       {/* Список избранных звуков */}
-      {/* Пока пустая рамка - наполним когда добавим логику звёздочки */}
       <div className="favorites-box">
-        <span className="favorites-empty-hint">
-          Нажмите ☆ чтобы добавить звук
-        </span>
+        {favoriteList.length > 0 ? (
+          favoriteList.map((fav) => (
+            <DraggableFavorite
+              key={fav.id}
+              fav={fav}
+              isPlaying={playingId === `fav-${fav.id}`}
+              onPlay={() => handlePlayFavorite(fav.soundPath, fav.id)}
+              onRemove={() => removeFromFavorites(fav.id)}
+            />
+          ))
+        ) : (
+          <span className="favorites-empty-hint">Нажмите ☆ чтобы добавить звук</span>
+        )}
       </div>
 
       {/* Кнопки снизу */}
