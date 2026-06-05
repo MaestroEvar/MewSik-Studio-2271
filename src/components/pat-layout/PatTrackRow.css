@@ -95,83 +95,55 @@
   padding: 0 2px;
 }
 
-/* Обёртка нужна, чтобы поверх инпута расположить голову кота */
-.volume-slider-wrap {
-  position: relative;
-  flex: 1;
-  height: 28px;
-  display: flex;
-  align-items: center;
-}
-
-/* Дорожка ползунка */
+/* Кошачий ползунок - такой же как в LineSettings на главной странице.
+   Тонкая дорожка с янтарной заливкой пройденной части (наша палитра),
+   бегунок - PNG-спрайт с котом. */
 .volume-slider {
-  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
   height: 4px;
   margin: 0;
   cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
+  /* Слева от бегунка дорожка залита янтарём по --val, справа - тёмный жёлоб */
   background:
     linear-gradient(var(--amber), var(--amber)) 0 / var(--val, 50%) 100% no-repeat,
     var(--st-line);
-  border-radius: 3px;
+  border-radius: 2px;
   outline: none;
 }
 
-/* Прячем стандартный бегунок, но оставляем зону захвата */
+/* Бегунок-кот: картинка-спрайт вместо стандартного кружочка */
 .volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 26px;
-  height: 26px;
-  background: transparent;
-  cursor: grab;
+  width: 25px;
+  height: 25px;
+  background-image: url('../sprites/cat_slider_sprite.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease;
 }
-.volume-slider::-webkit-slider-thumb:active { cursor: grabbing; }
 
 .volume-slider::-moz-range-thumb {
-  width: 26px;
-  height: 26px;
-  background: transparent;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background-image: url('../sprites/cat_slider_sprite.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
   border: none;
-  cursor: grab;
+  cursor: pointer;
 }
 
-/* Кошачья голова-бегунок поверх инпута */
-/* pointer-events: none, чтобы клики проходили насквозь*/
-.cat-thumb {
-  position: absolute;
-  top: 50%;
-  left: var(--val, 50%);
-  width: 26px;
-  height: 26px;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cat-thumb-svg {
-  width: 24px;
-  height: 24px;
-}
-
-/* Силуэт головы */
-.cat-thumb-svg .cat-silhouette {
-  fill: #babfc7;
-  stroke: var(--st-line);
-  stroke-width: 1.2;
-  stroke-linejoin: round;
-}
-
-/* Глаза-щёлочки светятся янтарём */
-.cat-thumb-svg .cat-eye {
-  fill: none;
-  stroke: var(--amber);
-  stroke-width: 1.8;
-  stroke-linecap: round;
+/* При наведении кот слегка увеличивается */
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
 }
 
 /* Цифра громкости */

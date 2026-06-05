@@ -11,8 +11,7 @@ export default function SequencerControls() {
       {/* Левая часть: подпись секции */}
       <div className="seq-controls-title">
         <span className="seq-title-bar" />
-        <span className="seq-title-text">SEQUENCER</span>
-        <span className="seq-title-sub">16 steps</span>
+        <span className="seq-title-text">Рабочее поле</span>
       </div>
 
       {/* Правая часть: кнопки управления */}

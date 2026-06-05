@@ -1,22 +1,6 @@
 import React from 'react';
 import './PatTrackRow.css';
 
-// Минималистичный силуэт головы кота - бегунок ползунка громкости. Цвета задаются через currentColor и классы.
-function CatHeadIcon() {
-  return (
-    <svg viewBox="0 0 32 28" className="cat-thumb-svg" aria-hidden="true">
-      {/* Силуэт головы с ушами одной линией */}
-      <path
-        className="cat-silhouette"
-        d="M5 3 L11 9 Q16 7 21 9 L27 3 L25 13 Q24 22 16 23 Q8 22 7 13 Z"
-      />
-      {/* Глаза, цвета янтарь */}
-      <path className="cat-eye" d="M11 13 q2 -2 4 0" />
-      <path className="cat-eye" d="M17 13 q2 -2 4 0" />
-    </svg>
-  );
-}
-
 export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
   // Массив из 16 шагов. Дорожки оставляем пустыми - заполнять их будет пользователь через dnd-kit, который добавим позже.
   const totalSteps = Array.from({ length: 16 }, (_, i) => i + 1);
@@ -55,26 +39,19 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         })}
       </div>
 
-      {/* Зона громкости*/}
+      {/* Зона громкости. Кошачий ползунок - такой же как в LineSettings:
+          тонкая дорожка с янтарной заливкой и бегунком-котом (PNG-спрайт). */}
       <div className="track-volume-zone">
-        <div className="volume-slider-wrap">
-          <input
-            type="range"
-            className="volume-slider"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={(e) => onVolumeChange(e.target.value)}
-            style={{ '--val': `${volume}%` }}
-          />
-          {/* Голова кота поверх инпута как бегунок */}
-          <span
-            className="cat-thumb"
-            style={{ '--val': `${volume}%` }}
-          >
-            <CatHeadIcon />
-          </span>
-        </div>
+        <input
+          type="range"
+          className="volume-slider"
+          min="0"
+          max="100"
+          value={volume}
+          onChange={(e) => onVolumeChange(e.target.value)}
+          // Доля заливки дорожки слева от бегунка
+          style={{ '--val': `${volume}%` }}
+        />
         <span className="volume-number">{volume}</span>
       </div>
 
