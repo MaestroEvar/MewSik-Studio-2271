@@ -3,6 +3,52 @@ import './PatSidebar.css';
 import { editorStore } from '../../app/store/editorStore.js';
 import cnf from '../sprites/Cat_not_found.png';
 import { initAudio, playSound } from '../../audio/engine/toneEngine.js';
+import { useDraggable } from '@dnd-kit/core';
+
+
+// Один перетаскиваемый звук кота в меню.
+// Тело блока тащится (useDraggable), а кнопки play/star отдельно кликаются:
+// им гасим pointerDown, чтобы нажатие не запускало перетаскивание.
+function DraggableSound({ sound, catName, category, isPlaying, onPlay, isFav, onFav }) {
+  // Подпись блока на дорожке: ИмяКота-Нота (например Jony-C)
+  const label = `${catName}-${sound.name}`;
+
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `sound-${catName}-${sound.id}`,
+    data: {
+      // Эти данные прилетят в onDragEnd при дропе на клетку
+      type: 'sound',
+      label,
+      sound: sound.sound,
+      category,
+    },
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`cat-sound-item ${isDragging ? 'is-dragging' : ''}`}
+      {...listeners}
+      {...attributes}
+    >
+      <span>{sound.name}</span>
+      <div className="cat-sound-btns">
+        <button
+          className="sound-btn" title="Прослушать"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={onPlay}
+        >{isPlaying ? '■' : '▶'}</button>
+        {/* Звёздочка: по клику переключает жёлтый визуал избранного */}
+        <button
+          className={`sound-btn star-btn ${isFav ? 'is-favorite' : ''}`}
+          title="В избранное"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={onFav}
+        >{isFav ? '★' : '☆'}</button>
+      </div>
+    </div>
+  );
+}
 
 
 export default function PatSidebar({ onBackToStudio }) {  
@@ -95,21 +141,16 @@ export default function PatSidebar({ onBackToStudio }) {
 
       {selectedSounds && selectedSounds.length > 0 ? (
         selectedSounds.map((sound) => (
-            <div key={sound.id} className="cat-sound-item">
-                <span>{sound.name}</span>
-                <div className="cat-sound-btns">
-                  <button 
-                    className="sound-btn" title="Прослушать"
-                    onClick={() => handlePlaySound(sound)}
-                  >{playingId === sound.id ? '■' : '▶'}</button>
-                  {/* Звёздочка: по клику переключает жёлтый визуал избранного */}
-                  <button
-                    className={`sound-btn star-btn ${favorites[sound.id] ? 'is-favorite' : ''}`}
-                    title="В избранное"
-                    onClick={() => toggleFavorite(sound.id)}
-                  >{favorites[sound.id] ? '★' : '☆'}</button>
-                </div>
-            </div>
+            <DraggableSound
+              key={sound.id}
+              sound={sound}
+              catName={selectedCat.name}
+              category={selectedCat.category}
+              isPlaying={playingId === sound.id}
+              onPlay={() => handlePlaySound(sound)}
+              isFav={!!favorites[sound.id]}
+              onFav={() => toggleFavorite(sound.id)}
+            />
         ))
       ) : (
           <span className="cat-hint">Выберите кота</span>

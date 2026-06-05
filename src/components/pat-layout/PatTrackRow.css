@@ -40,15 +40,32 @@
   color: var(--txt-dim);
 }
 
-/* Сетка нот из 16 колонок */
+/* Сетка нот из 16 колонок. relative - чтобы слой блоков лёг поверх. */
 .track-steps-grid {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(16, 1fr);
+  grid-template-rows: 36px;
   gap: 2px;
   padding: 3px;
   background: var(--st-line);
   border: 1px solid var(--st-line);
   border-radius: 4px;
+}
+
+/* Слой размещённых блоков. Лежит поверх клеток и повторяет ИХ грид-разметку
+   один в один (те же 16 колонок, тот же gap и padding), поэтому блоки
+   попадают ровно в клетки и ничего не сдвигают. */
+.placed-blocks-layer {
+  position: absolute;
+  inset: 0;
+  padding: 3px;
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  grid-template-rows: 36px;
+  gap: 2px;
+  /* Слой пропускает клики на клетки под собой, кроме самих блоков */
+  pointer-events: none;
 }
 
 /* Одиночная пустая клетка-шаг */
@@ -81,9 +98,62 @@
   box-shadow: inset 0 0 0 1px var(--amber-d);
 }
 
-/* Граница доли каждые 4 шага - чуть больший зазор */
+/* Клетка под перетаскиваемым звуком - подсвечивается зелёным/янтарным */
+.cell-over {
+  background: #45484f !important;
+  box-shadow: inset 0 0 0 2px var(--amber) !important;
+}
+
+/* Размещённый блок звука. Лежит в слое блоков, занимает span колонок
+   через grid-column (задаётся инлайн). pointer-events возвращаем, чтобы
+   по блоку можно было кликнуть (удаление), хотя сам слой их отключает. */
+.placed-block {
+  grid-row: 1;
+  height: 36px;
+  border-radius: 3px;
+  cursor: pointer;
+  pointer-events: auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  overflow: hidden;
+  /* Цвет берётся из роли категории: яркая рамка + полупрозрачная заливка */
+  background: color-mix(in srgb, var(--role) 22%, #1e2024);
+  border: 1.5px solid var(--role);
+  border-left: 4px solid var(--role);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: filter 0.12s ease, transform 0.12s ease;
+  z-index: 2;
+}
+
+.placed-block:hover {
+  filter: brightness(1.15);
+}
+
+/* Подпись блока: ИмяКота-Нота */
+.placed-block-label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Перетаскиваемый звук в сайдбаре во время drag - полупрозрачный */
+.cat-sound-item.is-dragging {
+  opacity: 0.4;
+}
+
+/* Граница доли каждые 4 шага. Раньше тут был margin-right, который съедал
+   ширину клетки и сдвигал блоки - убрали. Теперь это просто визуальная
+   засечка через box-shadow справа, которая НЕ меняет размер клетки. */
 .quarter-border {
-  margin-right: 4px;
+  box-shadow: inset -2px 0 0 var(--amber-d);
 }
 
 /* Зона громкости */

@@ -115,3 +115,22 @@
   overflow: hidden;
   display: flex;
 }
+
+/* Превью блока звука под курсором при перетаскивании (DragOverlay) */
+.drag-overlay-block {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 12px;
+  background: #d9a441;
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  cursor: grabbing;
+  pointer-events: none;
+}

@@ -88,6 +88,13 @@
   font-weight: 700;
   color: #c8ccd2;
   transition: border-color 0.4s ease;
+  /* Звук можно перетащить на дорожку */
+  cursor: grab;
+  touch-action: none;
+}
+
+.cat-sound-item:active {
+  cursor: grabbing;
 }
 
 /* Контейнер для двух кнопок внутри блока звука */
