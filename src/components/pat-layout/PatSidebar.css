@@ -153,7 +153,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #d9a441;
-  border-top: 2px solid #000000;
+  
   padding-top: 8px;
   margin-top: 2px;
 }
@@ -164,7 +164,8 @@
   flex: 1;
   border: 2px solid #000000;
   border-radius: 6px;
-  background-color: #f0efef;
+  margin-top: 15px;
+  background-color: #00000043;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -184,7 +185,7 @@
 
 /* Кнопки снизу */
 .sidebar-buttons-container {
-  margin-top: auto;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -193,6 +194,7 @@
 .sidebar-btn {
   padding: 10px;
   border: 2px solid #000000;
+  color: #9a9ea4;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
@@ -202,10 +204,10 @@
 }
 
 .btn-add-sound {
-  background-color: #bbf7d0;
+  background-color: #0000003b;
 }
 .btn-add-sound:hover {
-  background-color: #86efac;
+  background-color: #0000003a;
 }
 
 .btn-back-main {

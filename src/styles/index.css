@@ -49,3 +49,13 @@ body,
 .app-container.settings-collapsed {
   grid-template-columns: 200px 1fr 0px;
 }
+
+/* Когда блок Projects сворачивается убираем его ширину */
+.app-container.projects-collapsed {
+  grid-template-columns: 0px 1fr 250px;
+}
+
+/* Оба сворачиваются одновременно */
+.app-container.projects-collapsed.settings-collapsed {
+  grid-template-columns: 0px 1fr 0px;
+}
