@@ -39,7 +39,14 @@ function MiniGrid({ steps, color }) {
   );
 }
 
-export default function Patterns({ onOpenColors }) {
+export default function Patterns({ onOpenColors, selectedPatternId, onSelectPattern }) {
+  // Безопасный обработчик выбора паттерна
+  const handleSelectPattern = (pattern) => {
+    if (onSelectPattern) {
+      onSelectPattern(pattern);
+    }
+  };
+
   return (
     <div className="app-patterns">
 
@@ -66,7 +73,8 @@ export default function Patterns({ onOpenColors }) {
             {PLACEHOLDER_PATTERNS.map((pattern) => (
               <div
                 key={pattern.id}
-                className="pattern-card"
+                className={`pattern-card ${selectedPatternId === pattern.id ? 'selected' : ''}`}
+                onClick={() => handleSelectPattern(pattern)}
                 style={{ '--card-accent': pattern.color }}
               >
                 {/* Цветная полоска-акцент сверху карточки */}
