@@ -153,6 +153,8 @@ export default function TimeLine({ selectedPattern, onClearSelection }) {
             )}
 
             <div className='timeline_header'>
+                <div className='header_label_spacer'/>
+
                 {Array.from({ length: blocks }, (_, i) => (
                     <div key={i} className='header_block'>
                         <span className="block_number_main">{i + 1}</span>
