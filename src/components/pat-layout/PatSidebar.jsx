@@ -133,7 +133,10 @@ export default function PatSidebar({ onBackToStudio }) {
     : 'cat-role-none';
 
   const toggleFavorite = async (sound) => {                               // Добавление/удаление из избранного
-    const existing = await db.favorites.where('soundId').equals(sound.id).first();
+    const existing = await db.favorites
+      .where('soundId').equals(sound.id)
+      .and(fav => fav.catName === selectedCat.name)                     // Добавь проверку имени кота
+      .first();
 
     if (existing){
       await db.favorites.delete(existing.id);
@@ -148,7 +151,7 @@ export default function PatSidebar({ onBackToStudio }) {
     }
 
     await loadFavorites();
-  };
+};
 
   const removeFromFavorites = async (id) => {                             // Удаление из избранного
     // Останавливаем плеер если удаляемый звук играет
