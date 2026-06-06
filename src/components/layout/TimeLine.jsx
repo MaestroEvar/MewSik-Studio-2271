@@ -1,7 +1,8 @@
 import './TimeLine.css';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PlayHead from './PlayHead';
-import { useSequencer } from '../../audio/engine/useSequencer.js';
+import { usePlayheadSequencer } from '../../audio/engine/playheadSequencer.js';
+import { editorStore } from '../../app/store/editorStore.js';
 
 const tracks = [
     'Track1', 'Track2', 'Track3', 'Track4', 'Track5',
@@ -16,6 +17,7 @@ export default function TimeLine({ selectedPattern, onClearSelection }) {
     const [hoveredCell, setHoveredCell] = useState(null);
     const timelineRef = useRef(null);
     const tracksContainerRef = useRef(null);
+    const setIsPlaying = editorStore((s) => s.setIsPlaying);
 
     // Получить точную позицию клика внутри блока
     const getSubPosition = (e, element) => {
@@ -145,7 +147,13 @@ export default function TimeLine({ selectedPattern, onClearSelection }) {
         return currentAbsolute >= hoverAbsolute && currentAbsolute < patternEnd;
     };
 
-    useSequencer();
+    useEffect(() => {                           // Прекаращает воспроизведение при выходе из TimeLine
+        return () => {
+            setIsPlaying(false);
+        };
+    }, []);
+
+    usePlayheadSequencer();
 
     return (
         <div className="app-timeline" onClick={handleTimelineClick} ref={timelineRef}>

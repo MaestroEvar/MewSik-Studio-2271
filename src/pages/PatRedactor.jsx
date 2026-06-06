@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PatHeader from '../components/pat-layout/PatHeader';
 import PatSidebar from '../components/pat-layout/PatSidebar';
 import PatTrackRow from '../components/pat-layout/PatTrackRow';
@@ -32,6 +32,8 @@ export default function PatRedactor({ onBackToStudio }) {
 
   const placeBlock = editorStore((state) => state.placeBlock);
   const moveBlock = editorStore((state) => state.moveBlock);
+
+  const setIsPlaying = editorStore((s) => s.setIsPlaying);    // Управление воспроизведением
 
   // Подключаем движок проигрывания паттерна (реагирует на Play/Stop)
   useSequencer();
@@ -75,6 +77,12 @@ export default function PatRedactor({ onBackToStudio }) {
       });
     }
   };
+
+  useEffect(() => {             // Прекращает воспроизведение при выходе из редактора паттернов
+      return () => {
+          setIsPlaying(false);
+      };
+  }, []);
 
   return (
     <DndContext
