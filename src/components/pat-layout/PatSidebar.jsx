@@ -14,6 +14,10 @@ function DraggableSound({ sound, catName, category, isPlaying, onPlay, isFav, on
   // Подпись блока на дорожке: ИмяКота-Нота (например Jony-C)
   const label = `${catName}-${sound.name}`;
 
+  // Затемнение оттенка по высоте ноты: C (id 1) самый яркий, каждая
+  // следующая нота чуть темнее. Шаг 6% подмешивания чёрного на ноту.
+  const noteDarken = (sound.id - 1) * 6;
+
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `sound-${catName}-${sound.id}`,
     data: {
@@ -29,6 +33,7 @@ function DraggableSound({ sound, catName, category, isPlaying, onPlay, isFav, on
     <div
       ref={setNodeRef}
       className={`cat-sound-item ${isDragging ? 'is-dragging' : ''}`}
+      style={{ '--note-darken': noteDarken }}
       {...listeners}
       {...attributes}
     >
