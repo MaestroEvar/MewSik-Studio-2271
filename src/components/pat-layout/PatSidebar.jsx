@@ -316,7 +316,7 @@ export default function PatSidebar({ onBackToStudio }) {
 
       </div>
 
-      <div className="favorites-divider">Избранное</div>
+      <div className="favorites-divider">Favorites</div>
 
       {/* Список избранных звуков */}
       <div className="favorites-box">

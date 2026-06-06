@@ -58,7 +58,8 @@
 
 .projects-toggle-btn-minus:hover {
   background: #5433cc44;
-  color: #7c3aed
+  color: #7c3aed;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Кнопка разворота*/

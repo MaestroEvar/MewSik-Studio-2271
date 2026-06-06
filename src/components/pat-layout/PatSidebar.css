@@ -167,7 +167,6 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #d9a441;
-  border-top: 2px solid #000000;
   padding-top: 8px;
   margin-top: 2px;
 }
@@ -225,15 +224,24 @@
 }
 
 .sidebar-btn {
+  background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
   padding: 10px;
-  border: 2px solid #000000;
-  color: #9a9ea4;
+  gap: 6px;
+  border: 1px solid #000000;
+  color: #ffffff;
   border-radius: 6px;
-  font-weight: bold;
   cursor: pointer;
   font-size: 12px;
+  font-weight: 700;
   transition: background-color 0.15s;
   text-align: center;
+  transition: all 0.18s ease;
+}
+
+.sidebar-btn:hover {
+    
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 6px #d9a4412b);
 }
 
 .btn-add-sound {
@@ -244,10 +252,11 @@
 }
 
 .btn-back-main {
-  background-color: #4f46e5;
+  background-color: #0000003b
 }
 .btn-back-main:hover {
-  background-color: #e5e7eb;
+  background-color: #54545421;
+  box-shadow: 0 3px 12px rgba(124, 58, 237, 0.45);
 }
 
 /* Элемент избранного звука */

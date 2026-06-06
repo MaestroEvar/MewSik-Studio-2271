@@ -1,0 +1,101 @@
+.pat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 55px;
+    background-color: #26282d;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+/* Левая часть: логотип + название */
+.pat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.logo-container:hover {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 6px rgba(196, 196, 196, 0.7))
+            drop-shadow(0 0 12px rgba(74, 85, 90, 0.4));
+}
+
+.cat-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+}
+
+.pat-header-title {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+    color: #cbcbcb;
+    letter-spacing: 2px;
+    
+}
+
+/* Правая часть: иконки */
+.pat-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pat-icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: #26282d;
+    border: none;
+    border-radius: 8px;
+    color: #d9a441;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.18s ease;
+    filter: drop-shadow(0 0 6px #0d0e0f);
+    
+}
+
+.pat-icon-button:hover {
+    background-color: #d9a441;
+    color: #26282d;
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 6px #d9a441);
+}
+
+.pat-icon-button:active {
+    transform: translateY(0px);
+}
+
+.pat-icon-button svg {
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+@media (max-width: 768px) {
+    .pat-header { padding: 0 12px; }
+    .pat-header-title { font-size: 0.75rem; letter-spacing: 1px; }
+}
+
+@media (max-width: 480px) {
+    .pat-header-title { display: none; }
+}
