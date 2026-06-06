@@ -6,10 +6,9 @@ import { initAudio, loadBuffer, triggerSound, getBufferDuration, stopAllSounds }
 // Кол-во шагов в паттерне (ряд из 16 клеток = 16 шестнадцатых нот)
 const STEP_COUNT = 16;
 
-// Базовый темп проигрывания.
-// Пока фиксированный 60 bpm: 4 шага в секунду (шестнадцатая = 0.25с). Нужно подправить после реализации bpm
-// Смена BPM: когда будем её реализовывать - заменить эту константу на bpm из стора.
-const BASE_BPM = 60;
+// Запасной темп на случай некорректного значения bpm (например, пустого поля).
+// Основной темп берётся из стора (счётчик BPM).
+const DEFAULT_BPM = 60;
 
 // Хук подключает проигрывание паттерна. Висит в PatRedactor.
 // Следит за isPlaying в сторе: запускает цикл при старте, гасит при стопе.
@@ -17,6 +16,7 @@ export function useSequencer() {
   const isPlaying = editorStore((s) => s.isPlaying);
   const placedBlocks = editorStore((s) => s.placedBlocks);
   const setCurrentStep = editorStore((s) => s.setCurrentStep);
+  const bpm = editorStore((s) => s.bpm);
 
   // Свежие блоки держим в ref - чтобы колбэк Transport всегда видел актуальные
   // данные, не пересоздавая сам цикл при каждой правке паттерна.
@@ -27,6 +27,17 @@ export function useSequencer() {
     // игры, сразу знал свою длительность и корректно растягивался на такт.
     placedBlocks.forEach((b) => loadBuffer(b.sound));
   }, [placedBlocks]);
+
+  // Текущий bpm тоже держим в ref - по нему колбэк считает растяжение Pad.
+  const bpmRef = useRef(Number(bpm) || DEFAULT_BPM);
+
+  // Меняем темп транспорта вживую при смене bpm. Делаем это ОТДЕЛЬНЫМ эффектом,
+  // не трогая основной цикл - поэтому темп меняется на лету, без рывка и сброса шага.
+  useEffect(() => {
+    const value = Number(bpm) || DEFAULT_BPM;
+    bpmRef.current = value;
+    Tone.Transport.bpm.value = value;
+  }, [bpm]);
 
   useEffect(() => {
     // Играем только когда нажат Play
@@ -45,11 +56,8 @@ export function useSequencer() {
       if (cancelled) return;
 
       let step = 0;
-      Tone.Transport.bpm.value = BASE_BPM;
-
-      // Длительность одного такта в секундах: 4 доли по (60 / bpm) секунд.
-      // Считается от текущего темпа - то есть растяжение не зависит от bpm.
-      const barSeconds = (60 / BASE_BPM) * 4;
+      // Стартуем с текущего темпа (дальше его вживую правит отдельный эффект)
+      Tone.Transport.bpm.value = bpmRef.current;
 
       // На каждую шестнадцатую: играем блоки этого столбца и двигаем подсветку
       repeatId = Tone.Transport.scheduleRepeat((time) => {
@@ -58,12 +66,16 @@ export function useSequencer() {
         // Блоки, которые СТАРТУЮТ на этом шаге (Pad стартует только на своей первой клетке)
         const blocksHere = blocksRef.current.filter((b) => b.step === stepIndex);
 
+        // Длительность такта при текущем темпе: 4 доли по (60 / bpm) секунд.
+        // Считаем в колбэке, чтобы растяжение Pad следовало за сменой bpm на лету.
+        const barSeconds = (60 / bpmRef.current) * 4;
+
         blocksHere.forEach((b) => {
           let rate = 1;
           if (b.category === 'Pad') {
-            {/* Pad тянется на весь такт. Звуковой файл короче такта, поэтому
-            замедляем его так, чтобы он закончился ровно к концу паттерна
-            и тут же стартовал заново на следующем круге. */}
+            // Pad тянется на весь такт. Звуковой файл короче такта, поэтому
+            // подгоняем скорость так, чтобы он закончился ровно к концу паттерна
+            // и тут же стартовал заново на следующем круге.
             const dur = getBufferDuration(b.sound);
             rate = dur ? (dur / barSeconds) : 1;
           }
