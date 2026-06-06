@@ -3,6 +3,9 @@
   --role-dim: rgba(217, 164, 65, 0.16);
   background-color: #25282d;
   border-right: 2px solid #000000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .pat-sounds-sidebar.cat-role-none  { --role: #6f747c; --role-dim: rgba(111, 116, 124, 0.16); }
@@ -173,6 +176,7 @@
 /* Рамка под список избранных звуков */
 .favorites-box {
   flex: 1;
+  min-height: 0;
   border: 2px solid #000000;
   border-radius: 6px;
   margin-top: 15px;
@@ -182,7 +186,25 @@
   flex-direction: column;
   gap: 6px;
   overflow-y: auto; /* Если избранных много - разрешить скролл */
-  min-height: 60px;
+}
+
+/* Стилизованный скроллбар для избранного */
+.favorites-box::-webkit-scrollbar {
+  width: 4px;
+}
+
+.favorites-box::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+}
+
+.favorites-box::-webkit-scrollbar-thumb {
+  background: #464646;
+  border-radius: 2px;
+}
+
+.favorites-box::-webkit-scrollbar-thumb:hover {
+  background: #656464;
 }
 
 /* Заглушка "список пустой" */
@@ -231,9 +253,9 @@
 /* Элемент избранного звука */
 .favorite-item {
   height: 34px;
-  background-color: #2f3137;
-  border: 1px solid #3a3d44;
-  border-left: 3px solid #fbbf24;
+  flex-shrink: 0;
+  background-color: color-mix(in srgb, var(--role, #6f747c), #000 calc(var(--note-darken, 0) * 1%));
+  border: 1px solid color-mix(in srgb, var(--role, #6f747c), #000 40%);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -241,7 +263,8 @@
   padding: 0 8px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 11px;
-  color: #c8ccd2;
+  cursor: grab;
+  touch-action: none;
 }
 
 /* Информация об избранном звуке */
@@ -254,13 +277,14 @@
 /* Имя кота в избранном */
 .favorite-cat-name {
   font-size: 9px;
-  color: #9a9ea4;
+  color: rgba(0, 0, 0, 0.5);  /* полупрозрачный чёрный виден на любом фоне */
 }
 
 /* Название звука в избранном */
 .favorite-sound-name {
   font-size: 11px;
   font-weight: 700;
+  color: #15161a;  /* тёмный текст как в cat-sound-item */
 }
 
 /* Контейнер кнопок в избранном */
