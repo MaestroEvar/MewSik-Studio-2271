@@ -75,9 +75,12 @@
 /* Один блок звука кота: название + кнопки */
 .cat-sound-item {
   height: 34px;
-  background-color: #2f3137;
-  border: 1px solid #3a3d44;
-  border-left: 3px solid var(--role);
+  /* Фон блока полностью залит цветом роли кота.
+     Переменная --note-darken задаётся в JS и подмешивает чёрный:
+     чем выше нота, тем темнее оттенок (C самый яркий, дальше темнее). */
+  background-color: color-mix(in srgb, var(--role), #000 calc(var(--note-darken, 0) * 1%));
+  /* Рамка тем же цветом, но заметно темнее фона - даёт лёгкий контур */
+  border: 1px solid color-mix(in srgb, var(--role), #000 40%);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -86,8 +89,9 @@
   font-family: 'Courier New', Courier, monospace;
   font-size: 13px;
   font-weight: 700;
-  color: #c8ccd2;
-  transition: border-color 0.4s ease;
+  /* Тёмный текст для читаемости на ярком цветном фоне */
+  color: #15161a;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
   /* Звук можно перетащить на дорожку */
   cursor: grab;
   touch-action: none;
