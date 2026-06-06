@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import './PatTrackRow.css';
 import { useDroppable, useDraggable } from '@dnd-kit/core';
 import { editorStore } from '../../app/store/editorStore.js';
@@ -80,7 +80,7 @@ function DraggablePlacedBlock({ block, isBlockPlaying, onRemove }) {
   );
 }
 
-export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
+export default function PatTrackRow({ trackIndex }) {
   // 16 шагов дорожки (индексы 0..15)
   const totalSteps = Array.from({ length: 16 }, (_, i) => i);
 
@@ -90,6 +90,44 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
   // Текущий проигрываемый шаг - по нему подсвечиваем столбец и активные блоки
   const currentStep = editorStore((state) => state.currentStep);
   const myBlocks = placedBlocks.filter((b) => b.trackIndex === trackIndex);
+
+  // Громкость этой дорожки из стора и её сеттер
+  const volume = editorStore((state) => state.trackVolumes[trackIndex]);
+  const setTrackVolume = editorStore((state) => state.setTrackVolume);
+
+  // Локальный черновик поля громкости - чтобы можно было свободно печатать
+  const [volDraft, setVolDraft] = useState(String(volume));
+  // Если громкость изменилась извне (потянули ползунок) - подхватываем в поле
+  useEffect(() => { setVolDraft(String(volume)); }, [volume]);
+
+  // Ползунок: меняем громкость сразу
+  const handleSliderChange = (val) => setTrackVolume(trackIndex, Number(val));
+
+  // Ввод числа с клавиатуры: пускаем только цифры, валидное в стор сразу
+  const handleVolInput = (e) => {
+    const raw = e.target.value;
+    if (!/^\d*$/.test(raw)) return;
+    setVolDraft(raw);
+    const n = Number(raw);
+    if (raw !== '' && n >= 0 && n <= 100) {
+      setTrackVolume(trackIndex, n);
+    }
+  };
+
+  // Привести введённое к диапазону 0..100. 101 и больше становится 100.
+  const commitVolume = () => {
+    const n = Number(volDraft);
+    const clamped = volDraft === '' || Number.isNaN(n)
+      ? volume
+      : Math.max(0, Math.min(100, n));
+    setTrackVolume(trackIndex, clamped);
+    setVolDraft(String(clamped));
+  };
+
+  // Enter подтверждает ввод (и срабатывает замена 101 -> 100)
+  const handleVolKeyDown = (e) => {
+    if (e.key === 'Enter') e.target.blur();
+  };
 
   return (
     <div className="pat-track-row">
@@ -153,7 +191,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         </div>
       </div>
 
-      {/* Зона громкости. */}
+      {/* Зона громкости: ползунок, значок ноты и поле с числом. */}
       <div className="track-volume-zone">
         <input
           type="range"
@@ -161,10 +199,31 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
           min="0"
           max="100"
           value={volume}
-          onChange={(e) => onVolumeChange(e.target.value)}
-          style={{ '--val': `${volume}%` }}
+          onChange={(e) => handleSliderChange(e.target.value)}
+          style={{ '--val': volume / 100 }}
         />
-        <span className="volume-number">{volume}</span>
+
+        {/* Значок ноты - подсказка, что это настройки звука */}
+        <span className="volume-icon" title="Громкость дорожки">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none"
+               stroke="currentColor" strokeWidth="2"
+               strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18V5l12-2v13" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="16" r="3" />
+          </svg>
+        </span>
+
+        {/* Число громкости в контейнере, редактируется с клавиатуры */}
+        <input
+          type="text"
+          inputMode="numeric"
+          className="volume-input"
+          value={volDraft}
+          onChange={handleVolInput}
+          onBlur={commitVolume}
+          onKeyDown={handleVolKeyDown}
+        />
       </div>
 
     </div>

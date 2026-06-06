@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as Tone from 'tone';
 import { editorStore } from '../../app/store/editorStore.js';
-import { initAudio, loadBuffer, triggerSound, getBufferDuration, stopAllSounds } from './toneEngine.js';
+import { initAudio, loadBuffer, triggerSound, getBufferDuration, stopAllSounds, setTrackGain } from './toneEngine.js';
 
 // Кол-во шагов в паттерне (ряд из 16 клеток = 16 шестнадцатых нот)
 const STEP_COUNT = 16;
@@ -17,6 +17,7 @@ export function useSequencer() {
   const placedBlocks = editorStore((s) => s.placedBlocks);
   const setCurrentStep = editorStore((s) => s.setCurrentStep);
   const bpm = editorStore((s) => s.bpm);
+  const trackVolumes = editorStore((s) => s.trackVolumes);
 
   // Свежие блоки держим в ref - чтобы колбэк Transport всегда видел актуальные
   // данные, не пересоздавая сам цикл при каждой правке паттерна.
@@ -27,6 +28,13 @@ export function useSequencer() {
     // игры, сразу знал свою длительность и корректно растягивался на такт.
     placedBlocks.forEach((b) => loadBuffer(b.sound));
   }, [placedBlocks]);
+
+  // Громкости дорожек применяем к постоянным узлам громкости (0..100 -> усиление,
+  // 50 = 1.0 = звук как есть). Меняется плавно - без щелчков, и живёт даже когда
+  // не играем, поэтому громкость можно крутить в любой момент.
+  useEffect(() => {
+    trackVolumes.forEach((v, i) => setTrackGain(i, (v ?? 50) / 50));
+  }, [trackVolumes]);
 
   // Текущий bpm тоже держим в ref - по нему колбэк считает растяжение Pad.
   const bpmRef = useRef(Number(bpm) || DEFAULT_BPM);
@@ -79,7 +87,8 @@ export function useSequencer() {
             const dur = getBufferDuration(b.sound);
             rate = dur ? (dur / barSeconds) : 1;
           }
-          triggerSound(b.sound, time, rate);
+          // Звук вливается в узел громкости своей дорожки
+          triggerSound(b.sound, time, rate, b.trackIndex);
         });
 
         // Подсветку столбца синхронизируем с аудио через Tone.Draw
