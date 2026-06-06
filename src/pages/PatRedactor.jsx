@@ -27,8 +27,6 @@ const ROLE_COLORS = {
 export default function PatRedactor({ onBackToStudio }) {
   const tracks = ['Kick Drum', 'Snare', 'Closed Hat', 'Open Hat', 'Clap']; // Мусор
 
-  const [volumes, setVolumes] = useState([50, 50, 50, 50, 50]);
-
   // Данные звука, который сейчас тащим - для красивого превью под курсором
   const [activeDrag, setActiveDrag] = useState(null);
 
@@ -37,12 +35,6 @@ export default function PatRedactor({ onBackToStudio }) {
 
   // Подключаем движок проигрывания паттерна (реагирует на Play/Stop)
   useSequencer();
-
-  const handleVolumeChange = (index, newValue) => {
-    const updatedVolumes = [...volumes];
-    updatedVolumes[index] = Number(newValue);
-    setVolumes(updatedVolumes);
-  };
 
   // Сенсор с порогом 6px: клик по кнопкам play/star не запускает перетаскивание,
   // драг начинается только если зажать и потянуть.
@@ -115,8 +107,6 @@ export default function PatRedactor({ onBackToStudio }) {
                   <PatTrackRow
                     key={trackIndex}
                     trackIndex={trackIndex}
-                    volume={volumes[trackIndex]}
-                    onVolumeChange={(val) => handleVolumeChange(trackIndex, val)}
                   />
                 ))}
               </div>

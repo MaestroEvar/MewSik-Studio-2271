@@ -31,7 +31,7 @@ function getSpanForCategory(category) {
 }
 
 // Проверка: помещается ли блок шириной span на дорожке trackIndex,
-//  ignoreId - блок, который игнорируем (например при замене самого себя).
+// начиная со step. ignoreId - блок, который игнорируем (например при замене самого себя).
 function rangeIsFree(blocks, trackIndex, step, span, ignoreId = null) {
   // Не вылезаем за правый край дорожки
   if (step + span > STEP_COUNT) return false;
@@ -54,7 +54,7 @@ function rangeIsFree(blocks, trackIndex, step, span, ignoreId = null) {
 }
 
 export const editorStore = create((set, get) => ({
-  bpm: 60,
+  bpm: 80,
   isPlaying: false,
   // Текущий проигрываемый шаг секвенсора (0..15). -1 - ничего не играет.
   // По нему дорожки подсвечивают активный столбец.
@@ -64,12 +64,23 @@ export const editorStore = create((set, get) => ({
   selectedBlockId: null,
 
   // Размещённые на дорожках блоки звуков.
-  // Каждый имеет структуру: { id, trackIndex, step, span, label, sound, category, noteDarken }
+  // Каждый: { id, trackIndex, step, span, label, sound, category, noteDarken }
   placedBlocks: [],
+
+  // Громкость каждой из дорожек (0..100). 50 - это как звуки звучат фактически
+  // (без усиления и ослабления). Ниже 50 тише, выше 50 громче.
+  trackVolumes: Array.from({ length: TRACK_COUNT }, () => 50),
 
   setBpm: (newBpm) => set({ bpm: newBpm }),
   setIsPlaying: (isPlaying) => set({ isPlaying }),
   setCurrentStep: (currentStep) => set({ currentStep }),
+
+  // Установить громкость одной дорожки
+  setTrackVolume: (trackIndex, value) => {
+    const next = [...get().trackVolumes];
+    next[trackIndex] = value;
+    set({ trackVolumes: next });
+  },
   setTracks: (tracks) => set({ tracks }),
   setBlocks: (blocks) => set({ blocks }),
   setSelectedBlockId: (selectedBlockId) => set({ selectedBlockId }),
@@ -79,12 +90,16 @@ export const editorStore = create((set, get) => ({
     }),
 
   // Размещение звука на дорожке через drag-and-drop.
-  //   - Pad: ставим только если все 16 клеток свободны, иначе ничего.
+  // payload: { trackIndex, step, label, sound, category }
+  // Правила:
+  //   - Pad (span 4): ставим только если все 4 клетки свободны, иначе ничего.
   //   - Обычный звук (span 1): заменяем блок, который уже стоит в этой клетке.
   placeBlock: ({ trackIndex, step, label, sound, category, noteDarken = 0 }) => {
     const span = getSpanForCategory(category);
     const current = get().placedBlocks;
 
+    // Прижимаем step к допустимому диапазону, чтобы блок не вылез за край.
+    // Для Pad (span 16) это всегда 0 - его можно бросить в любую клетку дорожки.
     const safeStep = Math.max(0, Math.min(step, STEP_COUNT - span));
 
     if (span > 1) {
@@ -124,7 +139,7 @@ export const editorStore = create((set, get) => ({
     if (!block) return;
 
     const span = block.span;
-    // Прижимаем step
+    // Прижимаем step (для Pad всегда 0 - переедет на любую дорожку целиком)
     const safeStep = Math.max(0, Math.min(step, STEP_COUNT - span));
 
     // Остальные блоки без перемещаемого

@@ -17,6 +17,25 @@
     border-bottom: 1px solid #333;
 }
 
+/* Контейнер для треков и полосы воспроизведения */
+.timeline_body {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Полоса воспроизведения */
+.playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #ffffff;
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
 /* Один блок в шапке с номером и делением интервалов на 1/16*/
 .header_block {
     flex: 1;
@@ -72,7 +91,7 @@
 .timeline_tracks {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    height: 100%;
 }
 
 /* Один трек(дорожка) */

@@ -1,5 +1,7 @@
 import './TimeLine.css';
 import React, { useState, useRef } from 'react';
+import PlayHead from './PlayHead';
+import { useSequencer } from '../../audio/engine/useSequencer.js';
 
 const tracks = [
     'Track1', 'Track2', 'Track3', 'Track4', 'Track5',
@@ -143,6 +145,8 @@ export default function TimeLine({ selectedPattern, onClearSelection }) {
         return currentAbsolute >= hoverAbsolute && currentAbsolute < patternEnd;
     };
 
+    useSequencer();
+
     return (
         <div className="app-timeline" onClick={handleTimelineClick} ref={timelineRef}>
             {selectedPattern && (
@@ -169,98 +173,103 @@ export default function TimeLine({ selectedPattern, onClearSelection }) {
                 ))}
             </div>
 
-            <div className='timeline_tracks' ref={tracksContainerRef}>
-                {tracks.map((trackName, trackIndex) => (
-                    <div key={trackIndex} className='timeline_track'>
-                        <div className='track_label'>
-                            <span className='track_number'>{trackIndex + 1}</span>
-                        </div>
-
-                        {/* Контейнер для блоков и паттернов */}
-                        <div className='track_content'>
-                            {/* Слой с блоками (сетка) */}
-                            <div className='track_blocks'>
-                                {Array.from({ length: blocks }, (_, blockIndex) => (
-                                    <div
-                                        key={blockIndex}
-                                        className={`track_block ${blockIndex % 4 === 0 ? 'beat_start' : ''} ${selectedPattern ? 'has-selection' : ''}`}
-                                        onMouseMove={(e) => handleBlockMouseMove(trackIndex, blockIndex, e)}
-                                        onMouseLeave={handleBlockMouseLeave}
-                                        onClick={(e) => handleBlockClick(trackIndex, blockIndex, e)}
-                                        onContextMenu={(e) => {
-                                            e.preventDefault();
-                                            // Удаление всех паттернов в этом блоке
-                                            const newPatterns = {...patterns};
-                                            if (newPatterns[trackIndex]) {
-                                                const keysToDelete = [];
-                                                Object.keys(newPatterns[trackIndex]).forEach(key => {
-                                                    const pattern = newPatterns[trackIndex][key];
-                                                    const pStartBlock = pattern.position.startBlock;
-                                                    const pEndBlock = Math.floor((pattern.position.startBlock * subdivisions + pattern.position.startSub + pattern.position.length - 1) / subdivisions);
-                                                    if (blockIndex >= pStartBlock && blockIndex <= pEndBlock) {
-                                                        keysToDelete.push(key);
-                                                    }
-                                                });
-                                                keysToDelete.forEach(key => delete newPatterns[trackIndex][key]);
-                                                if (Object.keys(newPatterns[trackIndex]).length === 0) {
-                                                    delete newPatterns[trackIndex];
-                                                }
-                                                setPatterns(newPatterns);
-                                            }
-                                        }}
-                                    >
-                                        {/* Суб-деления для визуальной сетки и ховера */}
-                                        <div className="sub_divisions_container">
-                                            {Array.from({ length: subdivisions }, (_, subIndex) => {
-                                                const patternData = getPatternAtSub(trackIndex, blockIndex, subIndex);
-                                                const isHoverPreview = isInHoverZone(trackIndex, blockIndex, subIndex) && !patternData;
-                                                
-                                                return (
-                                                    <div
-                                                        key={subIndex}
-                                                        className={`sub_division ${isHoverPreview ? 'hover_preview' : ''} ${patternData ? 'occupied' : ''}`}
-                                                        style={{
-                                                            width: `${100 / subdivisions}%`,
-                                                            height: '100%',
-                                                            ...(isHoverPreview && { backgroundColor: selectedPattern.color + '20' })
-                                                        }}
-                                                    />
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                ))}
+            <div className='timeline_body'>
+                <div className='timeline_tracks' ref={tracksContainerRef}>
+                    {tracks.map((trackName, trackIndex) => (
+                        <div key={trackIndex} className='timeline_track'>
+                            <div className='track_label'>
+                                <span className='track_number'>{trackIndex + 1}</span>
                             </div>
 
-                            {/* Слой с паттернами (поверх сетки) */}
-                            <div className='track_patterns_layer'>
-                                {Object.entries(patterns[trackIndex] || {}).map(([patternKey, pattern]) => {
-                                    const isSelected = selectedPattern && pattern.id === selectedPattern.id;
-                                    const startPercent = ((pattern.position.startBlock * subdivisions + pattern.position.startSub) / (blocks * subdivisions)) * 100;
-                                    const widthPercent = (pattern.position.length / (blocks * subdivisions)) * 100;
-                                    
-                                    return (
+                            {/* Контейнер для блоков и паттернов */}
+                            <div className='track_content'>
+                                {/* Слой с блоками (сетка) */}
+                                <div className='track_blocks'>
+                                    {Array.from({ length: blocks }, (_, blockIndex) => (
                                         <div
-                                            key={patternKey}
-                                            className={`placed_pattern_full ${isSelected ? 'selected' : ''}`}
-                                            style={{
-                                                backgroundColor: pattern.color,
-                                                left: `${startPercent}%`,
-                                                width: `${widthPercent}%`
-                                            }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleRemovePattern(trackIndex, patternKey);
+                                            key={blockIndex}
+                                            className={`track_block ${blockIndex % 4 === 0 ? 'beat_start' : ''} ${selectedPattern ? 'has-selection' : ''}`}
+                                            onMouseMove={(e) => handleBlockMouseMove(trackIndex, blockIndex, e)}
+                                            onMouseLeave={handleBlockMouseLeave}
+                                            onClick={(e) => handleBlockClick(trackIndex, blockIndex, e)}
+                                            onContextMenu={(e) => {
+                                                e.preventDefault();
+                                                // Удаление всех паттернов в этом блоке
+                                                const newPatterns = {...patterns};
+                                                if (newPatterns[trackIndex]) {
+                                                    const keysToDelete = [];
+                                                    Object.keys(newPatterns[trackIndex]).forEach(key => {
+                                                        const pattern = newPatterns[trackIndex][key];
+                                                        const pStartBlock = pattern.position.startBlock;
+                                                        const pEndBlock = Math.floor((pattern.position.startBlock * subdivisions + pattern.position.startSub + pattern.position.length - 1) / subdivisions);
+                                                        if (blockIndex >= pStartBlock && blockIndex <= pEndBlock) {
+                                                            keysToDelete.push(key);
+                                                        }
+                                                    });
+                                                    keysToDelete.forEach(key => delete newPatterns[trackIndex][key]);
+                                                    if (Object.keys(newPatterns[trackIndex]).length === 0) {
+                                                        delete newPatterns[trackIndex];
+                                                    }
+                                                    setPatterns(newPatterns);
+                                                }
                                             }}
                                         >
-                                            {pattern.name}
+                                            {/* Суб-деления для визуальной сетки и ховера */}
+                                            <div className="sub_divisions_container">
+                                                {Array.from({ length: subdivisions }, (_, subIndex) => {
+                                                    const patternData = getPatternAtSub(trackIndex, blockIndex, subIndex);
+                                                    const isHoverPreview = isInHoverZone(trackIndex, blockIndex, subIndex) && !patternData;
+                                                    
+                                                    return (
+                                                        <div
+                                                            key={subIndex}
+                                                            className={`sub_division ${isHoverPreview ? 'hover_preview' : ''} ${patternData ? 'occupied' : ''}`}
+                                                            style={{
+                                                                width: `${100 / subdivisions}%`,
+                                                                height: '100%',
+                                                                ...(isHoverPreview && { backgroundColor: selectedPattern.color + '20' })
+                                                            }}
+                                                        />
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
-                                    );
-                                })}
+                                    ))}
+                                </div>
+
+                                {/* Слой с паттернами (поверх сетки) */}
+                                <div className='track_patterns_layer'>
+                                    {Object.entries(patterns[trackIndex] || {}).map(([patternKey, pattern]) => {
+                                        const isSelected = selectedPattern && pattern.id === selectedPattern.id;
+                                        const startPercent = ((pattern.position.startBlock * subdivisions + pattern.position.startSub) / (blocks * subdivisions)) * 100;
+                                        const widthPercent = (pattern.position.length / (blocks * subdivisions)) * 100;
+                                        
+                                        return (
+                                            <div
+                                                key={patternKey}
+                                                className={`placed_pattern_full ${isSelected ? 'selected' : ''}`}
+                                                style={{
+                                                    backgroundColor: pattern.color,
+                                                    left: `${startPercent}%`,
+                                                    width: `${widthPercent}%`
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleRemovePattern(trackIndex, patternKey);
+                                                }}
+                                            >
+                                                {pattern.name}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+
+                {/* Полоса воспроизведения поверх всех треков */}
+                <PlayHead />
             </div>
         </div>
     );

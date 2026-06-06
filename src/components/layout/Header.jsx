@@ -2,7 +2,16 @@ import React from 'react';
 import './Header.css';
 import PatBpmCounter from './PatBpmCounter';
 import catLogo from '../sprites/boss.png';
+import { editorStore } from '../../app/store/editorStore.js';
+
 export default function Header() {
+  const isPlaying = editorStore((s) => s.isPlaying);          // Берем isPlaying из editorStore
+  const setIsPlaying = editorStore((s) => s.setIsPlaying);    // Функция переключения из editorStore
+
+  const handlePlayToggle = () => {                            // Переключение воспроизведения
+    setIsPlaying(!isPlaying);
+  };
+
   return (
     <header className="app-header">
       
@@ -26,12 +35,19 @@ export default function Header() {
 
       {/* Центр - Кнопка воспроизведения */}
       <div className="header-center">
-        <button className="play-button" title="Play">
-
-          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-            <polygon points="8,5 19,12 8,19" />
-          </svg>
-          <span> PLAY</span>
+        <button className="play-button" title="Play" onClick={handlePlayToggle}>
+          {/* Иконка меняется в зависимости от состояния */}
+          {isPlaying ? (
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" />
+              <rect x="14" y="4" width="4" height="16" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+              <polygon points="8,5 19,12 8,19" />
+            </svg>
+          )}
+          <span>{isPlaying ? 'STOP' : 'PLAY'}</span>
         </button>
       </div>
 

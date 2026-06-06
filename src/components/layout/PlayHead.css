@@ -1,0 +1,23 @@
+/* Полоса воспроизведения */
+.playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #ffffff;
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+/* Полоса должна быть видна на всю высоту всех треков */
+.timeline_tracks {
+    position: relative;
+}
+  
+/* Первый трек — playhead выходит за его границы */
+.timeline_track:first-child .playhead {
+    /* Растягиваем на высоту всех 10 треков через viewport или calc */
+    height: 1000%; /* 10 треков */
+    top: 0;
+}
