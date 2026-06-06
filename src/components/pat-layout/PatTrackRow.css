@@ -40,7 +40,7 @@
   color: var(--txt-dim);
 }
 
-/* Сетка нот из 16 колонок. relative - чтобы слой блоков лёг поверх. */
+/* Сетка нот из 16 колонок. relative - чтобы слой блоков лёг поверх */
 .track-steps-grid {
   position: relative;
   display: grid;
@@ -53,9 +53,7 @@
   border-radius: 4px;
 }
 
-/* Слой размещённых блоков. Лежит поверх клеток и повторяет ИХ грид-разметку
-   один в один (те же 16 колонок, тот же gap и padding), поэтому блоки
-   попадают ровно в клетки и ничего не сдвигают. */
+/* Слой размещённых блоков. Лежит поверх клеток и повторяет ИХ грид-разметку */
 .placed-blocks-layer {
   position: absolute;
   inset: 0;
@@ -78,7 +76,7 @@
   transition: background 0.12s ease, box-shadow 0.12s ease;
 }
 
-/* Чередование групп по 4 шага: едва заметная разница светлоты */
+/* Чередование групп по 4 шага*/
 .step-accent {
   background: var(--st-cell-2);
 }
@@ -87,7 +85,7 @@
   background: var(--st-cell);
 }
 
-/* Сильная доля (1-й шаг каждой четверти) - тонкая янтарная засечка слева */
+/* Сильная доля (1-й шаг каждой четверти)*/
 .beat-start {
   border-left: 2px solid var(--amber-d);
 }
@@ -98,15 +96,14 @@
   box-shadow: inset 0 0 0 1px var(--amber-d);
 }
 
-/* Клетка под перетаскиваемым звуком - подсвечивается зелёным/янтарным */
+/* Клетка под перетаскиваемым звуком */
 .cell-over {
   background: #45484f !important;
   box-shadow: inset 0 0 0 2px var(--amber) !important;
 }
 
 /* Размещённый блок звука. Лежит в слое блоков, занимает span колонок
-   через grid-column (задаётся инлайн). pointer-events возвращаем, чтобы
-   по блоку можно было кликнуть (удаление), хотя сам слой их отключает. */
+   через grid-column. */
 .placed-block {
   grid-row: 1;
   height: 36px;
@@ -119,8 +116,7 @@
   justify-content: center;
   padding: 0 4px;
   overflow: hidden;
-  /* Блок полностью залит цветом роли с тем же затемнением по ноте,
-     что и в меню кота - оттенки совпадают один в один. */
+  /* Блок полностью залит цветом роли с тем же затемнением по ноте */
   background: color-mix(in srgb, var(--role), #000 calc(var(--note-darken, 0) * 1%));
   border: 1.5px solid color-mix(in srgb, var(--role), #000 40%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
@@ -132,8 +128,7 @@
   filter: brightness(1.15);
 }
 
-/* Подпись блока. Фон теперь яркий цветной, поэтому текст тёмный -
-   так же, как в меню кота, чтобы читался на любой ноте. */
+/* Подпись блока.*/
 .placed-block-label {
   font-family: 'Courier New', Courier, monospace;
   font-size: 11px;
@@ -149,9 +144,7 @@
   opacity: 0.4;
 }
 
-/* Граница доли каждые 4 шага. Раньше тут был margin-right, который съедал
-   ширину клетки и сдвигал блоки - убрали. Теперь это просто визуальная
-   засечка через box-shadow справа, которая НЕ меняет размер клетки. */
+/* Граница доли каждые 4 шага. */
 .quarter-border {
   box-shadow: inset -2px 0 0 var(--amber-d);
 }
@@ -165,9 +158,7 @@
   padding: 0 2px;
 }
 
-/* Кошачий ползунок - такой же как в LineSettings на главной странице.
-   Тонкая дорожка с янтарной заливкой пройденной части (наша палитра),
-   бегунок - PNG-спрайт с котом. */
+/* Кошачий ползунок*/
 .volume-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -175,7 +166,6 @@
   height: 4px;
   margin: 0;
   cursor: pointer;
-  /* Слева от бегунка дорожка залита янтарём по --val, справа - тёмный жёлоб */
   background:
     linear-gradient(var(--amber), var(--amber)) 0 / var(--val, 50%) 100% no-repeat,
     var(--st-line);
@@ -189,7 +179,7 @@
   appearance: none;
   width: 25px;
   height: 25px;
-  background-image: url('../sprites/cat_slider_sprite.png');
+  background-image: url('../sprites/cat_slider_pat_pg_orange.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -202,7 +192,7 @@
   appearance: none;
   width: 25px;
   height: 25px;
-  background-image: url('../sprites/cat_slider_sprite.png');
+  background-image: url('../sprites/cat_slider_pat_pg_orange.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
