@@ -25,13 +25,13 @@ const TRACK_COUNT = 5;
 const STEP_COUNT = 16;
 
 // Сколько клеток занимает звук в зависимости от роли кота.
-// Pad звуки длинные - занимают 4 клетки, остальные - 1.
+// Pad звуки тянутся на весь такт - занимают все 16 клеток, остальные - 1.
 function getSpanForCategory(category) {
-  return category === 'Pad' ? 4 : 1;
+  return category === 'Pad' ? 16 : 1;
 }
 
 // Проверка: помещается ли блок шириной span на дорожке trackIndex,
-// начиная со step. ignoreId - блок, который игнорируем (например при замене самого себя).
+//  ignoreId - блок, который игнорируем (например при замене самого себя).
 function rangeIsFree(blocks, trackIndex, step, span, ignoreId = null) {
   // Не вылезаем за правый край дорожки
   if (step + span > STEP_COUNT) return false;
@@ -54,18 +54,22 @@ function rangeIsFree(blocks, trackIndex, step, span, ignoreId = null) {
 }
 
 export const editorStore = create((set, get) => ({
-  bpm: 80,
+  bpm: 60,
   isPlaying: false,
+  // Текущий проигрываемый шаг секвенсора (0..15). -1 - ничего не играет.
+  // По нему дорожки подсвечивают активный столбец.
+  currentStep: -1,
   tracks: [],
   blocks: [],
   selectedBlockId: null,
 
   // Размещённые на дорожках блоки звуков.
-  // Каждый: { id, trackIndex, step, span, label, sound, category, noteDarken }
+  // Каждый имеет структуру: { id, trackIndex, step, span, label, sound, category, noteDarken }
   placedBlocks: [],
 
   setBpm: (newBpm) => set({ bpm: newBpm }),
   setIsPlaying: (isPlaying) => set({ isPlaying }),
+  setCurrentStep: (currentStep) => set({ currentStep }),
   setTracks: (tracks) => set({ tracks }),
   setBlocks: (blocks) => set({ blocks }),
   setSelectedBlockId: (selectedBlockId) => set({ selectedBlockId }),
@@ -75,22 +79,22 @@ export const editorStore = create((set, get) => ({
     }),
 
   // Размещение звука на дорожке через drag-and-drop.
-  // payload: { trackIndex, step, label, sound, category }
-  // Правила:
-  //   - Pad (span 4): ставим только если все 4 клетки свободны, иначе ничего.
+  //   - Pad: ставим только если все 16 клеток свободны, иначе ничего.
   //   - Обычный звук (span 1): заменяем блок, который уже стоит в этой клетке.
   placeBlock: ({ trackIndex, step, label, sound, category, noteDarken = 0 }) => {
     const span = getSpanForCategory(category);
     const current = get().placedBlocks;
 
+    const safeStep = Math.max(0, Math.min(step, STEP_COUNT - span));
+
     if (span > 1) {
       // Длинный Pad звук - строгая проверка: все клетки диапазона должны быть свободны
-      if (!rangeIsFree(current, trackIndex, step, span)) {
+      if (!rangeIsFree(current, trackIndex, safeStep, span)) {
         return; // Заняты - ничего не делаем
       }
       const newBlock = {
         id: Date.now() + Math.random(),
-        trackIndex, step, span, label, sound, category, noteDarken,
+        trackIndex, step: safeStep, span, label, sound, category, noteDarken,
       };
       set({ placedBlocks: [...current, newBlock] });
       return;
@@ -101,15 +105,45 @@ export const editorStore = create((set, get) => ({
       if (b.trackIndex !== trackIndex) return true;
       const bStart = b.step;
       const bEnd = b.step + b.span;
-      const overlap = step < bEnd && bStart < step + 1;
+      const overlap = safeStep < bEnd && bStart < safeStep + 1;
       return !overlap; // оставляем только непересекающиеся
     });
 
     const newBlock = {
       id: Date.now() + Math.random(),
-      trackIndex, step, span, label, sound, category, noteDarken,
+      trackIndex, step: safeStep, span, label, sound, category, noteDarken,
     };
     set({ placedBlocks: [...cleaned, newBlock] });
+  },
+
+  // Перемещение уже размещённого блока на другую клетку (drag готового блока).
+  // Сохраняем все его данные, меняем только дорожку и шаг.
+  moveBlock: ({ blockId, trackIndex, step }) => {
+    const current = get().placedBlocks;
+    const block = current.find((b) => b.id === blockId);
+    if (!block) return;
+
+    const span = block.span;
+    // Прижимаем step
+    const safeStep = Math.max(0, Math.min(step, STEP_COUNT - span));
+
+    // Остальные блоки без перемещаемого
+    const others = current.filter((b) => b.id !== blockId);
+
+    if (span > 1) {
+      // Pad: переезжает, только если на новой дорожке весь диапазон свободен
+      if (!rangeIsFree(others, trackIndex, safeStep, span)) return;
+      set({ placedBlocks: [...others, { ...block, trackIndex, step: safeStep }] });
+      return;
+    }
+
+    // Обычный блок: на новой клетке вытесняем то, что там стояло
+    const cleaned = others.filter((b) => {
+      if (b.trackIndex !== trackIndex) return true;
+      const overlap = safeStep < b.step + b.span && b.step < safeStep + 1;
+      return !overlap;
+    });
+    set({ placedBlocks: [...cleaned, { ...block, trackIndex, step: safeStep }] });
   },
 
   // Удалить один размещённый блок по id

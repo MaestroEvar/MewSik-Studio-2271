@@ -5,6 +5,7 @@ import PatTrackRow from '../components/pat-layout/PatTrackRow';
 import SequencerControls from '../components/pat-layout/SequencerControls';
 import Library from '../components/pat-layout/Library';
 import { editorStore } from '../app/store/editorStore.js';
+import { useSequencer } from '../audio/engine/useSequencer.js';
 import {
   DndContext,
   DragOverlay,
@@ -32,6 +33,10 @@ export default function PatRedactor({ onBackToStudio }) {
   const [activeDrag, setActiveDrag] = useState(null);
 
   const placeBlock = editorStore((state) => state.placeBlock);
+  const moveBlock = editorStore((state) => state.moveBlock);
+
+  // Подключаем движок проигрывания паттерна (реагирует на Play/Stop)
+  useSequencer();
 
   const handleVolumeChange = (index, newValue) => {
     const updatedVolumes = [...volumes];
@@ -54,20 +59,29 @@ export default function PatRedactor({ onBackToStudio }) {
     const { active, over } = event;
     if (!over) return; // бросили мимо дорожек
 
-    const sound = active.data.current;       // данные звука (label, sound, category)
+    const data = active.data.current;        // данные перетаскиваемого (звук или готовый блок)
     const cell = over.data.current;          // данные клетки (trackIndex, step)
-    if (!sound || !cell) return;
+    if (!data || !cell) return;
 
-    // Передаём в стор: он сам решит по правилам (Pad на 4 клетки строго,
-    // обычный звук с заменой того что было)
-    placeBlock({
-      trackIndex: cell.trackIndex,
-      step: cell.step,
-      label: sound.label,
-      sound: sound.sound,
-      category: sound.category,
-      noteDarken: sound.noteDarken,
-    });
+    if (data.type === 'placed') {
+      // Перенос уже вставленного блока на новую клетку
+      moveBlock({
+        blockId: data.blockId,
+        trackIndex: cell.trackIndex,
+        step: cell.step,
+      });
+    } else {
+      // Вставка нового звука из меню/избранного. Стор сам применит правила
+      // (Pad на всю дорожку строго, обычный звук с заменой того что было).
+      placeBlock({
+        trackIndex: cell.trackIndex,
+        step: cell.step,
+        label: data.label,
+        sound: data.sound,
+        category: data.category,
+        noteDarken: data.noteDarken,
+      });
+    }
   };
 
   return (

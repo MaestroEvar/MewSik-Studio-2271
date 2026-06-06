@@ -1,31 +1,64 @@
 import React from 'react';
 import './SequencerControls.css';
+import PatBpmCounter from './PatBpmCounter';
+import { editorStore } from '../../app/store/editorStore.js';
+import { initAudio } from '../../audio/engine/toneEngine.js';
 
 // Панель управления над дорожками секвенсора.
-// Заполняет пространство между шапкой и сеткой, держит Play и Save.
-// Пока кнопки чисто визуальные - логику подключим позже.
+// Слева подпись секции, по центру счётчик BPM и кнопка Play/Stop,
+// справа кнопка Save. Save пока чисто визуальная.
 export default function SequencerControls() {
+  // Состояние проигрывания берём из глобального стора
+  const isPlaying = editorStore((state) => state.isPlaying);
+  const setIsPlaying = editorStore((state) => state.setIsPlaying);
+
+  // Переключатель Play/Stop. Аудио-контекст запускаем именно тут,
+  // по жесту пользователя - иначе браузер не даст играть звук.
+  const handlePlayToggle = async () => {
+    if (isPlaying) {
+      setIsPlaying(false);
+    } else {
+      await initAudio();
+      setIsPlaying(true);
+    }
+  };
+
   return (
     <div className="seq-controls">
 
       {/* Левая часть: подпись секции */}
       <div className="seq-controls-title">
         <span className="seq-title-bar" />
-        <span className="seq-title-text">Рабочее поле</span>
+        <span className="seq-title-text">Work Field</span>
       </div>
 
-      {/* Правая часть: кнопки управления */}
-      <div className="seq-controls-buttons">
+      {/* Центр: счётчик BPM слева и главная кнопка Play/Stop */}
+      <div className="seq-controls-center">
+        <PatBpmCounter />
 
-        {/* Кнопка воспроизведения - основная, янтарная */}
-        <button className="seq-btn seq-btn-play" title="Воспроизвести">
-          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-            <polygon points="8,5 19,12 8,19" />
-          </svg>
-          <span>Play</span>
+        {/* Во время проигрывания кнопка превращается в Stop */}
+        <button
+          className={`seq-btn seq-btn-play ${isPlaying ? 'is-playing' : ''}`}
+          title={isPlaying ? 'Остановить' : 'Воспроизвести'}
+          onClick={handlePlayToggle}
+        >
+          {isPlaying ? (
+            // Иконка стоп - квадрат
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+              <rect x="6" y="6" width="12" height="12" rx="1" />
+            </svg>
+          ) : (
+            // Иконка play - треугольник
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+              <polygon points="8,5 19,12 8,19" />
+            </svg>
+          )}
+          <span>{isPlaying ? 'Stop' : 'Play'}</span>
         </button>
+      </div>
 
-        {/* Кнопка сохранения паттерна - вторичная */}
+      {/* Правая часть: кнопка сохранения паттерна (на своём месте) */}
+      <div className="seq-controls-buttons">
         <button className="seq-btn seq-btn-save" title="Сохранить паттерн">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none"
                stroke="currentColor" strokeWidth="2"
@@ -36,8 +69,8 @@ export default function SequencerControls() {
           </svg>
           <span>Save</span>
         </button>
-
       </div>
+
     </div>
   );
 }

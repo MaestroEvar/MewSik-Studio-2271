@@ -102,6 +102,12 @@
   box-shadow: inset 0 0 0 2px var(--amber) !important;
 }
 
+/* Активный столбец во время проигрывания - клетка загорается янтарём */
+.step-playing {
+  background: #4a4636;
+  box-shadow: inset 0 0 0 1px var(--amber), 0 0 8px rgba(217, 164, 65, 0.45);
+}
+
 /* Размещённый блок звука. Лежит в слое блоков, занимает span колонок
    через grid-column. */
 .placed-block {
@@ -126,6 +132,23 @@
 
 .placed-block:hover {
   filter: brightness(1.15);
+}
+
+/* Готовый блок можно перетаскивать на другую клетку */
+.placed-block {
+  cursor: grab;
+  touch-action: none;
+}
+
+/* Пока тащим - origin-блок делаем полупрозрачным (превью едет под курсором) */
+.placed-block.is-dragging {
+  opacity: 0.4;
+}
+
+/* Блок звучит сейчас - делаем его ярче и добавляем свечение */
+.placed-block.is-playing {
+  filter: brightness(1.4);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.35), 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 /* Подпись блока.*/
