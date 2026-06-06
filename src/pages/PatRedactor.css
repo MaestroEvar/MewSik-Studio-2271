@@ -116,16 +116,17 @@
   display: flex;
 }
 
-/* Превью блока звука под курсором при перетаскивании (DragOverlay) */
+/* Превью блока звука под курсором при перетаскивании (DragOverlay).
+   Цвет берётся из роли категории с тем же затемнением по ноте, что и в меню. */
 .drag-overlay-block {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 36px;
   padding: 0 12px;
-  background: #d9a441;
-  color: #1a1a1a;
-  border: 2px solid #1a1a1a;
+  background: color-mix(in srgb, var(--role, #d9a441), #000 calc(var(--note-darken, 0) * 1%));
+  color: #15161a;
+  border: 2px solid color-mix(in srgb, var(--role, #d9a441), #000 40%);
   border-radius: 4px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 12px;

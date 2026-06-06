@@ -61,7 +61,7 @@ export const editorStore = create((set, get) => ({
   selectedBlockId: null,
 
   // Размещённые на дорожках блоки звуков.
-  // Каждый: { id, trackIndex, step, span, label, sound, category }
+  // Каждый: { id, trackIndex, step, span, label, sound, category, noteDarken }
   placedBlocks: [],
 
   setBpm: (newBpm) => set({ bpm: newBpm }),
@@ -79,7 +79,7 @@ export const editorStore = create((set, get) => ({
   // Правила:
   //   - Pad (span 4): ставим только если все 4 клетки свободны, иначе ничего.
   //   - Обычный звук (span 1): заменяем блок, который уже стоит в этой клетке.
-  placeBlock: ({ trackIndex, step, label, sound, category }) => {
+  placeBlock: ({ trackIndex, step, label, sound, category, noteDarken = 0 }) => {
     const span = getSpanForCategory(category);
     const current = get().placedBlocks;
 
@@ -90,7 +90,7 @@ export const editorStore = create((set, get) => ({
       }
       const newBlock = {
         id: Date.now() + Math.random(),
-        trackIndex, step, span, label, sound, category,
+        trackIndex, step, span, label, sound, category, noteDarken,
       };
       set({ placedBlocks: [...current, newBlock] });
       return;
@@ -107,7 +107,7 @@ export const editorStore = create((set, get) => ({
 
     const newBlock = {
       id: Date.now() + Math.random(),
-      trackIndex, step, span, label, sound, category,
+      trackIndex, step, span, label, sound, category, noteDarken,
     };
     set({ placedBlocks: [...cleaned, newBlock] });
   },

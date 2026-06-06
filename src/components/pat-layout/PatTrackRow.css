@@ -1,5 +1,5 @@
 
-/* палитра дорожек */
+/* Локальные переменные палитры дорожек */
 .pat-track-row {
   --st-bg:      #1e2024;  /* фон ряда */
   --st-panel:   #26282d;  /* панель клеток */
@@ -119,10 +119,10 @@
   justify-content: center;
   padding: 0 4px;
   overflow: hidden;
-  /* Цвет берётся из роли категории: яркая рамка + полупрозрачная заливка */
-  background: color-mix(in srgb, var(--role) 22%, #1e2024);
-  border: 1.5px solid var(--role);
-  border-left: 4px solid var(--role);
+  /* Блок полностью залит цветом роли с тем же затемнением по ноте,
+     что и в меню кота - оттенки совпадают один в один. */
+  background: color-mix(in srgb, var(--role), #000 calc(var(--note-darken, 0) * 1%));
+  border: 1.5px solid color-mix(in srgb, var(--role), #000 40%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   transition: filter 0.12s ease, transform 0.12s ease;
   z-index: 2;
@@ -132,16 +132,16 @@
   filter: brightness(1.15);
 }
 
-/* Подпись блока: ИмяКота-Нота */
+/* Подпись блока. Фон теперь яркий цветной, поэтому текст тёмный -
+   так же, как в меню кота, чтобы читался на любой ноте. */
 .placed-block-label {
   font-family: 'Courier New', Courier, monospace;
   font-size: 11px;
   font-weight: 700;
-  color: #fff;
+  color: #15161a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 /* Перетаскиваемый звук в сайдбаре во время drag - полупрозрачный */
@@ -165,7 +165,9 @@
   padding: 0 2px;
 }
 
-/* Кошачий ползунок */
+/* Кошачий ползунок - такой же как в LineSettings на главной странице.
+   Тонкая дорожка с янтарной заливкой пройденной части (наша палитра),
+   бегунок - PNG-спрайт с котом. */
 .volume-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -173,6 +175,7 @@
   height: 4px;
   margin: 0;
   cursor: pointer;
+  /* Слева от бегунка дорожка залита янтарём по --val, справа - тёмный жёлоб */
   background:
     linear-gradient(var(--amber), var(--amber)) 0 / var(--val, 50%) 100% no-repeat,
     var(--st-line);
@@ -180,7 +183,7 @@
   outline: none;
 }
 
-/* ползунок-кот*/
+/* Бегунок-кот: картинка-спрайт вместо стандартного кружочка */
 .volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -208,6 +211,7 @@
   cursor: pointer;
 }
 
+/* При наведении кот слегка увеличивается */
 .volume-slider::-webkit-slider-thumb:hover {
   transform: scale(1.3);
 }

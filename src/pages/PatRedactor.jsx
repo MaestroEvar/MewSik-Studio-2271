@@ -14,6 +14,15 @@ import {
 } from '@dnd-kit/core';
 import './PatRedactor.css';
 
+// Цвета ролей котов - те же, что в меню и в дорожках.
+// Нужны, чтобы превью под курсором красить в цвет категории звука.
+const ROLE_COLORS = {
+  Lead:  '#a78bfa',
+  Bass:  '#f472b6',
+  Pad:   '#34d399',
+  Drums: '#fbbf24',
+};
+
 export default function PatRedactor({ onBackToStudio }) {
   const tracks = ['Kick Drum', 'Snare', 'Closed Hat', 'Open Hat', 'Clap']; // Мусор
 
@@ -57,6 +66,7 @@ export default function PatRedactor({ onBackToStudio }) {
       label: sound.label,
       sound: sound.sound,
       category: sound.category,
+      noteDarken: sound.noteDarken,
     });
   };
 
@@ -110,7 +120,14 @@ export default function PatRedactor({ onBackToStudio }) {
       {/* Превью блока под курсором во время перетаскивания */}
       <DragOverlay dropAnimation={null}>
         {activeDrag ? (
-          <div className="drag-overlay-block">{activeDrag.label}</div>
+          <div
+            className="drag-overlay-block"
+            style={{
+              // Тот же цвет роли и то же затемнение по ноте, что и в меню
+              '--role': ROLE_COLORS[activeDrag.category] || '#d9a441',
+              '--note-darken': activeDrag.noteDarken || 0,
+            }}
+          >{activeDrag.label}</div>
         ) : null}
       </DragOverlay>
     </DndContext>

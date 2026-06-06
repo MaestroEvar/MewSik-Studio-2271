@@ -3,7 +3,8 @@ import './PatTrackRow.css';
 import { useDroppable } from '@dnd-kit/core';
 import { editorStore } from '../../app/store/editorStore.js';
 
-
+// Цвета ролей котов - те же, что в библиотеке и нотах паттернов.
+// Используются для окраски размещённых блоков по категории звука.
 const ROLE_COLORS = {
   Lead:  '#a78bfa',
   Bass:  '#f472b6',
@@ -11,7 +12,7 @@ const ROLE_COLORS = {
   Drums: '#fbbf24',
 };
 
-// Одна клетка-шаг, которая может принимать перетаскиваемый звук
+// Одна клетка-шаг, которая может принимать перетаскиваемый звук (useDroppable).
 function StepCell({ trackIndex, step, className }) {
   const { setNodeRef, isOver } = useDroppable({
     id: `cell-${trackIndex}-${step}`,
@@ -44,7 +45,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         <span className="track-number-value">{String(trackIndex + 1).padStart(2, '0')}</span>
       </div>
 
-      {/* Сетка дорожки. Два совмещённых слоя с одинаковой грид-разметкой:
+      {/* Сетка дорожки. Два совмещённых слоя с ОДИНАКОВОЙ грид-разметкой:
           1) слой клеток-дропзон (16 равных колонок),
           2) слой размещённых блоков поверх него (position: absolute).
           Блоки не участвуют в раскладке клеток, поэтому ничего не сдвигается. */}
@@ -54,7 +55,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         {totalSteps.map((step) => {
           // Каждые 4 шага - граница доли
           const isQuarterEnd = (step + 1) % 4 === 0 && step !== 15;
-          // Чередуем группы по 4 шага по светлоте
+          // Чередуем группы по 4 шага по светлоте для читаемости такта
           const isGroupAccent = Math.floor(step / 4) % 2 === 0;
           // Первый шаг каждой доли помечаем как сильную долю
           const isBeatStart = step % 4 === 0;
@@ -84,6 +85,8 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
               style={{
                 gridColumn: `${block.step + 1} / span ${block.span}`,
                 '--role': ROLE_COLORS[block.category] || '#d9a441',
+                // Затемнение по ноте - точно как в меню кота
+                '--note-darken': block.noteDarken || 0,
               }}
               title={`${block.label} (клик чтобы удалить)`}
               onClick={() => removeBlock(block.id)}
@@ -94,7 +97,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         </div>
       </div>
 
-      {/* Зона громкости.*/}
+      {/* Зона громкости. Кошачий ползунок - такой же как в LineSettings. */}
       <div className="track-volume-zone">
         <input
           type="range"
