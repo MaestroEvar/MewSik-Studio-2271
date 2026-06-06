@@ -7,9 +7,9 @@ import { useDraggable } from '@dnd-kit/core';
 import { db } from '../../db/db.js';
 
 
-// Один перетаскиваемый звук кота в меню.
-// Тело блока тащится (useDraggable), а кнопки play/star отдельно кликаются:
-// им гасим pointerDown, чтобы нажатие не запускало перетаскивание.
+{/* Один перетаскиваемый звук кота в меню.
+ Тело блока тащится (useDraggable), а кнопки play/star отдельно кликаются:
+ им гасим pointerDown, чтобы нажатие не запускало перетаскивание.*/}
 function DraggableSound({ sound, catName, category, isPlaying, onPlay, isFav, onFav }) {
   // Подпись блока на дорожке. У барабанщика звуки длинные (kick, snare...),
   // поэтому для Drums пишем только имя звука без имени кота.
@@ -23,13 +23,10 @@ function DraggableSound({ sound, catName, category, isPlaying, onPlay, isFav, on
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `sound-${catName}-${sound.id}`,
     data: {
-      // Эти данные прилетят в onDragEnd при дропе на клетку
       type: 'sound',
       label,
       sound: sound.sound,
       category,
-      // Затемнение тащим вместе со звуком, чтобы превью под курсором
-      // и вставленный блок были точно того же оттенка, что и в меню
       noteDarken,
     },
   });

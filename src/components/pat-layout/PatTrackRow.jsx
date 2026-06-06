@@ -97,7 +97,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         </div>
       </div>
 
-      {/* Зона громкости. Кошачий ползунок - такой же как в LineSettings. */}
+      {/* Зона громкости. */}
       <div className="track-volume-zone">
         <input
           type="range"
