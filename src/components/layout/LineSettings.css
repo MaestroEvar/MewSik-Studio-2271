@@ -1,7 +1,7 @@
 /*Основной контейнер*/
 .app-linesettings {
   grid-area: settings;
-  background-color: #111111;
+  background-color: #141414;
   display: flex;
   flex-direction: column;
   overflow: visible;
@@ -33,7 +33,8 @@
 
 .settings-toggle-btn-minus:hover {
   background: #5433cc44;
-  color: #7c3aed
+  color: #7c3aed;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 
@@ -106,7 +107,6 @@
 .slider-label {
   font-size: 11px;
   color: #cccccc;
-  font-family: 'Courier New', monospace;
 }
 
 .slider-input-row {
@@ -116,7 +116,6 @@
 }
 
 .slider-value {
-  font-family: 'Courier New', monospace;
   font-size: 11px;
   color: #7755ff;
   min-width: 36px;
@@ -248,7 +247,6 @@
 
 .eq-fader-label {
   font-size: 10px;
-  font-family: 'Courier New', monospace;
   color: #888888;
   text-transform: uppercase;
   letter-spacing: 0.08em;

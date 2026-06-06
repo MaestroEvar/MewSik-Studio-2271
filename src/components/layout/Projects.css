@@ -2,7 +2,6 @@
 .app-projects {
   grid-area: projects;
   background-color: #141414;
-  border-right: 2px solid #000000;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -58,8 +57,8 @@
 }
 
 .projects-toggle-btn-minus:hover {
-  background: #2a2a2a;
-  color: #ffffff;
+  background: #5433cc44;
+  color: #7c3aed
 }
 
 /* Кнопка разворота*/

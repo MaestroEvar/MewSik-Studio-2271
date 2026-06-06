@@ -1,8 +1,8 @@
 /* Базовые стили для хедера */
 .app-header {
   grid-area: header;
-  background-color: #e0e0e0;
-  border-bottom: 2px solid #000000;
+  background-color: #141414;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.25);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -91,22 +91,33 @@
 }
 
 .play-button {
-  background: none;
+  font-weight: 700;
+  font-size: 12px;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
   border: none;
   cursor: pointer;
-  color: #222222;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
-  border-radius: 50%;
-  transition: transform 0.1s ease, color 0.2s;
+  border-radius: 8px;
+  letter-spacing: 1px;
+  box-shadow: 0 3px 12px rgba(124, 58, 237, 0.45);
+  transition: background-color 0.12s ease, transform 0.12s ease, color 0.2s;
 }
 
 /* Анимация нажатия и наведения для кнопки Play */
 .play-button:hover {
-  color: #000000;
-  transform: scale(1.15); /* Кнопка слегка увеличивается при наведении */
+  background-color: #883eff;
+  box-shadow: 0 0 12px #7c3aed55; /* Легкое свечение при наведении */
+}
+
+.play-button:active {
+  scale: 0.95;
+  background-color: #7a39ee;
+  box-shadow: none; /* Убираем свечение при клике */
 }
 
 .play-button:active {
@@ -126,7 +137,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #333333;
+  color: #7a39ee;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,7 +146,7 @@
 }
 
 .icon-button:hover {
-  color: #000000;
+  color: #ac79ff;
   transform: translateY(-1px);
 }
 

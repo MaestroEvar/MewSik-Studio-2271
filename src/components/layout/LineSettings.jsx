@@ -83,10 +83,10 @@ export default function LineSettings() {
 
       <div className={`settings-content ${collapsed ? 'hidden' : ''}`}>
         <div className="settings-section">
-          <span className="settings-section-title">Настройка звука</span>
-          <HSlider label="Общая громкость трека" tooltip="объяснение.txt" defaultValue={0} />
-          <HSlider label="Параметр 2" tooltip="объяснение.txt" defaultValue={0} />
-          <HSlider label="Параметр 3" tooltip="объяснение.txt" defaultValue={0} />
+          <span className="settings-section-title">Sound settings</span>
+          <HSlider label="Track Volume" tooltip="объяснение.txt" defaultValue={0} />
+          <HSlider label="Parameter 2" tooltip="объяснение.txt" defaultValue={0} />
+          <HSlider label="Parameter 3" tooltip="объяснение.txt" defaultValue={0} />
         </div>
 
         <div className="eq-section">
@@ -95,9 +95,9 @@ export default function LineSettings() {
             <HelpIcon text={`Эквалайзер делит звуковой сигнал на три диапазона частот с помощью фильтров. Каждый ползунок управляет громкостью своего диапазона: поднимаете ползунок — диапазон звучит громче, опускаете — тише. Итоговый сигнал складывается из обработанных низких, средних и высоких частот.`} />
           </div>
           <div className="eq-faders">
-            <VSlider label="Низкие"/>
-            <VSlider label="Средние"/>
-            <VSlider label="Высокие"/>
+            <VSlider label="LOW"/>
+            <VSlider label="MID"/>
+            <VSlider label="HIGH"/>
           </div>
         </div>
       </div>

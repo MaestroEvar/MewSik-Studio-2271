@@ -2,7 +2,6 @@
 .app-patterns {
   grid-area: patterns;
   background-color: #141414;
-  border-top: 2px solid #000000;
   padding: 10px 12px;
   display: flex;
   flex-direction: column;

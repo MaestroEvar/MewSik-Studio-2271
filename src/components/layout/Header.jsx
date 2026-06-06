@@ -28,9 +28,10 @@ export default function Header() {
       <div className="header-center">
         <button className="play-button" title="Play">
 
-          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
             <polygon points="8,5 19,12 8,19" />
           </svg>
+          <span> PLAY</span>
         </button>
       </div>
 

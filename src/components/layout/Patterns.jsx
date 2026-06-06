@@ -40,7 +40,7 @@ function MiniGrid({ steps, color }) {
 }
 
 export default function Patterns({ onOpenColors, selectedPatternId, onSelectPattern }) {
-  // Безопасный обработчик выбора паттерна
+  // обработчик выбора паттерна
   const handleSelectPattern = (pattern) => {
     if (onSelectPattern) {
       onSelectPattern(pattern);
@@ -50,12 +50,12 @@ export default function Patterns({ onOpenColors, selectedPatternId, onSelectPatt
   return (
     <div className="app-patterns">
 
-      {/* ===== КНОПКА СОЗДАТЬ ===== */}
+      {/* кнопка создания паттерна*/}
       <button className="patterns-create-btn" onClick={onOpenColors}>
-        Создать паттерн +
+        Create pattern
       </button>
 
-      {/* ===== ПОЛЕ С ПАТТЕРНАМИ ===== */}
+      {/*поле с паттернами*/}
       <div className="patterns-field">
 
         {PLACEHOLDER_PATTERNS.length === 0 ? (
