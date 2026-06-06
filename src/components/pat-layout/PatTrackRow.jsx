@@ -3,8 +3,7 @@ import './PatTrackRow.css';
 import { useDroppable } from '@dnd-kit/core';
 import { editorStore } from '../../app/store/editorStore.js';
 
-// Цвета ролей котов - те же, что в библиотеке и нотах паттернов.
-// Используются для окраски размещённых блоков по категории звука.
+
 const ROLE_COLORS = {
   Lead:  '#a78bfa',
   Bass:  '#f472b6',
@@ -12,7 +11,7 @@ const ROLE_COLORS = {
   Drums: '#fbbf24',
 };
 
-// Одна клетка-шаг, которая может принимать перетаскиваемый звук (useDroppable).
+// Одна клетка-шаг, которая может принимать перетаскиваемый звук
 function StepCell({ trackIndex, step, className }) {
   const { setNodeRef, isOver } = useDroppable({
     id: `cell-${trackIndex}-${step}`,
@@ -45,7 +44,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         <span className="track-number-value">{String(trackIndex + 1).padStart(2, '0')}</span>
       </div>
 
-      {/* Сетка дорожки. Два совмещённых слоя с ОДИНАКОВОЙ грид-разметкой:
+      {/* Сетка дорожки. Два совмещённых слоя с одинаковой грид-разметкой:
           1) слой клеток-дропзон (16 равных колонок),
           2) слой размещённых блоков поверх него (position: absolute).
           Блоки не участвуют в раскладке клеток, поэтому ничего не сдвигается. */}
@@ -55,7 +54,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         {totalSteps.map((step) => {
           // Каждые 4 шага - граница доли
           const isQuarterEnd = (step + 1) % 4 === 0 && step !== 15;
-          // Чередуем группы по 4 шага по светлоте для читаемости такта
+          // Чередуем группы по 4 шага по светлоте
           const isGroupAccent = Math.floor(step / 4) % 2 === 0;
           // Первый шаг каждой доли помечаем как сильную долю
           const isBeatStart = step % 4 === 0;
@@ -95,7 +94,7 @@ export default function PatTrackRow({ trackIndex, volume, onVolumeChange }) {
         </div>
       </div>
 
-      {/* Зона громкости. Кошачий ползунок - такой же как в LineSettings. */}
+      {/* Зона громкости.*/}
       <div className="track-volume-zone">
         <input
           type="range"

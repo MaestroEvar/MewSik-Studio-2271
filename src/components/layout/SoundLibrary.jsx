@@ -18,6 +18,18 @@ import padaImg from '../sprites/sound_cats/pads/pad_pada_cat.png';
 import peterImg from '../sprites/sound_cats/pads/pad_peter_cat.png';
 import antonImg from '../sprites/sound_cats/drums/drums_anton.png';
 
+import earsLead  from '../sprites/ears_sprites/ear_lead.png';
+import earsBass  from '../sprites/ears_sprites/ear_bass.png';
+import earsPad   from '../sprites/ears_sprites/ear_pad.png';
+import earsDrums from '../sprites/ears_sprites/ear_drums.png';
+
+const earsMap = {
+    Lead:  earsLead,
+    Bass:  earsBass,
+    Pad:   earsPad,
+    Drums: earsDrums,
+};
+
 const categories = ['Lead', 'Bass', 'Pad', 'Drums'];
 
 export default function SoundLibrary() {
@@ -147,17 +159,20 @@ export default function SoundLibrary() {
                                         e.preventDefault();
                                         setSelectedCat(cat);
                                     }} className='card'>
-                                    {/* Контейнер с картинкой кота */}
+                                    {/* Контейнер с картинкой кота. Рамка красится цветом роли. */}
                                     <div className='card-cat-frame'>
-                                        {/*рисованые ушки*/}
-                                        <svg className='card-cat-ear card-cat-ear--left' viewBox='0 0 36 38' xmlns='http://www.w3.org/2000/svg'>
-                                            <path className='ear-outer' d='M-6,38 L18,0 L42,38 Z' />
-                                            <path className='ear-inner' d='M2,36 L18,9 L35,36 Z' />
-                                        </svg>
-                                        <svg className='card-cat-ear card-cat-ear--right' viewBox='0 0 36 38' xmlns='http://www.w3.org/2000/svg'>
-                                            <path className='ear-outer' d='M-6,38 L18,0 L42,38 Z' />
-                                            <path className='ear-inner' d='M2,36 L18,9 L35,36 Z' />
-                                        </svg>
+                                        {/* Левое ухо (оригинал) */}
+                                        <img
+                                            className='card-cat-ears-sprite left'
+                                            src={earsMap[category]}
+                                            alt=""
+                                        />
+                                        {/* Правое ухо (отражённая копия) */}
+                                        <img
+                                            className='card-cat-ears-sprite right'
+                                            src={earsMap[category]}
+                                            alt=""
+                                        />
                                         <img 
                                             src={cat.png_path} 
                                             alt={cat.name}

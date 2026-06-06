@@ -75,33 +75,27 @@
     overflow: visible;
 }
 
-/* ушки */
-.card-cat-ear {
+/* PNG спрайт ушек — общая база */
+.card-cat-ears-sprite {
     position: absolute;
-    top: -34px;
-    width: 50px;
-    height: 38px;
+    top: -50px;
+    width: 60px;           /* фиксированная ширина вместо % */
     pointer-events: none;
-    transition: transform 0.15s ease;
+    aspect-ratio: auto;
 }
 
-.card-cat-ear--left  { left: 18px; }
-.card-cat-ear--right { right: 18px; }
-
-.card-cat-ear .ear-outer {
-    fill: var(--role);
-    stroke: none;
+/* Левое ухо (оригинал) */
+.card-cat-ears-sprite.left {
+    left: 5px;            /* фиксированный отступ слева */
+    transform: none;
 }
 
-
-.card-cat-ear .ear-inner {
-    fill: rgba(0, 0, 0, 0.45);
+/* Правое ухо (отражённое) */
+.card-cat-ears-sprite.right {
+    right: 5px;           /* фиксированный отступ справа */
+    transform: scaleX(-1);
 }
 
-/*поднятие ушей при наведении на карточку*/
-.sound_library .card:hover .card-cat-ear {
-    transform: translateY(-5px);
-}
 
 .sound_library .card:hover .card-cat-frame {
     background: rgba(0, 0, 0, 0.15);
@@ -109,7 +103,7 @@
 }
 
 /* Картинка кота */
-.sound_library .card img {
+.sound_library .card img:not(.card-cat-ears-sprite) {
     width: 80%;
     border-radius: 6px;
     display: block;

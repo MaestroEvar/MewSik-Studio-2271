@@ -1,4 +1,4 @@
-/* Контейнер блока PROJECTS ===== */
+/* блок проектов*/
 .app-projects {
   grid-area: projects;
   background-color: #141414;
@@ -12,7 +12,6 @@
   transition: border-right 0.3s ease;
 }
 
-/* Когда свёрнуто — убираем границу и разрешаем overflow чтобы кнопка была видна */
 .app-projects.collapsed {
   border-right: none;
   overflow: visible;
@@ -31,8 +30,8 @@
   display: none;
 }
 
-/* Кнопка сворачивания "-" */
-/* Тонкая полоска-шапка с кнопкой сворачивания */
+
+/* блок с кнопкой сворачивания  */
 .projects-topbar {
   display: flex;
   align-items: center;
@@ -63,7 +62,7 @@
   color: #ffffff;
 }
 
-/* Кнопка разворота с иконкой ноты — выглядывает из свёрнутого контейнера наружу */
+/* Кнопка разворота*/
 .projects-toggle-btn-note {
   position: absolute;
   top: 10px;
@@ -86,7 +85,7 @@
   background: #5433cc44;
 }
 
-/* Шапка: кнопка + счётчик ===== */
+/* шапка: кнопка + счётчик*/
 .create_project {
   padding: 10px 10px 0 10px;
   border-bottom: 1.5px solid #2a2a2a;
@@ -96,7 +95,7 @@
   gap: 0;
 }
 
-/* Кнопка "create project +" */
+/* Кнопка создания проектов*/
 .create_project a {
   text-decoration: none;
   user-select: none;

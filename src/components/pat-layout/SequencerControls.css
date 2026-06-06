@@ -1,8 +1,3 @@
-/* ============================================================
-   SequencerControls - панель над дорожками секвенсора
-   Та же студийная палитра: графит, сталь, янтарный акцент.
-   ============================================================ */
-
 .seq-controls {
   --st-panel:  #26282d;
   --st-line:   #15161a;
@@ -23,14 +18,14 @@
   border-radius: 5px;
 }
 
-/* ---- Заголовок секции ---- */
+/*Заголовок секции*/
 .seq-controls-title {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Янтарная вертикальная засечка-маркер слева от названия */
+/* полоса слева от названия панели */
 .seq-title-bar {
   width: 3px;
   height: 16px;
@@ -52,13 +47,13 @@
   color: var(--txt-dim);
 }
 
-/* ---- Кнопки управления ---- */
+/* Кнопки управления */
 .seq-controls-buttons {
   display: flex;
   gap: 8px;
 }
 
-/* Общая база кнопок: строгая, плоская, с тонкой гранью */
+/* Общая база кнопок*/
 .seq-btn {
   display: flex;
   align-items: center;
@@ -76,7 +71,7 @@
 
 .seq-btn:active { transform: translateY(1px); }
 
-/* Play - основная, янтарная заливка */
+/* Play - основная*/
 .seq-btn-play {
   background: var(--amber);
   border: 1px solid var(--amber-d);
@@ -86,7 +81,7 @@
   background: #e6b454;
 }
 
-/* Save - вторичная, тёмная с янтарным контуром при наведении */
+/* Save - вторичная*/
 .seq-btn-save {
   background: #2f3137;
   border: 1px solid var(--st-edge);

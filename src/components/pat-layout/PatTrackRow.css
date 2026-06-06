@@ -1,5 +1,5 @@
 
-/* Локальные переменные палитры дорожек */
+/* палитра дорожек */
 .pat-track-row {
   --st-bg:      #1e2024;  /* фон ряда */
   --st-panel:   #26282d;  /* панель клеток */
@@ -165,9 +165,7 @@
   padding: 0 2px;
 }
 
-/* Кошачий ползунок - такой же как в LineSettings на главной странице.
-   Тонкая дорожка с янтарной заливкой пройденной части (наша палитра),
-   бегунок - PNG-спрайт с котом. */
+/* Кошачий ползунок */
 .volume-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -175,7 +173,6 @@
   height: 4px;
   margin: 0;
   cursor: pointer;
-  /* Слева от бегунка дорожка залита янтарём по --val, справа - тёмный жёлоб */
   background:
     linear-gradient(var(--amber), var(--amber)) 0 / var(--val, 50%) 100% no-repeat,
     var(--st-line);
@@ -183,7 +180,7 @@
   outline: none;
 }
 
-/* Бегунок-кот: картинка-спрайт вместо стандартного кружочка */
+/* ползунок-кот*/
 .volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -211,7 +208,6 @@
   cursor: pointer;
 }
 
-/* При наведении кот слегка увеличивается */
 .volume-slider::-webkit-slider-thumb:hover {
   transform: scale(1.3);
 }
