@@ -18,36 +18,44 @@
 }
 
 .logo-container {
+    
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: 8px;
     transition: transform 0.2s ease;
 }
 
 .logo-container:hover {
     transform: scale(1.08);
-    filter: drop-shadow(0 0 6px rgba(196, 196, 196, 0.7))
-            drop-shadow(0 0 12px rgba(74, 85, 90, 0.4));
 }
 
+/* Картинка кота — теперь фон вместо <img> */
 .cat-img {
     width: 32px;
     height: 32px;
-    object-fit: contain;
+    background-image: url('../sprites/boss.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+    cursor: pointer;
+}
+
+/* При нажатии (зажатии) меняем картинку */
+.cat-img:active {
+    background-image: url('../sprites/pat_pat_boss.gif');
 }
 
 .pat-header-title {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Alegreya', serif;
     font-size: 0.95rem;
     font-weight: 700;
     margin: 0;
     color: #cbcbcb;
     letter-spacing: 2px;
-    
 }
 
 /* Правая часть: иконки */
@@ -71,7 +79,6 @@
     font-size: 15px;
     transition: all 0.18s ease;
     filter: drop-shadow(0 0 6px #0d0e0f);
-    
 }
 
 .pat-icon-button:hover {

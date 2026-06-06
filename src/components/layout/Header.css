@@ -7,14 +7,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  user-select: none; /* Запрещаем случайное выделение текста мышкой */
+  user-select: none;
 }
-
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 24px; /* Расстояние между котиком и BPM */
+  gap: 24px;
 }
 
 /* Контейнер для кота-логотипа */
@@ -27,9 +26,19 @@
 }
 
 .cat-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  width: 32px;
+  height: 32px;
+  background-image: url('../sprites/boss.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+  cursor: pointer;
+}
+
+/* При зажатии меняем картинку на гифку */
+.cat-img:active {
+  background-image: url('../sprites/pat_pat_boss.gif');
 }
 
 /* Запасной вариант, если картинка кота еще не подгрузилась */
@@ -62,7 +71,7 @@
 }
 
 .bpm-value {
-  font-family: 'Courier New', Courier, monospace; /* шрифт для цифр */
+  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
   font-size: 16px;
   min-width: 32px;
@@ -80,11 +89,10 @@
 }
 
 .bpm-arrow:hover {
-  color: #000000; /* Стрелочки темнеют при наведении */
+  color: #000000;
 }
 
-
-/* Центр хедера*/
+/* Центр хедера */
 .header-center {
   display: flex;
   align-items: center;
@@ -108,31 +116,24 @@
   transition: background-color 0.12s ease, transform 0.12s ease, color 0.2s;
 }
 
-/* Анимация нажатия и наведения для кнопки Play */
 .play-button:hover {
   background-color: #883eff;
-  box-shadow: 0 0 12px #7c3aed55; /* Легкое свечение при наведении */
+  box-shadow: 0 0 12px #7c3aed55;
 }
 
 .play-button:active {
-  scale: 0.95;
+  transform: scale(0.95);
   background-color: #7a39ee;
-  box-shadow: none; /* Убираем свечение при клике */
+  box-shadow: none;
 }
 
-.play-button:active {
-  transform: scale(0.95); /* Эффект продавливания при клике */
-}
-
-
-/* Правая часть*/
+/* Правая часть */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 14px; /* Расстояние между системными кнопками */
+  gap: 14px;
 }
 
-/* Универсальный класс для всех иконок справа */
 .icon-button {
   background: none;
   border: none;
@@ -154,7 +155,6 @@
   transform: translateY(1px);
 }
 
-/* Стилизация текстового знака вопроса */
 .help-text {
   font-weight: bold;
   font-size: 18px;
@@ -162,7 +162,6 @@
   text-align: center;
 }
 
-/* Отдельный микро-отступ для меню, чтобы визуально сбалансировать край экрана */
 .menu-button {
   margin-left: 4px;
 }

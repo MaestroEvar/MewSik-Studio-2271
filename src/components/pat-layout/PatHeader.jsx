@@ -1,5 +1,4 @@
 import React from 'react';
-import catLogo from '../sprites/boss.png';
 import './PatHeader.css';
 
 export default function PatHeader() {
@@ -7,12 +6,7 @@ export default function PatHeader() {
     <header className="pat-header">
       <div className="pat-header-left">
         <div className="logo-container">
-          <img
-            src={catLogo}
-            alt="Mew Logo"
-            className="cat-img"
-            onError={(e) => e.target.style.display = 'none'}
-          />
+          <div className="cat-img"></div>  {/* <img> заменён на <div> */}
         </div>
         <h1 className="pat-header-title">Pattern Redactor</h1>
       </div>
