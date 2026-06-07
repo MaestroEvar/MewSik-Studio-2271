@@ -16,4 +16,12 @@ db.version(2).stores({
     favorites: '++id, soundId, soundName, catName, soundPath, catCategory'
 });
 
+// Сохранённые паттерны для главного редактора.
+// Поля-объекты (blocks, color) хранятся в записи, индексируем только id/name/createdAt.
+db.version(3).stores({
+    projects: '++id, name, updatedAt',
+    favorites: '++id, soundId, soundName, catName, soundPath, catCategory',
+    patterns: '++id, name, createdAt'
+});
+
 await dbSL.cats.clear();

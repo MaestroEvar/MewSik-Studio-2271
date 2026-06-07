@@ -294,7 +294,7 @@ export default function PatSidebar({ onBackToStudio }) {
                 onError={(e) => { e.target.src = cnf; }}
             />
         ) : (
-            <span>🐱 Кот не выбран</span>
+            <span>🐱 No cat selected </span>
         )}
       </div>
 
@@ -317,7 +317,7 @@ export default function PatSidebar({ onBackToStudio }) {
             />
         ))
       ) : (
-          <span className="cat-hint">Выберите кота</span>
+          <span className="cat-hint">Select a cat!</span>
       )}
 
       </div>
@@ -340,7 +340,7 @@ export default function PatSidebar({ onBackToStudio }) {
             />
           ))
         ) : (
-          <span className="favorites-empty-hint">Нажмите ☆ или перетащите звук</span>
+          <span className="favorites-empty-hint">Click ☆ or drag sound</span>
         )}
       </div>
 

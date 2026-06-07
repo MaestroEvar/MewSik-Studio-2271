@@ -178,7 +178,7 @@
   align-items: center;
   gap: 10px;
   height: 40px;
-  padding: 0 2px;
+  padding: 0 20px 0 2px;
 }
 
 /* Кошачий ползунок*/
@@ -190,13 +190,13 @@
   height: 4px;
   margin: 0;
   cursor: pointer;
-  /* Заливку тянем до ЛЕВОГО края бегунка. Так при 0 заливки нет вовсе (нет
-     торчащего кусочка слева), а при 100 она доходит ровно до кота и не вылезает
+  /* Заливку тянем до ЛЕВОГО края бегунка. Так при 0 заливки нет вовсе
+  , а при 100 она доходит ровно до кота и не вылезает
      справа. Бегунок ходит на (ширина_дорожки - размер_кота), отсюда и формула.
      --val - доля 0..1 (ставится в JS). */
   background:
     linear-gradient(var(--amber), var(--amber))
-      0 / calc(var(--val, 0.5) * (100% - var(--thumb-size))) 100% no-repeat,
+      0 / calc(var(--val, 0.5) * (110% - var(--thumb-size))) 100% no-repeat,
     var(--st-line);
   border-radius: 2px;
   outline: none;

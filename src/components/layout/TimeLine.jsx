@@ -1,6 +1,8 @@
 import './TimeLine.css';
 import React, { useState, useRef, useEffect } from 'react';
 import PlayHead from './PlayHead';
+import PatternPreview from './PatternPreview';
+import { getPatternBorderStyle } from './patternStyle.js';
 import { usePlayheadSequencer } from '../../audio/engine/playheadSequencer.js';
 import { editorStore } from '../../app/store/editorStore.js';
 
@@ -268,16 +270,20 @@ export default function TimeLine({ selectedPattern, onClearSelection, selectedPr
                                                 key={patternKey}
                                                 className={`placed_pattern_full ${isSelected ? 'selected' : ''}`}
                                                 style={{
-                                                    backgroundColor: pattern.color,
                                                     left: `${startPercent}%`,
-                                                    width: `${widthPercent}%`
+                                                    width: `${widthPercent}%`,
+                                                    backgroundColor: '#1f1f1f',
+                                                    // Рамка по типам котов внутри паттерна (цвет или градиент)
+                                                    ...getPatternBorderStyle(pattern.blocks, '#1f1f1f')
                                                 }}
+                                                title={pattern.name}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleRemovePattern(trackIndex, patternKey);
                                                 }}
                                             >
-                                                {pattern.name}
+                                                {/* Та же мини-копия, что и в карточке: 5 строк своих цветов */}
+                                                <PatternPreview blocks={pattern.blocks} />
                                             </div>
                                         );
                                     })}

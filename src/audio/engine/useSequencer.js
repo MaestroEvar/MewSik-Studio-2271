@@ -96,7 +96,7 @@ export function useSequencer() {
           if (!cancelled) setCurrentStep(stepIndex);
         }, time);
 
-        step += 1; // дойдя до 16, цикл сам начнётся заново (через % STEP_COUNT)
+        step += 1; // дойдя до 16, цикл сам начнётся заново
       }, '16n');
 
       Tone.Transport.start();

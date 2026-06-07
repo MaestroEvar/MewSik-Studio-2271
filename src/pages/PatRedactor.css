@@ -33,6 +33,7 @@
 .sequencer-table {
   display: flex;
   flex-direction: column;
+  margin-right: 15px;
 }
 
 /* Правая зона */

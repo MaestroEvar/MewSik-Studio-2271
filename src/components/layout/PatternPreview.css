@@ -1,0 +1,21 @@
+/* Мини-копия паттерна: сетка 5 строк на 16 столбцов, заполняет контейнер */
+.pattern-preview {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 1px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Пустая клетка */
+.pattern-preview-cell {
+  border-radius: 1px;
+  background-color: #383838;
+}
+
+/* Занятая клетка - цвет приходит инлайном по категории блока */
+.pattern-preview-cell.filled {
+  border-radius: 1px;
+}

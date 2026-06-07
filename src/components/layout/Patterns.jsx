@@ -1,91 +1,70 @@
 import React from 'react';
 import './Patterns.css';
-
-/* Заглушки паттернов — потом заменим реальными данными из стора */
-const PLACEHOLDER_PATTERNS = [
-  {
-    id: 1,
-    name: 'Pattern 1',
-    /* Мини-превью: 16 шагов, 1 = активный, 0 = пустой */
-    grid: [1,0,0,0, 1,0,1,0, 0,0,1,0, 1,0,0,1,1,1,0,0, 0,0,1,1, 1,0,0,1, 0,1,1,0,1,1,0,0, 0,0,1,1, 1,0,0,1, 0,1,1,0,1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
-    color: '#a78bfa',
-  },
-  {
-    id: 2,
-    name: 'Pattern 2',
-    grid: [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
-    color: '#34d399',
-  },
-  {
-    id: 3,
-    name: 'Pattern 3',
-    grid: [1,1,0,0, 0,0,1,1, 1,0,0,1, 0,1,1,0,1,1,0,0, 0,0,1,1, 1,0,1,0, 1,0,1,0,1,0,1,0, 1,0,1,0, 1,0,0,0,1,1, 1,0,0,1,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,1,0,1,0, 1,0,1,0, 0,0,1,1, 1,0,0,1,],
-    color: '#fbbf24',
-  },
-];
-
-/* Мини-сетка 16 точек внутри блока */
-function MiniGrid({ steps, color }) {
-  return (
-    <div className="pattern-mini-grid">
-      {steps.map((active, i) => (
-        <div
-          key={i}
-          className={`pattern-mini-step ${active ? 'active' : ''}`}
-          style={active ? { backgroundColor: color } : {}}
-        />
-      ))}
-    </div>
-  );
-}
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db } from '../../db/db.js';
+import PatternPreview from './PatternPreview.jsx';
+import { getPatternBorderStyle } from './patternStyle.js';
 
 export default function Patterns({ onOpenColors, selectedPatternId, onSelectPattern }) {
-  // обработчик выбора паттерна
+  // Живой список сохранённых паттернов из Dexie - обновляется сам при сохранении/удалении
+  const patterns = useLiveQuery(() => db.patterns.toArray(), []) || [];
+
+  // Выбор паттерна (для размещения на таймлайне)
   const handleSelectPattern = (pattern) => {
-    if (onSelectPattern) {
-      onSelectPattern(pattern);
-    }
+    if (onSelectPattern) onSelectPattern(pattern);
+  };
+
+  // Удаление паттерна. stopPropagation - чтобы клик по крестику не выбирал карточку.
+  const handleDelete = async (e, id) => {
+    e.stopPropagation();
+    await db.patterns.delete(id);
   };
 
   return (
     <div className="app-patterns">
 
-      {/* кнопка создания паттерна*/}
+      {/* кнопка создания паттерна */}
       <button className="patterns-create-btn" onClick={onOpenColors}>
-        Create pattern
+        Create pattern +
       </button>
 
-      {/*поле с паттернами*/}
+      {/* поле с паттернами */}
       <div className="patterns-field">
 
-        {PLACEHOLDER_PATTERNS.length === 0 ? (
+        {patterns.length === 0 ? (
 
           /* Если паттернов нет */
           <div className="patterns-empty-hint">
             <span className="patterns-empty-icon">🎹</span>
-            <span>Паттернов пока нет.<br/>Нажмите кнопку выше!</span>
+            <span>No patterns found.<br/>Click the "Create Pattern" button.</span>
           </div>
 
         ) : (
 
           /* Список карточек */
           <div className="patterns-list">
-            {PLACEHOLDER_PATTERNS.map((pattern) => (
+            {patterns.map((pattern) => (
               <div
                 key={pattern.id}
                 className={`pattern-card ${selectedPatternId === pattern.id ? 'selected' : ''}`}
                 onClick={() => handleSelectPattern(pattern)}
-                style={{ '--card-accent': pattern.color }}
+                // Рамка отражает типы котов внутри паттерна (цвет или градиент)
+                style={getPatternBorderStyle(pattern.blocks, '#242424')}
               >
-                {/* Цветная полоска-акцент сверху карточки */}
-                <div className="pattern-card-bar" />
+                {/* Кнопка удаления паттерна */}
+                <button
+                  className="pattern-delete-btn"
+                  title="Удалить паттерн"
+                  onClick={(e) => handleDelete(e, pattern.id)}
+                >×</button>
 
-                {/* Мини-превью сетки 16 шагов */}
-                <MiniGrid steps={pattern.grid} color={pattern.color} />
-                
+                {/* Мини-копия паттерна: 5 строк, каждая своим цветом */}
+                <div className="pattern-card-preview">
+                  <PatternPreview blocks={pattern.blocks} />
+                </div>
+
                 {/* Название паттерна */}
                 <span className="pattern-card-name">{pattern.name}</span>
-
               </div>
             ))}
           </div>
