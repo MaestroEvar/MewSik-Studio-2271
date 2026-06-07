@@ -3,7 +3,7 @@ import './PatSidebar.css';
 import { editorStore } from '../../app/store/editorStore.js';
 import cnf from '../sprites/Cat_not_found.png';
 import { initAudio, playSound } from '../../audio/engine/toneEngine.js';
-import { useDraggable } from '@dnd-kit/core';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { db } from '../../db/db.js';
 
 
@@ -28,6 +28,7 @@ import { db } from '../../db/db.js';
       sound: sound.sound,
       category,
       noteDarken,
+      soundId: sound.id,
     },
   });
 
@@ -138,6 +139,10 @@ export default function PatSidebar({ onBackToStudio }) {
   const [favorites, setFavorites] = useState({});                           // Локальный визуал звёздочек (id -> true/false)
   const [favoriteList, setFavoriteList] = useState([]);                     // Список избранных звуков
 
+  const { setNodeRef: setFavDropRef, isOver: isFavOver } = useDroppable({   // Дроппабл зона для избранного
+    id: 'favorites-drop-zone',
+  });
+
   // Загружаем избранное при монтировании
   useEffect(() => {
     loadFavorites();
@@ -152,7 +157,7 @@ export default function PatSidebar({ onBackToStudio }) {
     }
     setPlayingId(null);
     loadFavorites();
-}, [selectedCat]);
+  }, [selectedCat]);
 
   const loadFavorites = async () => {                                    // Загрузка избранного из БД
     const favs = await db.favorites.toArray();
@@ -169,27 +174,27 @@ export default function PatSidebar({ onBackToStudio }) {
     ? `cat-role-${selectedCat.category.toLowerCase()}`
     : 'cat-role-none';
 
-  const toggleFavorite = async (sound) => {                               // Добавление/удаление из избранного
-    const existing = await db.favorites
-      .where('soundId').equals(sound.id)
-      .and(fav => fav.catName === selectedCat.name)                     // Добавь проверку имени кота
-      .first();
-
-    if (existing){
-      await db.favorites.delete(existing.id);
-    } else {
-      await db.favorites.add({
-        soundId : sound.id,
-        soundName: sound.name,
-        soundPath : sound.sound,
-        catName: selectedCat.name,
-        catCategory: selectedCat.category,
-        noteDarken: (sound.id - 1) * 6
-      });
-    }
-
-    await loadFavorites();
-};
+    const toggleFavorite = async (sound) => {                               // Добавление/удаление из избранного
+      const existing = await db.favorites
+        .where('soundId').equals(sound.id)
+        .and(fav => fav.catName === selectedCat.name)                     // Добавь проверку имени кота
+        .first();
+  
+      if (existing){
+        await db.favorites.delete(existing.id);
+      } else {
+        await db.favorites.add({
+          soundId : sound.id,
+          soundName: sound.name,
+          soundPath : sound.sound,
+          catName: selectedCat.name,
+          catCategory: selectedCat.category,
+          noteDarken: (sound.id - 1) * 6
+        });
+      }
+  
+      await loadFavorites();
+  };
 
   const removeFromFavorites = async (id) => {                             // Удаление из избранного
     // Останавливаем плеер если удаляемый звук играет
@@ -308,6 +313,7 @@ export default function PatSidebar({ onBackToStudio }) {
               onPlay={() => handlePlaySound(sound)}
               isFav={!!favorites[`${selectedCat.name}-${sound.id}`]}
               onFav={() => toggleFavorite(sound)}
+              
             />
         ))
       ) : (
@@ -319,7 +325,10 @@ export default function PatSidebar({ onBackToStudio }) {
       <div className="favorites-divider">Favorites</div>
 
       {/* Список избранных звуков */}
-      <div className="favorites-box">
+      <div 
+        className={`favorites-box ${isFavOver ? 'fav-drag-over' : ''}`}
+        ref={setFavDropRef}
+      >
         {favoriteList.length > 0 ? (
           favoriteList.map((fav) => (
             <DraggableFavorite
@@ -331,7 +340,7 @@ export default function PatSidebar({ onBackToStudio }) {
             />
           ))
         ) : (
-          <span className="favorites-empty-hint">Нажмите ☆ чтобы добавить звук</span>
+          <span className="favorites-empty-hint">Нажмите ☆ или перетащите звук</span>
         )}
       </div>
 

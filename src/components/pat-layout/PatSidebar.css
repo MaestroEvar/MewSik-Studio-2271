@@ -187,6 +187,13 @@
   overflow-y: auto; /* Если избранных много - разрешить скролл */
 }
 
+/* Подсветка избранного при перетаскивании */
+.favorites-box.fav-drag-over {
+  border-color: #fbbf24;
+  background-color: rgba(251, 191, 36, 0.1);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.3);
+}
+
 /* Стилизованный скроллбар для избранного */
 .favorites-box::-webkit-scrollbar {
   width: 4px;

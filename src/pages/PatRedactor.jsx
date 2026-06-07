@@ -14,6 +14,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import './PatRedactor.css';
+import { db } from '../db/db.js';
 
 // Цвета ролей котов - те же, что в меню и в дорожках.
 // Нужны, чтобы превью под курсором красить в цвет категории звука.
@@ -29,6 +30,7 @@ export default function PatRedactor({ onBackToStudio }) {
 
   // Данные звука, который сейчас тащим - для красивого превью под курсором
   const [activeDrag, setActiveDrag] = useState(null);
+  const [favKey, setFavKey] = useState(0);
 
   const placeBlock = editorStore((state) => state.placeBlock);
   const moveBlock = editorStore((state) => state.moveBlock);
@@ -48,12 +50,42 @@ export default function PatRedactor({ onBackToStudio }) {
     setActiveDrag(event.active.data.current);
   };
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = async (event) => {
     setActiveDrag(null);
     const { active, over } = event;
     if (!over) return; // бросили мимо дорожек
 
     const data = active.data.current;        // данные перетаскиваемого (звук или готовый блок)
+
+    if (over.id === 'favorites-drop-zone') {            // Если бросили звук в избранное
+      if (data && data.type === 'sound'){
+        if (active.id.startsWith('fav-')) {             // Если звук есть, то не добавляем
+          return;
+        }
+
+        const cat = editorStore.getState().selectedCat; // Добавляем звук в избранное
+        if (cat) {
+          const existing = await db.favorites           // Проверяем существует ли уже звук в избранном
+            .where('soundId').equals(data.soundId || 0)
+            .and(fav => fav.catName === cat.name)
+            .first();
+
+          if(!existing){                                // Если такого звука нет в избранном, добавляем
+            await db.favorites.add({
+              soundId: data.soundId || 0,
+              soundName: data.label.split('-').pop(),
+              soundPath: data.sound,
+              catName: cat.name,
+              catCategory: cat.category,
+              noteDarken: data.noteDarken || 0,
+            });
+          }
+          setFavKey(prev => prev + 1); // Триггерим перезагрузку избранного
+        }
+      }
+      return; 
+    }
+
     const cell = over.data.current;          // данные клетки (trackIndex, step)
     if (!data || !cell) return;
 
@@ -99,6 +131,7 @@ export default function PatRedactor({ onBackToStudio }) {
           <PatSidebar
             tracks={tracks}
             onBackToStudio={onBackToStudio}
+            key={favKey}
           />
 
           {/* 3. Правая часть экрана, разделенная на дорожки и библиотеку */}
