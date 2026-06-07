@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-// этот файл хранит в себе данные состояния: bpm песни, проигрывается ли она сейчас и т.д.
+// Этот файл хранит в себе данные состояния: bpm песни, проигрывается ли она сейчас и т.д.
 
 function generateCatSounds(cat) {
   if (!cat.sounds) return [];
@@ -42,7 +42,7 @@ function rangeIsFree(blocks, trackIndex, step, span, ignoreId = null) {
     if (ignoreId !== null && b.id === ignoreId) continue;
 
     const bStart = b.step;
-    const bEnd = b.step + b.span; // не включительно
+    const bEnd = b.step + b.span;
     const newStart = step;
     const newEnd = step + span;
 
@@ -67,6 +67,12 @@ export const editorStore = create((set, get) => ({
   // Каждый: { id, trackIndex, step, span, label, sound, category, noteDarken }
   placedBlocks: [],
 
+  // Звук, выбранный для вставки по клику (как выбор паттерна на таймлайне).
+  // null - ничего не выбрано. Хранит те же данные, что и при перетаскивании:
+  // { key, label, sound, category, noteDarken }. Поле key - уникальный ключ
+  // источника (звук кота или избранное), по нему подсвечиваем выбранный элемент.
+  selectedSound: null,
+
   // Громкость каждой из дорожек (0..100). 50 - это как звуки звучат фактически
   // (без усиления и ослабления). Ниже 50 тише, выше 50 громче.
   trackVolumes: Array.from({ length: TRACK_COUNT }, () => 50),
@@ -84,6 +90,22 @@ export const editorStore = create((set, get) => ({
   setTracks: (tracks) => set({ tracks }),
   setBlocks: (blocks) => set({ blocks }),
   setSelectedBlockId: (selectedBlockId) => set({ selectedBlockId }),
+
+  // Выбрать конкретный звук для вставки (срабатывает по долгому зажатию).
+  selectSound: (soundData) => set({ selectedSound: soundData }),
+
+  // Снять выбор только если кликнули по тому же выбранному звуку.
+  // Клик по невыбранному звуку ничего не делает.
+  unselectIfSame: (key) => {
+    const current = get().selectedSound;
+    if (current && current.key === key) {
+      set({ selectedSound: null });
+    }
+  },
+
+  // Принудительно снять выбор звука (например при уходе со страницы)
+  clearSelectedSound: () => set({ selectedSound: null }),
+
     setSelectedCat: (cat) => set({
       selectedCat: cat,
       selectedSounds: cat ? generateCatSounds(cat) : []
@@ -131,8 +153,7 @@ export const editorStore = create((set, get) => ({
     set({ placedBlocks: [...cleaned, newBlock] });
   },
 
-  // Перемещение уже размещённого блока на другую клетку (drag готового блока).
-  // Сохраняем все его данные, меняем только дорожку и шаг.
+  // Перемещение уже размещённого блока на другую клетку
   moveBlock: ({ blockId, trackIndex, step }) => {
     const current = get().placedBlocks;
     const block = current.find((b) => b.id === blockId);

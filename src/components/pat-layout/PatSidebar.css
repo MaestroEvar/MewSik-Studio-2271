@@ -104,6 +104,18 @@
   cursor: grabbing;
 }
 
+/* Выбранный для вставки звук кота - яркая светлая рамка и лёгкое свечение.
+   Так сразу видно, какой звук сейчас "заряжен" для клика по дорожкам.
+   Перетаскивание отключено, поэтому курсор обычный, а не "рука". */
+.cat-sound-item.is-selected,
+.cat-sound-item.is-selected:active {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9),
+              0 0 10px 1px color-mix(in srgb, var(--role), #000 0%);
+  transform: translateY(-1px);
+  cursor: default;
+}
+
 /* Контейнер для двух кнопок внутри блока звука */
 .cat-sound-btns {
   display: flex;
@@ -327,4 +339,14 @@
 
 .favorite-item:active {
   cursor: grabbing;
+}
+
+/* Выбранный для вставки избранный звук - та же светлая рамка, что и у звука кота */
+.favorite-item.is-selected,
+.favorite-item.is-selected:active {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9),
+              0 0 10px 1px color-mix(in srgb, var(--role, #6f747c), #000 0%);
+  transform: translateY(-1px);
+  cursor: default;
 }

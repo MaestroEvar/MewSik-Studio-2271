@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PatHeader from '../components/pat-layout/PatHeader';
 import PatSidebar from '../components/pat-layout/PatSidebar';
 import PatTrackRow from '../components/pat-layout/PatTrackRow';
@@ -34,6 +34,26 @@ export default function PatRedactor({ onBackToStudio }) {
 
   const placeBlock = editorStore((state) => state.placeBlock);
   const moveBlock = editorStore((state) => state.moveBlock);
+  const removeBlock = editorStore((state) => state.removeBlock); // для удаления блока за границей
+
+  // Ref на контейнер дорожек - по нему определяем, бросили ли блок за пределы.
+  const tracksTableRef = useRef(null);
+  // Последняя позиция курсора - dnd-kit не даёт её в dragEnd надёжно,
+  // поэтому отслеживаем сами через глобальный слушатель указателя.
+  const pointerRef = useRef({ x: 0, y: 0 });
+
+  // Запоминаем позицию курсора на каждое движение/нажатие указателя.
+  useEffect(() => {
+    const onPointer = (e) => {
+      pointerRef.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener('pointermove', onPointer);
+    window.addEventListener('pointerdown', onPointer);
+    return () => {
+      window.removeEventListener('pointermove', onPointer);
+      window.removeEventListener('pointerdown', onPointer);
+    };
+  }, []);
 
   const setIsPlaying = editorStore((s) => s.setIsPlaying);    // Управление воспроизведением
 
@@ -53,9 +73,26 @@ export default function PatRedactor({ onBackToStudio }) {
   const handleDragEnd = async (event) => {
     setActiveDrag(null);
     const { active, over } = event;
-    if (!over) return; // бросили мимо дорожек
 
     const data = active.data.current;        // данные перетаскиваемого (звук или готовый блок)
+
+    if (!over) {
+      // Бросили не на клетку и не в избранное. Если это уже размещённый блок
+      // и курсор оказался за пределами таблицы дорожек - удаляем блок.
+      if (data && data.type === 'placed') {
+        const table = tracksTableRef.current;
+        if (table) {
+          const rect = table.getBoundingClientRect();
+          const { x, y } = pointerRef.current;
+          const outside =
+            x < rect.left || x > rect.right || y < rect.top || y > rect.bottom;
+          if (outside) {
+            removeBlock(data.blockId);
+          }
+        }
+      }
+      return; // в остальных случаях оставляем как было
+    }
 
     if (over.id === 'favorites-drop-zone') {            // Если бросили звук в избранное
       if (data && data.type === 'sound'){
@@ -143,7 +180,7 @@ export default function PatRedactor({ onBackToStudio }) {
               {/* Панель управления над дорожками: Play и Save. */}
               <SequencerControls />
 
-              <div className="sequencer-table">
+              <div className="sequencer-table" ref={tracksTableRef}>
                 {tracks.map((trackName, trackIndex) => (
                   <PatTrackRow
                     key={trackIndex}

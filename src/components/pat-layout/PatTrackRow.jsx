@@ -13,7 +13,8 @@ const ROLE_COLORS = {
 };
 
 // Одна клетка-шаг, которая может принимать перетаскиваемый звук (useDroppable).
-function StepCell({ trackIndex, step, className }) {
+// Также по клику вставляет выбранный (через меню) звук - режим "выбрал и кликай".
+function StepCell({ trackIndex, step, className, onCellClick, isArmed }) {
   const { setNodeRef, isOver } = useDroppable({
     id: `cell-${trackIndex}-${step}`,
     data: { trackIndex, step }, // эти данные читаем в onDragEnd
@@ -22,14 +23,15 @@ function StepCell({ trackIndex, step, className }) {
   return (
     <div
       ref={setNodeRef}
-      className={`${className} ${isOver ? 'cell-over' : ''}`}
+      className={`${className} ${isOver ? 'cell-over' : ''} ${isArmed ? 'cell-armed' : ''}`}
       title={`Шаг ${step + 1}`}
+      onClick={() => onCellClick(trackIndex, step)}
     />
   );
 }
 
 // Уже размещённый блок. Его можно перетащить на другую клетку (useDraggable),
-// а кликом - удалить.
+// а кликом - удалить (всегда, даже когда в меню выбран звук для вставки).
 function DraggablePlacedBlock({ block, isBlockPlaying, onRemove }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `placed-${block.id}`,
@@ -55,6 +57,7 @@ function DraggablePlacedBlock({ block, isBlockPlaying, onRemove }) {
       draggedRef.current = false; // это был перенос, не удаляем
       return;
     }
+    // Клик по уже стоящему блоку удаляет его
     onRemove(block.id);
   };
 
@@ -90,6 +93,26 @@ export default function PatTrackRow({ trackIndex }) {
   // Текущий проигрываемый шаг - по нему подсвечиваем столбец и активные блоки
   const currentStep = editorStore((state) => state.currentStep);
   const myBlocks = placedBlocks.filter((b) => b.trackIndex === trackIndex);
+
+  // Выбранный для вставки по клику звук и метод вставки.
+  // Если звук выбран - клик по клетке ставит его (как клик по таймлайну).
+  const selectedSound = editorStore((state) => state.selectedSound);
+  const placeBlock = editorStore((state) => state.placeBlock);
+
+  // Клик по клетке: вставляем выбранный звук, если он есть.
+  // Звук остаётся выбранным - можно ставить его сколько угодно раз,
+  // включая Pad (он тоже остаётся выбранным до повторного клика по нему в меню).
+  const handleCellClick = (tIndex, step) => {
+    if (!selectedSound) return; // ничего не выбрано - обычная клетка
+    placeBlock({
+      trackIndex: tIndex,
+      step,
+      label: selectedSound.label,
+      sound: selectedSound.sound,
+      category: selectedSound.category,
+      noteDarken: selectedSound.noteDarken,
+    });
+  };
 
   // Громкость этой дорожки из стора и её сеттер
   const volume = editorStore((state) => state.trackVolumes[trackIndex]);
@@ -166,6 +189,8 @@ export default function PatTrackRow({ trackIndex }) {
               trackIndex={trackIndex}
               step={step}
               className={cls}
+              onCellClick={handleCellClick}
+              isArmed={!!selectedSound}
             />
           );
         })}

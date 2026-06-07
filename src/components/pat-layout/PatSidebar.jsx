@@ -6,11 +6,91 @@ import { initAudio, playSound } from '../../audio/engine/toneEngine.js';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { db } from '../../db/db.js';
 
+// Сколько держать без движения, чтобы звук выбрался (мс)
+const LONG_PRESS_MS = 1000;
+// Порог в пикселях: если за время удержания курсор сдвинулся дальше -
+// значит человек тащит блок (drag), а не выбирает. Тогда таймер отменяется.
+const PRESS_MOVE_THRESHOLD = 6;
+
+// Хук "выбор по долгому зажатию".
+// Возвращает обработчики для тела звука и сам признак, нужно ли подключать drag.
+//   - Зажал и держишь 1 сек без движения -> onSelect (звук выбирается).
+//   - Сдвинул дальше порога за это время -> отмена, начинается обычный drag.
+//   - Короткий клик по уже выбранному -> onUnselect (снять выбор).
+//   - Короткий клик по невыбранному -> ничего.
+// isSelected важен: у выбранного звука drag отключаем совсем.
+function useLongPressSelect({ isSelected, onSelect, onUnselect }) {
+  const timerRef = useRef(null);
+  const startRef = useRef(null);
+  const firedRef = useRef(false);   // сработал ли долгий выбор в этом нажатии
+  const movedRef = useRef(false);   // ушёл ли курсор дальше порога
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const onPointerDown = (e) => {
+    if (e.button !== 0) return;
+    startRef.current = { x: e.clientX, y: e.clientY };
+    firedRef.current = false;
+    movedRef.current = false;
+
+    // Выбранный звук не перетаскивается - для него таймер не нужен,
+    // нажатие обрабатываем как обычный клик (снятие выбора) на pointerUp.
+    if (isSelected) return;
+
+    clearTimer();
+    timerRef.current = setTimeout(() => {
+      timerRef.current = null;
+      if (!movedRef.current) {
+        firedRef.current = true; // Если держали курсор ровно - выбираем звук
+        onSelect();
+      }
+    }, LONG_PRESS_MS);
+  };
+
+  const onPointerMove = (e) => {
+    const start = startRef.current;
+    if (!start) return;
+    const dx = Math.abs(e.clientX - start.x);
+    const dy = Math.abs(e.clientY - start.y);
+    if (dx > PRESS_MOVE_THRESHOLD || dy > PRESS_MOVE_THRESHOLD) {
+      movedRef.current = true;
+      clearTimer();
+    }
+  };
+
+  const onPointerUp = (e) => {
+    clearTimer();
+    const start = startRef.current;
+    startRef.current = null;
+    if (!start || e.button !== 0) return;
+
+    // Короткий клик
+    const dx = Math.abs(e.clientX - start.x);
+    const dy = Math.abs(e.clientY - start.y);
+    const isClick = !firedRef.current && dx <= PRESS_MOVE_THRESHOLD && dy <= PRESS_MOVE_THRESHOLD;
+
+    if (isClick && isSelected) {
+      onUnselect();// Клик по выбранному - снимаем выбор
+    }
+    // клик по невыбранному - ничего не делаем
+  };
+
+  // Чистим таймер, если компонент пропал во время удержания
+  useEffect(() => () => clearTimer(), []);
+
+  return { onPointerDown, onPointerMove, onPointerUp };
+}
+
 
 {/* Один перетаскиваемый звук кота в меню.
  Тело блока тащится (useDraggable), а кнопки play/star отдельно кликаются:
  им гасим pointerDown, чтобы нажатие не запускало перетаскивание.*/}
- function DraggableSound({ sound, catName, category, isPlaying, onPlay, isFav, onFav }) {
+ function DraggableSound({ sound, catName, category, isPlaying, onPlay, isFav, onFav, isSelected, onSelect, onUnselect }) {
   // Подпись блока на дорожке. У барабанщика звуки длинные (kick, snare...),
   // поэтому для Drums пишем только имя звука без имени кота.
   // Для остальных категорий - ИмяКота-Нота (например Jony-C).
@@ -40,30 +120,40 @@ import { db } from '../../db/db.js';
   };
   const roleColor = roleColors[category] || '#6f747c';
 
+  // Логика выбора по долгому зажатию (1 сек без движения)
+  const longPress = useLongPressSelect({ isSelected, onSelect, onUnselect });
+
+  // У выбранного звука перетаскивание отключаем: не расставляем drag-слушатели
+  // и убираем курсор-"руку" (класс is-selected задаёт cursor: default в CSS).
+  const dragProps = isSelected ? {} : { ...listeners, ...attributes };
+
   return (
     <div
       ref={setNodeRef}
-      className={`cat-sound-item ${isDragging ? 'is-dragging' : ''}`}
+      className={`cat-sound-item ${isDragging ? 'is-dragging' : ''} ${isSelected ? 'is-selected' : ''}`}
       style={{
         '--role': roleColor,
         '--note-darken': noteDarken,
       }}
-      {...listeners}
-      {...attributes}
+      {...dragProps}
+      // Совмещаем drag-слушатель dnd-kit с нашим pointerDown (когда drag включён)
+      onPointerDown={(e) => { dragProps.onPointerDown?.(e); longPress.onPointerDown(e); }}
+      onPointerMove={longPress.onPointerMove}
+      onPointerUp={longPress.onPointerUp}
     >
       <span>{sound.name}</span>
       <div className="cat-sound-btns">
         <button
           className="sound-btn" title="Прослушать"
           onPointerDown={(e) => e.stopPropagation()}
-          onClick={onPlay}
+          onClick={(e) => { e.stopPropagation(); onPlay(); }}
         >{isPlaying ? '■' : '▶'}</button>
         {/* Звёздочка: по клику переключает жёлтый визуал избранного */}
         <button
           className={`sound-btn star-btn ${isFav ? 'is-favorite' : ''}`}
           title="В избранное"
           onPointerDown={(e) => e.stopPropagation()}
-          onClick={onFav}
+          onClick={(e) => { e.stopPropagation(); onFav(); }}
         >{isFav ? '★' : '☆'}</button>
       </div>
     </div>
@@ -71,7 +161,7 @@ import { db } from '../../db/db.js';
 }
 
 // Перетаскиваемый избранный звук
-function DraggableFavorite({ fav, isPlaying, onPlay, onRemove }) {        // Делаем так, чтобы звуки из favorite были Draggable
+function DraggableFavorite({ fav, isPlaying, onPlay, onRemove, isSelected, onSelect, onUnselect }) {        // Делаем так, чтобы звуки из favorite были Draggable
   // Для барабанов подпись без имени кота, для остальных - ИмяКота-Нота
   const label = fav.catCategory === 'Drums'
     ? fav.soundName
@@ -99,16 +189,24 @@ function DraggableFavorite({ fav, isPlaying, onPlay, onRemove }) {        // Д�
   };
   const roleColor = roleColors[fav.catCategory] || '#6f747c';
 
+  // Логика выбора по долгому зажатию (1 сек без движения)
+  const longPress = useLongPressSelect({ isSelected, onSelect, onUnselect });
+
+  // У выбранного звука drag отключаем (см. комментарий в DraggableSound)
+  const dragProps = isSelected ? {} : { ...listeners, ...attributes };
+
   return (
     <div
       ref={setNodeRef}
-      className={`favorite-item ${isDragging ? 'is-dragging' : ''}`}
+      className={`favorite-item ${isDragging ? 'is-dragging' : ''} ${isSelected ? 'is-selected' : ''}`}
       style={{
         '--role': roleColor,
         '--note-darken': noteDarken,
       }}
-      {...listeners}
-      {...attributes}
+      {...dragProps}
+      onPointerDown={(e) => { dragProps.onPointerDown?.(e); longPress.onPointerDown(e); }}
+      onPointerMove={longPress.onPointerMove}
+      onPointerUp={longPress.onPointerUp}
     >
       <div className="favorite-info">
         <span className="favorite-cat-name">{fav.catName}</span>
@@ -118,12 +216,12 @@ function DraggableFavorite({ fav, isPlaying, onPlay, onRemove }) {        // Д�
         <button
           className="sound-btn" title="Прослушать"
           onPointerDown={(e) => e.stopPropagation()}
-          onClick={onPlay}
+          onClick={(e) => { e.stopPropagation(); onPlay(); }}
         >{isPlaying ? '■' : '▶'}</button>
         <button
           className="sound-btn favorite-remove-btn" title="Удалить из избранного"
           onPointerDown={(e) => e.stopPropagation()}
-          onClick={onRemove}
+          onClick={(e) => { e.stopPropagation(); onRemove(); }}
         >✕</button>
       </div>
     </div>
@@ -138,6 +236,12 @@ export default function PatSidebar({ onBackToStudio }) {
   const playerRef = useRef(null);                                           // Ссылка на плеер
   const [favorites, setFavorites] = useState({});                           // Локальный визуал звёздочек (id -> true/false)
   const [favoriteList, setFavoriteList] = useState([]);                     // Список избранных звуков
+
+  // Выбранный для вставки по клику звук и его переключатель (общий стор).
+  // По нему подсвечиваем выбранный элемент в меню и избранном.
+  const selectedSound = editorStore((state) => state.selectedSound);
+  const selectSound = editorStore((state) => state.selectSound);
+  const unselectIfSame = editorStore((state) => state.unselectIfSame);
 
   const { setNodeRef: setFavDropRef, isOver: isFavOver } = useDroppable({   // Дроппабл зона для избранного
     id: 'favorites-drop-zone',
@@ -303,7 +407,15 @@ export default function PatSidebar({ onBackToStudio }) {
       )}
 
       {selectedSounds && selectedSounds.length > 0 ? (
-        selectedSounds.map((sound) => (
+        selectedSounds.map((sound) => {
+          // Те же данные, что уходят в перетаскивание, плюс уникальный key источника
+          const label = selectedCat.category === 'Drums'
+            ? sound.name
+            : `${selectedCat.name}-${sound.name}`;
+          const noteDarken = (sound.id - 1) * 6;
+          const soundKey = `sound-${selectedCat.name}-${sound.id}`;
+
+          return (
             <DraggableSound
               key={sound.id}
               sound={sound}
@@ -313,9 +425,18 @@ export default function PatSidebar({ onBackToStudio }) {
               onPlay={() => handlePlaySound(sound)}
               isFav={!!favorites[`${selectedCat.name}-${sound.id}`]}
               onFav={() => toggleFavorite(sound)}
-              
+              isSelected={selectedSound?.key === soundKey}
+              onSelect={() => selectSound({
+                key: soundKey,
+                label,
+                sound: sound.sound,
+                category: selectedCat.category,
+                noteDarken,
+              })}
+              onUnselect={() => unselectIfSame(soundKey)}
             />
-        ))
+          );
+        })
       ) : (
           <span className="cat-hint">Select a cat!</span>
       )}
@@ -330,15 +451,33 @@ export default function PatSidebar({ onBackToStudio }) {
         ref={setFavDropRef}
       >
         {favoriteList.length > 0 ? (
-          favoriteList.map((fav) => (
-            <DraggableFavorite
-              key={fav.id}
-              fav={fav}
-              isPlaying={playingId === `fav-${fav.id}`}
-              onPlay={() => handlePlayFavorite(fav.soundPath, fav.id)}
-              onRemove={() => removeFromFavorites(fav.id)}
-            />
-          ))
+          favoriteList.map((fav) => {
+            // Те же данные, что уходят в перетаскивание избранного
+            const label = fav.catCategory === 'Drums'
+              ? fav.soundName
+              : `${fav.catName}-${fav.soundName}`;
+            const noteDarken = fav.noteDarken ?? (fav.soundId - 1) * 6;
+            const favKeyId = `fav-${fav.id}`;
+
+            return (
+              <DraggableFavorite
+                key={fav.id}
+                fav={fav}
+                isPlaying={playingId === `fav-${fav.id}`}
+                onPlay={() => handlePlayFavorite(fav.soundPath, fav.id)}
+                onRemove={() => removeFromFavorites(fav.id)}
+                isSelected={selectedSound?.key === favKeyId}
+                onSelect={() => selectSound({
+                  key: favKeyId,
+                  label,
+                  sound: fav.soundPath,
+                  category: fav.catCategory,
+                  noteDarken,
+                })}
+                onUnselect={() => unselectIfSame(favKeyId)}
+              />
+            );
+          })
         ) : (
           <span className="favorites-empty-hint">Click ☆ or drag sound</span>
         )}

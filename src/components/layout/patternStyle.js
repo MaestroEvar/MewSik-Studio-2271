@@ -24,9 +24,8 @@ export function representativeColor(blocks) {
 }
 
 // Стиль рамки паттерна по типам котов внутри него:
-//   - одна категория  -> сплошная рамка её цветом (только drums = оранжевая)
-//   - несколько        -> градиентная рамка из цветов этих категорий
-//   - все четыре       -> градиент из четырёх цветов
+//   - одна категория - сплошная рамка её цветом
+//   - несколько - градиентная рамка из цветов этих категорий
 // innerBg - цвет фона элемента (нужен для трюка с градиентной рамкой,
 // чтобы скруглённые углы не ломались, в отличие от border-image).
 export function getPatternBorderStyle(blocks, innerBg = '#242424') {
@@ -40,7 +39,7 @@ export function getPatternBorderStyle(blocks, innerBg = '#242424') {
     return { border: `2px solid ${colors[0]}` };
   }
 
-  // Градиентная рамка: один слой-фон под контентом + градиент в области рамки
+  // Градиентная рамка
   const gradient = `linear-gradient(135deg, ${colors.join(', ')})`;
   return {
     border: '2px solid transparent',
