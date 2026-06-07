@@ -159,9 +159,8 @@ export default function TimeLine({ selectedPattern, onClearSelection, selectedPr
         return (
             <div className="app-timeline">
             <div className="timeline-empty-hint">
-                <span>select a project</span>
-                <span>select a project</span>
-                <span>select a project</span>
+                <span>The project is not selected</span>
+                <span>Select a project from the menu on the left</span>
             </div>
             </div>
         );
