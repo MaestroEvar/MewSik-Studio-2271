@@ -103,7 +103,7 @@
   background: #e26461;
 }
 
-/* Save - вторичная*/
+/* Save */
 .seq-btn-save {
   background: #2f3137;
   border: 1px solid var(--st-edge);
@@ -112,4 +112,14 @@
 .seq-btn-save:hover {
   border-color: var(--amber-d);
   color: var(--amber);
+}
+
+/* После сохранения кнопка коротко становится зелёной */
+.seq-btn-save.is-saved {
+  color: #4ade80;
+  border-color: #4ade80;
+}
+.seq-btn-save.is-saved:hover {
+  color: #4ade80;
+  border-color: #4ade80;
 }
