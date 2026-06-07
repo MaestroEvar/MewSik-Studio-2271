@@ -12,7 +12,7 @@ function buildGrid(blocks) {
 
   (blocks || []).forEach((b) => {
     if (b.trackIndex < 0 || b.trackIndex >= TRACK_COUNT) return;
-    const color = ROLE_COLORS[b.category] || '#888888';
+    const color = ROLE_COLORS[b.category] || '#878686';
     const start = Math.max(0, b.step);
     const end = Math.min(STEP_COUNT, b.step + (b.span || 1));
     for (let c = start; c < end; c++) {
