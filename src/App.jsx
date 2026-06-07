@@ -5,10 +5,15 @@ import PatRedactor from './pages/PatRedactor';
 export default function App() {
   // Теперь у нас снова 2 экрана: 'studio' и 'patterns'
   const [currentPage, setCurrentPage] = useState('studio');
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   if (currentPage === 'patterns') {
     return <PatRedactor onBackToStudio={() => setCurrentPage('studio')} />;
   }
 
-  return <StudioPage onNavigate={() => setCurrentPage('patterns')} />;
+  return <StudioPage 
+    onNavigate={() => setCurrentPage('patterns')} 
+    selectedProjectId={selectedProjectId}
+    onSelectProject={setSelectedProjectId}
+  />;
 }

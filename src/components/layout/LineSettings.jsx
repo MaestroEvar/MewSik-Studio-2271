@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './LineSettings.css';
 
 function HelpIcon({ text }) {
@@ -53,7 +53,15 @@ function VSlider({ label }) {
 }
 
 export default function LineSettings() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+
+  // При первом рендере добавляем класс на контейнер
+  useEffect(() => {
+      const appContainer = document.querySelector('.app-container');
+      if (appContainer) {
+          appContainer.classList.add('settings-collapsed');
+      }
+  }, []);
 
   const handleToggle = () => {
     const newCollapsed = !collapsed;

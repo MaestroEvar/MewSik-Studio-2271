@@ -1,7 +1,7 @@
 import './Projects.css';
 import { db } from '../../db/db.js';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const COLOR_PALETTE = [
   '#2a1f3d', '#3d1f5a', '#251a4a', '#1a2a3d', '#1a2050',
@@ -13,7 +13,7 @@ const COLOR_PALETTE = [
 const getRandomColor = () =>
   COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)];
 
-export default function Projects() {
+export default function Projects({ selectedProjectId, onSelectProject }) {
   const [showModal, setShowModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [selectedId, setSelectedId] = useState(null);
@@ -23,6 +23,25 @@ export default function Projects() {
 
   const projects = useLiveQuery(() => db.projects.toArray(), []);
   const isLimitReached = projects && projects.length >= 5;
+
+  const defaultCreated = useRef(false);                               // Флаг, чтобы дефолтный проект создавался 1 раз
+  const hasLoaded = useRef(false);
+
+  useEffect(() => {                                                   // При первом рендере: если проектов нет, создаём MyFirstSong
+    if (projects === undefined) return;                               // Ждем когда проекты загружатся
+
+    if (!hasLoaded.current){
+      hasLoaded.current = true;
+      if (projects.length === 0 && !defaultCreated.current) {
+        defaultCreated.current = true;
+        db.projects.add({
+          name: 'MyFirstSong',
+          createdAt: new Date(),
+          color: getRandomColor()
+        });
+      }
+    }
+  }, [projects]);
 
   const toggleCollapse = () => {
     const next = !collapsed;
@@ -51,11 +70,11 @@ export default function Projects() {
   const handleDeleteProject = async (e, id) => {
     e.stopPropagation();
     await db.projects.delete(id);
-    if (selectedId === id) setSelectedId(null);
+    if (selectedProjectId === id) onSelectProject(null);
   };
 
   const handleSelectProject = (id) => {
-    setSelectedId(prev => prev === id ? null : id);
+    onSelectProject(id);
   };
 
   const handleCloseModal = () => {
@@ -133,7 +152,7 @@ export default function Projects() {
         {/* Список Проектов */}
         <div className="projects">
           {projects?.map(project => {
-            const isSelected = selectedId === project.id;
+            const isSelected = selectedProjectId === project.id;
             return (
               <div
                 key={project.id}

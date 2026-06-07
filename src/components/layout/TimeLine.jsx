@@ -12,7 +12,7 @@ const tracks = [
 const blocks = 16;
 const subdivisions = 16; // 1/16 блока
 
-export default function TimeLine({ selectedPattern, onClearSelection }) {
+export default function TimeLine({ selectedPattern, onClearSelection, selectedProjectId }) {
     const [patterns, setPatterns] = useState({});
     const [hoveredCell, setHoveredCell] = useState(null);
     const timelineRef = useRef(null);
@@ -154,6 +154,18 @@ export default function TimeLine({ selectedPattern, onClearSelection }) {
     }, []);
 
     usePlayheadSequencer();
+
+    if (!selectedProjectId) {
+        return (
+            <div className="app-timeline">
+            <div className="timeline-empty-hint">
+                <span>select a project</span>
+                <span>select a project</span>
+                <span>select a project</span>
+            </div>
+            </div>
+        );
+    }
 
     return (
         <div className="app-timeline" onClick={handleTimelineClick} ref={timelineRef}>
