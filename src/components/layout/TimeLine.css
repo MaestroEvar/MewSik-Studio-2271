@@ -45,8 +45,18 @@
     justify-content: center;
     font-size: 9px;
     color: #666;
-    border-right: 1px solid #2a2a2a;
     position: relative;
+    /* border-right убран, вместо него псевдоэлемент */
+}
+
+.header_block:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #2a2a2a;
 }
 
 /* Пустой спейсер(пустота) слева для выравнивания header с track_label */
@@ -59,7 +69,7 @@
 
 /* Убирает правую границу у последнего блока */
 .header_block:last-child {
-    border-right: none;
+    /* border-right уже убран, :last-child не добавляем псевдоэлемент */
 }
 
 /* Основной номер блока */
@@ -148,10 +158,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-right: 1px solid #333;
     position: relative;
     cursor: pointer;
     overflow: hidden;
+    /* border-right заменён псевдоэлементом */
+}
+
+.track_block:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #333;
 }
 
 /* Подсветка блока при наведении */
@@ -161,7 +181,7 @@
 
 /* Убирает правую границу у последнего блока */
 .track_block:last-child {
-    border-right: none;
+    /* ничего не нужно, :last-child не имеет псевдоэлемента */
 }
 
 /* Блок с которого начинается бит */
@@ -191,12 +211,22 @@
 
 /* Один интервал */
 .sub_division {
-    border-right: 1px solid rgba(255, 255, 255, 0.03);
+    border-right: none;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     transition: background-color 0.1s;
+}
+
+.sub_division:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.03);
 }
 
 /* Убирает правую границу у последнего интервала */
@@ -339,4 +369,4 @@
     font-style: italic;
     text-align: center;
     line-height: 1.5;
-  }
+}

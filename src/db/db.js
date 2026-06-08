@@ -13,14 +13,14 @@ dbSL.version(1).stores({
 
 db.version(2).stores({
     projects: '++id, name, updatedAt',
-    favorites: '++id, soundId, soundName, catName, soundPath, catCategory'
+    favorites: '++id, soundId, soundName, soundPath, catCategory'
 });
 
 // Сохранённые паттерны для главного редактора.
 // Поля-объекты (blocks, color) хранятся в записи, индексируем только id/name/createdAt.
 db.version(3).stores({
     projects: '++id, name, updatedAt',
-    favorites: '++id, soundId, soundName, catName, soundPath, catCategory',
+    favorites: '++id, soundId, soundName, soundPath, catCategory',
     patterns: '++id, name, createdAt'
 });
 

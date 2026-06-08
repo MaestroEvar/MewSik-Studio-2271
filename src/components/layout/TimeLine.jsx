@@ -1,10 +1,9 @@
 import './TimeLine.css';
 import React, { useState, useRef, useEffect } from 'react';
-import PlayHead from './PlayHead';
 import PatternPreview from './PatternPreview';
 import { getPatternBorderStyle } from './patternStyle.js';
-import { usePlayheadSequencer } from '../../audio/engine/playheadSequencer.js';
 import { editorStore } from '../../app/store/editorStore.js';
+import { useTimelineSequencer } from '../../audio/engine/useTimelineSequencer.js';
 
 const tracks = [
     'Track1', 'Track2', 'Track3', 'Track4', 'Track5',
@@ -18,8 +17,8 @@ export default function TimeLine({ selectedPattern, onClearSelection, selectedPr
     const [patterns, setPatterns] = useState({});
     const [hoveredCell, setHoveredCell] = useState(null);
     const timelineRef = useRef(null);
-    const tracksContainerRef = useRef(null);
     const setIsPlaying = editorStore((s) => s.setIsPlaying);
+
 
     // Получить точную позицию клика внутри блока
     const getSubPosition = (e, element) => {
@@ -36,32 +35,29 @@ export default function TimeLine({ selectedPattern, onClearSelection, selectedPr
 
         const subIndex = getSubPosition(e, e.currentTarget);
         
-        // Создаём уникальный ключ для паттерна: трек + начальный блок + суб-позиция
         const patternKey = `${blockIndex}-${subIndex}`;
 
-        // Если кликнули по уже размещённому паттерну - удаляем его
         if (patterns[trackIndex]?.[patternKey]?.id === selectedPattern.id) {
             handleRemovePattern(trackIndex, patternKey);
             return;
         }
 
-        // Проверяем, не занята ли эта область другим паттерном
         if (isAreaOccupied(trackIndex, blockIndex, subIndex)) {
-            return; // Область занята
+            return;
         }
 
-        // Размещаем паттерн (длиной 1 блок = 16 суб-делений)
         setPatterns(prev => ({
             ...prev,
             [trackIndex]: {
                 ...(prev[trackIndex] || {}),
                 [patternKey]: {
                     ...selectedPattern,
+                    blocks: selectedPattern.blocks || [],
                     position: {
                         startBlock: blockIndex,
                         startSub: subIndex,
                         trackIndex: trackIndex,
-                        length: subdivisions // Длина паттерна = 1 блок (16 суб-делений)
+                        length: subdivisions
                     }
                 }
             }
@@ -78,7 +74,7 @@ export default function TimeLine({ selectedPattern, onClearSelection, selectedPr
         
         // Конвертируем в абсолютные суб-деления
         const startAbsolute = startBlock * subdivisions + startSub;
-        const endAbsolute = endBlock * subdivisions + endSub;
+        const endAbsolute = startAbsolute + subdivisions;
         
         // Проверяем пересечение с существующими паттернами
         for (const key in trackPatterns) {
@@ -143,19 +139,18 @@ export default function TimeLine({ selectedPattern, onClearSelection, selectedPr
         const hoverAbsolute = hoveredCell.blockIndex * subdivisions + hoveredCell.subIndex;
         const currentAbsolute = blockIndex * subdivisions + subIndex;
         
-        // Паттерн длиной 1 блок
         const patternEnd = hoverAbsolute + subdivisions;
         
         return currentAbsolute >= hoverAbsolute && currentAbsolute < patternEnd;
     };
-
+    
     useEffect(() => {                           // Прекаращает воспроизведение при выходе из TimeLine
         return () => {
             setIsPlaying(false);
         };
     }, []);
 
-    usePlayheadSequencer();
+    useTimelineSequencer(patterns);
 
     if (!selectedProjectId) {
         return (
@@ -170,12 +165,6 @@ export default function TimeLine({ selectedPattern, onClearSelection, selectedPr
 
     return (
         <div className="app-timeline" onClick={handleTimelineClick} ref={timelineRef}>
-            {selectedPattern && (
-                <div className="selected-pattern-bar" style={{ backgroundColor: selectedPattern.color }}>
-                    Выбран: {selectedPattern.name}
-                    <button className="clear-btn" onClick={(e) => { e.stopPropagation(); onClearSelection(); }}>✕</button>
-                </div>
-            )}
 
             <div className='timeline_header'>
                 <div className='header_label_spacer'/>
@@ -195,7 +184,7 @@ export default function TimeLine({ selectedPattern, onClearSelection, selectedPr
             </div>
 
             <div className='timeline_body'>
-                <div className='timeline_tracks' ref={tracksContainerRef}>
+                <div className='timeline_tracks'>
                     {tracks.map((trackName, trackIndex) => (
                         <div key={trackIndex} className='timeline_track'>
                             <div className='track_label'>
@@ -292,9 +281,6 @@ export default function TimeLine({ selectedPattern, onClearSelection, selectedPr
                         </div>
                     ))}
                 </div>
-
-                {/* Полоса воспроизведения поверх всех треков */}
-                <PlayHead />
             </div>
         </div>
     );
