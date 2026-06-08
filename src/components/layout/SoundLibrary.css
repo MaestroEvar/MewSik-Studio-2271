@@ -70,7 +70,7 @@
     margin: 30px 6px 0 6px;
     padding: 10px;
     background: rgba(0, 0, 0, 0.25);
-    border: 3px solid var(--role);
+    border: 6px solid var(--role);
     border-radius: 10px;
     display: flex;
     align-items: center;

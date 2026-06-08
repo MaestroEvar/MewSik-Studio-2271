@@ -7,7 +7,7 @@ import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { db } from '../../db/db.js';
 
 // Сколько держать без движения, чтобы звук выбрался (мс)
-const LONG_PRESS_MS = 1000;
+const LONG_PRESS_MS = 2000;
 // Порог в пикселях: если за время удержания курсор сдвинулся дальше -
 // значит человек тащит блок (drag), а не выбирает. Тогда таймер отменяется.
 const PRESS_MOVE_THRESHOLD = 6;

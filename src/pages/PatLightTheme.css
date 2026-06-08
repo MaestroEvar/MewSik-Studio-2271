@@ -1,0 +1,243 @@
+/* Светлая тема редактора паттернов.
+   Все правила действуют ТОЛЬКО под классом .pat-theme-light,
+   поэтому главная страница и тёмная тема никак не затрагиваются. */
+
+.pat-theme-light {
+  /* Палитра темы */
+  --lt-bg:        #f5da9a;  /* общий фон страницы*/
+  --lt-panel:     #fae698;  /* панели и карточки */
+  --lt-panel-2:   #f3e5bc;  /* вторичные панели */
+  --lt-cell:      #f6d685;  /* клетка-шаг секвенсора */
+  --lt-cell-2:    #fef3d9;  /* акцентная группа клеток */
+  --lt-line:      #cda546;  /* разделители и тонкие линии */
+  --lt-edge:      #d0a541;  /* отдельные грани */
+  --lt-border:    #cb9f37;  /* границы  */
+  --lt-txt:       #2e2c28;  /* основной текст */
+  --lt-txt-dim:   #8a8478;  /* приглушённый текст */
+  --lt-amber:     #d9a441;  /* рамки дорожки */
+  --lt-amber-d:   #cb8d1b;  /* границы дорожек */
+}
+
+/* Базовый контейнер и зоны */
+
+.pat-theme-light.pat-redactor-container {
+  background-color: var(--lt-bg);
+  color: var(--lt-txt);
+}
+
+.pat-theme-light .pat-tracks-area {
+  background-color: var(--lt-bg);
+}
+
+/* Превью блока при перетаскивании - тень делаем мягче для светлого фона */
+.pat-theme-light .drag-overlay-block {
+  box-shadow: 0 6px 16px rgba(60, 50, 30, 0.25);
+}
+
+/* Шапка */
+
+.pat-theme-light .pat-header {
+  background-color: var(--lt-panel);
+  border-bottom: 1px solid var(--lt-line);
+}
+
+.pat-theme-light .pat-header-title {
+  color: var(--lt-txt);
+}
+
+.pat-theme-light .pat-icon-button {
+  background: var(--lt-panel);
+  color: var(--lt-amber-d);
+  filter: drop-shadow(0 0 4px rgba(60, 50, 30, 0.12));
+}
+
+.pat-theme-light .pat-icon-button:hover {
+  background-color: var(--lt-amber);
+  color: var(--lt-panel);
+  filter: drop-shadow(0 0 6px rgba(217, 164, 65, 0.55));
+}
+
+/* Левый сайдбар */
+
+.pat-theme-light .pat-sounds-sidebar {
+  background-color: var(--lt-panel-2);
+  border-right: 1px solid var(--lt-line);
+}
+
+.pat-theme-light .sidebar-title {
+  color: var(--lt-amber-d);
+}
+
+/* Рамка меню кота - светлая карточка, слегка подкрашенная цветом роли.
+   Базовый светлый фон + поверх бледная заливка роли (как в тёмной теме,
+   но светлее), чтобы меню выбранного кота читалось его цветом. */
+.pat-theme-light .cat-menu-box {
+  background-color: var(--lt-panel);
+  background-image: linear-gradient(
+    color-mix(in srgb, var(--role), #fff 80%),
+    color-mix(in srgb, var(--role), #fff 80%)
+  );
+  border: 1px solid var(--role);
+  box-shadow: 0 4px 14px rgba(60, 50, 30, 0.12);
+}
+
+.pat-theme-light .cat-name {
+  color: var(--lt-txt);
+}
+
+.pat-theme-light .cat-hint,
+.pat-theme-light .cat-image-placeholder {
+  color: var(--lt-txt-dim);
+}
+
+
+.pat-theme-light .favorites-divider {
+  color: var(--lt-amber-d);
+}
+
+/* Поле избранного - светлая утопленная зона */
+.pat-theme-light .favorites-box {
+  border: 1px solid var(--lt-border);
+  background-color: rgba(60, 50, 30, 0.05);
+}
+
+.pat-theme-light .favorites-empty-hint {
+  color: var(--lt-txt-dim);
+}
+
+/* Скроллбар избранного под светлую тему */
+.pat-theme-light .favorites-box::-webkit-scrollbar-thumb {
+  background: #c4bdac;
+}
+.pat-theme-light .favorites-box::-webkit-scrollbar-thumb:hover {
+  background: #a9a08c;
+}
+
+
+
+/* Панель управления над дорожками */
+
+.pat-theme-light .seq-controls {
+  background: var(--lt-panel);
+  border: 1px solid var(--lt-border);
+  border-top: 1px solid var(--lt-edge);
+  box-shadow: 0 2px 8px rgba(60, 50, 30, 0.08);
+}
+
+.pat-theme-light .seq-title-text {
+  color: var(--lt-txt);
+}
+.pat-theme-light .seq-title-sub {
+  color: var(--lt-txt-dim);
+}
+
+/* Кнопка Save - светлый вариант */
+.pat-theme-light .seq-btn-save {
+  background: var(--lt-panel-2);
+  border: 1px solid var(--lt-border);
+  color: var(--lt-txt);
+}
+.pat-theme-light .seq-btn-save:hover {
+  border-color: var(--lt-amber-d);
+  color: var(--lt-amber-d);
+}
+
+/* Play оставляем янтарным - он и так светлый акцент */
+
+
+
+/* Дорожки секвенсора */
+/* Переопределяем локальные переменные ряда - и почти все клетки/панели
+   подхватывают светлые цвета автоматически. */
+
+.pat-theme-light .pat-track-row {
+  --st-bg:      var(--lt-panel);
+  --st-panel:   var(--lt-panel);
+  --st-cell:    var(--lt-cell);
+  --st-cell-2:  var(--lt-cell-2);
+  --st-line:    var(--lt-line);
+  --st-edge:    var(--lt-edge);
+  --txt:        var(--lt-txt);
+  --txt-dim:    var(--lt-txt-dim);
+  --amber-d:    var(--lt-amber-d);
+}
+
+/* Номер дорожки */
+.pat-theme-light .track-number-cell {
+  border: 1px solid var(--lt-line);
+  border-left: 2px solid var(--lt-amber-d);
+}
+
+/* Наведение на клетку */
+.pat-theme-light .step-block:hover {
+  background: #ddd6c6;
+  box-shadow: inset 0 0 0 1px var(--lt-amber-d);
+}
+
+/* Клетка под перетаскиваемым звуком */
+.pat-theme-light .cell-over {
+  background: #ddd6c6 !important;
+  box-shadow: inset 0 0 0 2px var(--lt-amber) !important;
+}
+
+/* Режим вставки по клику */
+.pat-theme-light .cell-armed {
+  box-shadow: inset 0 0 0 1px rgba(60, 50, 30, 0.14);
+}
+.pat-theme-light .cell-armed:hover {
+  background: #ddd6c6;
+  box-shadow: inset 0 0 0 2px rgba(185, 134, 42, 0.9);
+}
+
+/* Активный столбец при проигрывании*/
+.pat-theme-light .step-playing {
+  background: #f6e4b8;
+  box-shadow: inset 0 0 0 1px var(--lt-amber), 0 0 8px rgba(217, 164, 65, 0.5);
+}
+
+/* Поле ввода громкости */
+.pat-theme-light .volume-input {
+  background: var(--lt-panel-2);
+  border: 1px solid var(--lt-border);
+  color: var(--lt-txt);
+}
+.pat-theme-light .volume-input:focus {
+  border-color: var(--lt-amber);
+}
+
+/* Дорожка ползунка громкости */
+.pat-theme-light .volume-slider {
+  background:
+    linear-gradient(var(--lt-amber), var(--lt-amber))
+      0 / calc(var(--val, 0.5) * (110% - var(--thumb-size))) 100% no-repeat,
+    #ddd6c6;
+}
+
+
+/* Нижняя библиотека котов */
+
+.pat-theme-light .library-panel-container {
+  background-color: var(--lt-panel-2);
+  border: 1px solid var(--lt-line);
+}
+
+.pat-theme-light .category_section {
+  background: color-mix(in srgb, var(--role), #fff 82%);
+  border: 1px solid var(--role);
+  border-left: 4px solid var(--role);
+}
+
+/* Рамка вокруг кота*/
+.pat-theme-light .card-cat-frame {
+  background: color-mix(in srgb, var(--role), #fff 72%);
+}
+
+.pat-theme-light .sound_library .card:hover .card-cat-frame {
+  background: color-mix(in srgb, var(--role), #fff 60%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--role), #fff 70%), 0 6px 14px rgba(60, 50, 30, 0.2);
+}
+
+/* Имя кота под карточкой */
+.pat-theme-light .sound_library .card p {
+  color: var(--lt-txt);
+}

@@ -14,6 +14,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import './PatRedactor.css';
+import './PatLightTheme.css'; // Светлая тема редактора паттернов (переопределяет цвета)
 import { db } from '../db/db.js';
 
 // Цвета ролей котов - те же, что в меню и в дорожках.
@@ -31,6 +32,11 @@ export default function PatRedactor({ onBackToStudio }) {
   // Данные звука, который сейчас тащим - для красивого превью под курсором
   const [activeDrag, setActiveDrag] = useState(null);
   const [favKey, setFavKey] = useState(0);
+
+  // Тема редактора паттернов: 'light' - светлая, 'dark' - старая тёмная.
+  // Переключается кнопкой-луной в шапке. На главную страницу не влияет.
+  const [theme, setTheme] = useState('light');
+  const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));
 
   const placeBlock = editorStore((state) => state.placeBlock);
   const moveBlock = editorStore((state) => state.moveBlock);
@@ -159,9 +165,9 @@ export default function PatRedactor({ onBackToStudio }) {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="pat-redactor-container">
+      <div className={`pat-redactor-container pat-theme-${theme}`}>
         {/* Шапка */}
-        <PatHeader />
+        <PatHeader theme={theme} onToggleTheme={toggleTheme} />
 
         <div className="pat-workspace">
           {/* 2. Левая колонка со звуками и кнопкой возврата */}
