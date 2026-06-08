@@ -59,6 +59,10 @@ export const editorStore = create((set, get) => ({
   // Текущий проигрываемый шаг секвенсора (0..15). -1 - ничего не играет.
   // По нему дорожки подсвечивают активный столбец.
   currentStep: -1,
+  // Текущий шаг таймлайна главного редактора (0..255). -1 - не играет.
+  // Отдельно от currentStep, чтобы полоса воспроизведения таймлайна и
+  // подсветка секвенсора паттернов не мешали друг другу.
+  timelineStep: -1,
   tracks: [],
   blocks: [],
   selectedBlockId: null,
@@ -80,6 +84,7 @@ export const editorStore = create((set, get) => ({
   setBpm: (newBpm) => set({ bpm: newBpm }),
   setIsPlaying: (isPlaying) => set({ isPlaying }),
   setCurrentStep: (currentStep) => set({ currentStep }),
+  setTimelineStep: (timelineStep) => set({ timelineStep }),
 
   // Установить громкость одной дорожки
   setTrackVolume: (trackIndex, value) => {

@@ -1,287 +1,174 @@
 import './TimeLine.css';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDroppable, useDraggable } from '@dnd-kit/core';
 import PatternPreview from './PatternPreview';
 import { getPatternBorderStyle } from './patternStyle.js';
 import { editorStore } from '../../app/store/editorStore.js';
 import { useTimelineSequencer } from '../../audio/engine/useTimelineSequencer.js';
 
-const tracks = [
-    'Track1', 'Track2', 'Track3', 'Track4', 'Track5',
-    'Track6', 'Track7', 'Track8', 'Track9', 'Track10'
-];
+const TRACK_COUNT = 10; // 10 дорожек
+const BLOCK_COUNT = 16; // 16 блоков (тактов) по горизонтали
 
-const blocks = 16;
-const subdivisions = 16; // 1/16 блока
+// Список дорожек строим из количества - имена не используются в разметке
+const tracks = Array.from({ length: TRACK_COUNT }, (_, i) => i);
 
-export default function TimeLine({ selectedPattern, onClearSelection, selectedProjectId }) {
-    const [patterns, setPatterns] = useState({});
-    const [hoveredCell, setHoveredCell] = useState(null);
-    const timelineRef = useRef(null);
-    const setIsPlaying = editorStore((s) => s.setIsPlaying);
+// Одна ячейка-блок дорожки. Это droppable-зона: сюда можно бросить паттерн
+// из нижней панели или перенести уже стоящий паттерн.
+function TimelineCell({ trackIndex, blockIndex, isBeatStart }) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: `cell-${trackIndex}-${blockIndex}`,
+    data: { trackIndex, blockIndex },
+  });
 
+  return (
+    <div
+      ref={setNodeRef}
+      className={`track_block ${isBeatStart ? 'beat_start' : ''} ${isOver ? 'cell_over' : ''}`}
+    />
+  );
+}
 
-    // Получить точную позицию клика внутри блока
-    const getSubPosition = (e, element) => {
-        const rect = element.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const subWidth = rect.width / subdivisions;
-        const subIndex = Math.floor(x / subWidth);
-        return Math.min(subIndex, subdivisions - 1);
-    };
+// Уже размещённый на таймлайне паттерн. Его можно перетащить на другой блок
+// или дорожку (useDraggable), а кликом - удалить.
+function PlacedPattern({ placement, currentStep, onRemove }) {
+  const { id, trackIndex, blockIndex, pattern } = placement;
 
-    const handleBlockClick = (trackIndex, blockIndex, e) => {
-        e.stopPropagation();
-        if (!selectedPattern) return;
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `placed-${id}`,
+    data: { type: 'placed', placementId: id },
+  });
 
-        const subIndex = getSubPosition(e, e.currentTarget);
-        
-        const patternKey = `${blockIndex}-${subIndex}`;
+  // Защита от случайного удаления: если только что тащили - клик не удаляет
+  const draggedRef = React.useRef(false);
+  useEffect(() => {
+    if (isDragging) draggedRef.current = true;
+  }, [isDragging]);
 
-        if (patterns[trackIndex]?.[patternKey]?.id === selectedPattern.id) {
-            handleRemovePattern(trackIndex, patternKey);
-            return;
-        }
-
-        if (isAreaOccupied(trackIndex, blockIndex, subIndex)) {
-            return;
-        }
-
-        setPatterns(prev => ({
-            ...prev,
-            [trackIndex]: {
-                ...(prev[trackIndex] || {}),
-                [patternKey]: {
-                    ...selectedPattern,
-                    blocks: selectedPattern.blocks || [],
-                    position: {
-                        startBlock: blockIndex,
-                        startSub: subIndex,
-                        trackIndex: trackIndex,
-                        length: subdivisions
-                    }
-                }
-            }
-        }));
-    };
-
-    // Проверка, занята ли область
-    const isAreaOccupied = (trackIndex, startBlock, startSub) => {
-        const trackPatterns = patterns[trackIndex] || {};
-        
-        // Паттерн занимает от startBlock:startSub до startBlock+1:startSub
-        const endBlock = startBlock + 1; // Длина 1 блок
-        const endSub = startSub;
-        
-        // Конвертируем в абсолютные суб-деления
-        const startAbsolute = startBlock * subdivisions + startSub;
-        const endAbsolute = startAbsolute + subdivisions;
-        
-        // Проверяем пересечение с существующими паттернами
-        for (const key in trackPatterns) {
-            const pattern = trackPatterns[key];
-            const pStartAbsolute = pattern.position.startBlock * subdivisions + pattern.position.startSub;
-            const pEndAbsolute = pStartAbsolute + pattern.position.length;
-            
-            if (startAbsolute < pEndAbsolute && endAbsolute > pStartAbsolute) {
-                return true; // Есть пересечение
-            }
-        }
-        
-        return false;
-    };
-
-    const handleRemovePattern = (trackIndex, patternKey) => {
-        setPatterns(prev => {
-            const trackPatterns = {...prev[trackIndex]};
-            delete trackPatterns[patternKey];
-            return {...prev, [trackIndex]: trackPatterns};
-        });
-    };
-
-    const handleTimelineClick = (e) => {
-        if (e.target === e.currentTarget || e.target.classList.contains('timeline_tracks')) {
-            onClearSelection();
-        }
-    };
-
-    const handleBlockMouseMove = (trackIndex, blockIndex, e) => {
-        const subIndex = getSubPosition(e, e.currentTarget);
-        setHoveredCell({ trackIndex, blockIndex, subIndex });
-    };
-
-    const handleBlockMouseLeave = () => {
-        setHoveredCell(null);
-    };
-
-    // Получить паттерн для конкретного суб-деления
-    const getPatternAtSub = (trackIndex, blockIndex, subIndex) => {
-        const trackPatterns = patterns[trackIndex] || {};
-        const absolutePos = blockIndex * subdivisions + subIndex;
-        
-        for (const key in trackPatterns) {
-            const pattern = trackPatterns[key];
-            const startAbsolute = pattern.position.startBlock * subdivisions + pattern.position.startSub;
-            const endAbsolute = startAbsolute + pattern.position.length;
-            
-            if (absolutePos >= startAbsolute && absolutePos < endAbsolute) {
-                return { pattern, patternKey: key };
-            }
-        }
-        
-        return null;
-    };
-
-    // Проверяем, попадает ли ховер в зону потенциального размещения
-    const isInHoverZone = (trackIndex, blockIndex, subIndex) => {
-        if (!hoveredCell || !selectedPattern) return false;
-        if (hoveredCell.trackIndex !== trackIndex) return false;
-        
-        const hoverAbsolute = hoveredCell.blockIndex * subdivisions + hoveredCell.subIndex;
-        const currentAbsolute = blockIndex * subdivisions + subIndex;
-        
-        const patternEnd = hoverAbsolute + subdivisions;
-        
-        return currentAbsolute >= hoverAbsolute && currentAbsolute < patternEnd;
-    };
-    
-    useEffect(() => {                           // Прекаращает воспроизведение при выходе из TimeLine
-        return () => {
-            setIsPlaying(false);
-        };
-    }, []);
-
-    useTimelineSequencer(patterns);
-
-    if (!selectedProjectId) {
-        return (
-            <div className="app-timeline">
-            <div className="timeline-empty-hint">
-                <span>The project is not selected</span>
-                <span>Select a project from the menu on the left</span>
-            </div>
-            </div>
-        );
+  const handleClick = () => {
+    if (draggedRef.current) {
+      draggedRef.current = false; // это был перенос, не удаляем
+      return;
     }
+    onRemove(id);
+  };
 
+  // Позиция и ширина: ровно один блок шириной (квантизация по блокам).
+  const leftPercent = (blockIndex / BLOCK_COUNT) * 100;
+  const widthPercent = (1 / BLOCK_COUNT) * 100;
+
+  // Подсветка паттерна, когда playhead находится внутри его блока.
+  // Один блок = 16 шагов секвенсора, значит блок blockIndex звучит
+  // на шагах [blockIndex*16, blockIndex*16 + 16).
+  const stepStart = blockIndex * 16;
+  const isActive = currentStep >= stepStart && currentStep < stepStart + 16;
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`placed_pattern_full ${isActive ? 'active' : ''} ${isDragging ? 'is_dragging' : ''}`}
+      style={{
+        left: `${leftPercent}%`,
+        width: `${widthPercent}%`,
+        backgroundColor: '#1f1f1f',
+        ...getPatternBorderStyle(pattern.blocks, '#1f1f1f'),
+      }}
+      title={`${pattern.name} (клик - удалить, перетащить - перенести)`}
+      onClick={handleClick}
+      {...listeners}
+      {...attributes}
+    >
+      <PatternPreview blocks={pattern.blocks} />
+    </div>
+  );
+}
+
+export default function TimeLine({ placements, currentStep, onRemovePlacement, selectedProjectId }) {
+  const setIsPlaying = editorStore((s) => s.setIsPlaying);
+
+  // Движок проигрывания таймлайна - получает актуальную расстановку
+  useTimelineSequencer(placements);
+
+  // Останавливаем воспроизведение при уходе со страницы
+  useEffect(() => {
+    return () => setIsPlaying(false);
+  }, []);
+
+  if (!selectedProjectId) {
     return (
-        <div className="app-timeline" onClick={handleTimelineClick} ref={timelineRef}>
+      <div className="app-timeline">
+        <div className="timeline-empty-hint">
+          <span>The project is not selected</span>
+          <span>Select a project from the menu on the left</span>
+        </div>
+      </div>
+    );
+  }
 
-            <div className='timeline_header'>
-                <div className='header_label_spacer'/>
+  // Полоса воспроизведения. currentStep идёт 0..(16*16-1)=0..255.
+  // Переводим его в проценты по всей ширине дорожки.
+  const totalSteps = BLOCK_COUNT * 16;
+  const playheadPercent = currentStep >= 0 ? (currentStep / totalSteps) * 100 : null;
 
-                {Array.from({ length: blocks }, (_, i) => (
-                    <div key={i} className='header_block'>
-                        <span className="block_number_main">{i + 1}</span>
-                        <div className="header_subdivisions">
-                            {Array.from({ length: subdivisions }, (_, si) => (
-                                <div key={si} className="header_sub_mark">
-                                    {si % 4 === 0 ? '·' : ''}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
+  return (
+    <div className="app-timeline">
 
-            <div className='timeline_body'>
-                <div className='timeline_tracks'>
-                    {tracks.map((trackName, trackIndex) => (
-                        <div key={trackIndex} className='timeline_track'>
-                            <div className='track_label'>
-                                <span className='track_number'>{trackIndex + 1}</span>
-                            </div>
+      {/* Шапка с номерами блоков */}
+      <div className="timeline_header">
+        <div className="header_label_spacer" />
+        {Array.from({ length: BLOCK_COUNT }, (_, i) => (
+          <div key={i} className="header_block">
+            <span className="block_number_main">{i + 1}</span>
+          </div>
+        ))}
+      </div>
 
-                            {/* Контейнер для блоков и паттернов */}
-                            <div className='track_content'>
-                                {/* Слой с блоками (сетка) */}
-                                <div className='track_blocks'>
-                                    {Array.from({ length: blocks }, (_, blockIndex) => (
-                                        <div
-                                            key={blockIndex}
-                                            className={`track_block ${blockIndex % 4 === 0 ? 'beat_start' : ''} ${selectedPattern ? 'has-selection' : ''}`}
-                                            onMouseMove={(e) => handleBlockMouseMove(trackIndex, blockIndex, e)}
-                                            onMouseLeave={handleBlockMouseLeave}
-                                            onClick={(e) => handleBlockClick(trackIndex, blockIndex, e)}
-                                            onContextMenu={(e) => {
-                                                e.preventDefault();
-                                                // Удаление всех паттернов в этом блоке
-                                                const newPatterns = {...patterns};
-                                                if (newPatterns[trackIndex]) {
-                                                    const keysToDelete = [];
-                                                    Object.keys(newPatterns[trackIndex]).forEach(key => {
-                                                        const pattern = newPatterns[trackIndex][key];
-                                                        const pStartBlock = pattern.position.startBlock;
-                                                        const pEndBlock = Math.floor((pattern.position.startBlock * subdivisions + pattern.position.startSub + pattern.position.length - 1) / subdivisions);
-                                                        if (blockIndex >= pStartBlock && blockIndex <= pEndBlock) {
-                                                            keysToDelete.push(key);
-                                                        }
-                                                    });
-                                                    keysToDelete.forEach(key => delete newPatterns[trackIndex][key]);
-                                                    if (Object.keys(newPatterns[trackIndex]).length === 0) {
-                                                        delete newPatterns[trackIndex];
-                                                    }
-                                                    setPatterns(newPatterns);
-                                                }
-                                            }}
-                                        >
-                                            {/* Суб-деления для визуальной сетки и ховера */}
-                                            <div className="sub_divisions_container">
-                                                {Array.from({ length: subdivisions }, (_, subIndex) => {
-                                                    const patternData = getPatternAtSub(trackIndex, blockIndex, subIndex);
-                                                    const isHoverPreview = isInHoverZone(trackIndex, blockIndex, subIndex) && !patternData;
-                                                    
-                                                    return (
-                                                        <div
-                                                            key={subIndex}
-                                                            className={`sub_division ${isHoverPreview ? 'hover_preview' : ''} ${patternData ? 'occupied' : ''}`}
-                                                            style={{
-                                                                width: `${100 / subdivisions}%`,
-                                                                height: '100%',
-                                                                ...(isHoverPreview && { backgroundColor: selectedPattern.color + '20' })
-                                                            }}
-                                                        />
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+      <div className="timeline_body">
+        <div className="timeline_tracks">
+          {tracks.map((trackIndex) => (
+            <div key={trackIndex} className="timeline_track">
+              <div className="track_label">
+                <span className="track_number">{trackIndex + 1}</span>
+              </div>
 
-                                {/* Слой с паттернами (поверх сетки) */}
-                                <div className='track_patterns_layer'>
-                                    {Object.entries(patterns[trackIndex] || {}).map(([patternKey, pattern]) => {
-                                        const isSelected = selectedPattern && pattern.id === selectedPattern.id;
-                                        const startPercent = ((pattern.position.startBlock * subdivisions + pattern.position.startSub) / (blocks * subdivisions)) * 100;
-                                        const widthPercent = (pattern.position.length / (blocks * subdivisions)) * 100;
-                                        
-                                        return (
-                                            <div
-                                                key={patternKey}
-                                                className={`placed_pattern_full ${isSelected ? 'selected' : ''}`}
-                                                style={{
-                                                    left: `${startPercent}%`,
-                                                    width: `${widthPercent}%`,
-                                                    backgroundColor: '#1f1f1f',
-                                                    // Рамка по типам котов внутри паттерна (цвет или градиент)
-                                                    ...getPatternBorderStyle(pattern.blocks, '#1f1f1f')
-                                                }}
-                                                title={pattern.name}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleRemovePattern(trackIndex, patternKey);
-                                                }}
-                                            >
-                                                {/* Та же мини-копия, что и в карточке: 5 строк своих цветов */}
-                                                <PatternPreview blocks={pattern.blocks} />
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        </div>
+              <div className="track_content">
+                {/* Слой сетки: 16 блоков-дропзон */}
+                <div className="track_blocks">
+                  {Array.from({ length: BLOCK_COUNT }, (_, blockIndex) => (
+                    <TimelineCell
+                      key={blockIndex}
+                      trackIndex={trackIndex}
+                      blockIndex={blockIndex}
+                      isBeatStart={blockIndex % 4 === 0}
+                    />
+                  ))}
+                </div>
+
+                {/* Слой паттернов поверх сетки */}
+                <div className="track_patterns_layer">
+                  {placements
+                    .filter((p) => p.trackIndex === trackIndex)
+                    .map((placement) => (
+                      <PlacedPattern
+                        key={placement.id}
+                        placement={placement}
+                        currentStep={currentStep}
+                        onRemove={onRemovePlacement}
+                      />
                     ))}
                 </div>
+              </div>
             </div>
+          ))}
         </div>
-    );
+
+        {/* Полоса воспроизведения - движется слева направо.
+            Лежит поверх дорожек, отступ слева равен ширине колонки с номерами. */}
+        {playheadPercent !== null && (
+          <div className="playhead_wrapper">
+            <div className="playhead" style={{ left: `${playheadPercent}%` }} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

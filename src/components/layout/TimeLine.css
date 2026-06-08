@@ -370,3 +370,65 @@
     text-align: center;
     line-height: 1.5;
 }
+/* ===== Новые стили: DnD, полоса воспроизведения, подсветка ===== */
+
+/* Подсветка блока-дропзоны, когда над ним тащат паттерн */
+.track_block.cell_over {
+    background: rgba(124, 58, 237, 0.18);
+    box-shadow: inset 0 0 0 2px rgba(124, 58, 237, 0.6);
+}
+
+/* Размещённый паттерн теперь перетаскивается - курсор "рука" */
+.placed_pattern_full {
+    cursor: grab;
+    touch-action: none;
+}
+.placed_pattern_full:active {
+    cursor: grabbing;
+}
+
+/* Пока тащим паттерн - оригинал делаем полупрозрачным (превью едет под курсором) */
+.placed_pattern_full.is_dragging {
+    opacity: 0.4;
+}
+
+/* Активный паттерн (полоса воспроизведения внутри его блока) - подсветка */
+.placed_pattern_full.active {
+    filter: brightness(1.45);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+}
+
+/* Обёртка полосы воспроизведения. Отступ слева = ширина колонки с номерами
+   дорожек (37px), чтобы полоса шла строго по области блоков. */
+.playhead_wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 37px;
+    right: 0;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Сама полоса - тонкая светящаяся вертикальная линия */
+.playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+}
+
+/* Превью паттерна под курсором при перетаскивании */
+.timeline-drag-overlay {
+    width: 90px;
+    height: 46px;
+    border-radius: 4px;
+    padding: 2px;
+    box-sizing: border-box;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    cursor: grabbing;
+    pointer-events: none;
+}
