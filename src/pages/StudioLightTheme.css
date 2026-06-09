@@ -15,7 +15,7 @@
   --st-txt:         #bd92ff;  /* основной текст */
   --st-txt-2:       #2d2550;  /* вторичный текст */
   --st-txt-dim:     #8b82b0;  /* приглушённый текст, подсказки */
-  --st-accent:      #7c3aed;  /* основной акцент */
+  --st-accent:      #5d00ff;  /* основной акцент */
   --st-accent-2:    #4f46e5;  /* второй цвет градиентов */
   --st-accent-d:    #5b21b6;  /* тёмный акцент для текста на светлом */
   --st-accent-soft: rgba(124, 58, 237, 0.1); /* лёгкая подсветка */
@@ -39,10 +39,6 @@
   box-shadow: 0 2px 14px rgba(100, 60, 200, 0.1);
 }
 
-.studio-theme-light .bpm-label {
-  color: var(--st-accent-d);
-}
-
 /* Кнопка Play */
 
 .studio-theme-light .icon-button {
@@ -52,23 +48,6 @@
   color: var(--st-accent);
 }
 
-/* Табло BPM (PatBpmCounter.css) */
-.studio-theme-light .pat-bpm-counter {
-  background-color: var(--st-panel-2);
-  border: 2px solid var(--st-border);
-}
-.studio-theme-light .pat-bpm-counter .bpm-label {
-  color: var(--st-accent-d);
-}
-.studio-theme-light .bpm-arrow-btn {
-  color: var(--st-txt);
-}
-.studio-theme-light .bpm-arrow-btn:hover {
-  color: var(--st-accent);
-}
-.studio-theme-light .bpm-input {
-  color: var(--st-txt);
-}
 
 /* Projects.css */
 
