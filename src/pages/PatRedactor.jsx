@@ -26,17 +26,12 @@ const ROLE_COLORS = {
   Drums: '#fbbf24',
 };
 
-export default function PatRedactor({ onBackToStudio }) {
+export default function PatRedactor({ onBackToStudio, theme, onToggleTheme }) {
   const tracks = ['Kick Drum', 'Snare', 'Closed Hat', 'Open Hat', 'Clap']; // Мусор
 
   // Данные звука, который сейчас тащим - для красивого превью под курсором
   const [activeDrag, setActiveDrag] = useState(null);
   const [favKey, setFavKey] = useState(0);
-
-  // Тема редактора паттернов: 'light' - светлая, 'dark' - старая тёмная.
-  // Переключается кнопкой-луной в шапке. На главную страницу не влияет.
-  const [theme, setTheme] = useState('light');
-  const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));
 
   const placeBlock = editorStore((state) => state.placeBlock);
   const moveBlock = editorStore((state) => state.moveBlock);
@@ -167,7 +162,7 @@ export default function PatRedactor({ onBackToStudio }) {
     >
       <div className={`pat-redactor-container pat-theme-${theme}`}>
         {/* Шапка */}
-        <PatHeader theme={theme} onToggleTheme={toggleTheme} />
+        <PatHeader theme={theme} onToggleTheme={onToggleTheme} />
 
         <div className="pat-workspace">
           {/* 2. Левая колонка со звуками и кнопкой возврата */}

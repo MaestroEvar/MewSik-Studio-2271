@@ -14,8 +14,9 @@ import Patterns from '../components/layout/Patterns';
 import PatternPreview from '../components/layout/PatternPreview';
 import { getPatternBorderStyle } from '../components/layout/patternStyle.js';
 import { editorStore } from '../app/store/editorStore.js';
+import './StudioLightTheme.css'; // Светлая тема главного редактора (переопределяет цвета)
 
-export default function StudioPage({ onNavigate, selectedProjectId, onSelectProject }) {
+export default function StudioPage({ onNavigate, selectedProjectId, onSelectProject, theme, onToggleTheme }) {
   // Размещённые на таймлайне паттерны - плоский массив.
   // Каждый: { id, trackIndex, blockIndex, pattern }. Один блок = один паттерн.
   const [placements, setPlacements] = useState([]);
@@ -30,6 +31,17 @@ export default function StudioPage({ onNavigate, selectedProjectId, onSelectProj
   useEffect(() => {
     setPlacements([]);
   }, [selectedProjectId]);
+
+  // Класс темы вешаем на .app-container через classList, а не через className
+  // в JSX. Причина: панели сворачивания (LineSettings/Projects) тоже правят
+  // классы этого контейнера напрямую через classList. Если бы тему задавал
+  // React, ререндер при смене темы сбрасывал бы классы сворачивания.
+  useEffect(() => {
+    const el = document.querySelector('.app-container');
+    if (!el) return;
+    el.classList.toggle('studio-theme-light', theme === 'light');
+    el.classList.toggle('studio-theme-dark', theme === 'dark');
+  }, [theme]);
 
   // Порог 6px: клик по карточке-паттерну не считается перетаскиванием,
   // drag начинается только если зажать и потянуть.
@@ -106,7 +118,7 @@ export default function StudioPage({ onNavigate, selectedProjectId, onSelectProj
       onDragEnd={handleDragEnd}
     >
       <div className="app-container">
-        <Header />
+        <Header theme={theme} onToggleTheme={onToggleTheme} />
         <Projects
           selectedProjectId={selectedProjectId}
           onSelectProject={onSelectProject}

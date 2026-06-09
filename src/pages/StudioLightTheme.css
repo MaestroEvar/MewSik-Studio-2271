@@ -1,0 +1,327 @@
+.studio-theme-light {
+  /* Фоны и панели */
+  --st-bg:          #d3bcf6;  /* общий фон зон */
+  --st-panel:       #cba2fa;  /* шапка, боковые панели */
+  --st-panel-2:     #efece3;  /* вторичные панели, поля */
+  --st-panel-3:     rgb(186, 158, 248);  /* утопленные зоны (поле паттернов, таймлайн) */
+  --st-card:        #ffffff;  /* карточки проектов и паттернов */
+
+  /* Линии и границы */
+  --st-line:        rgb(144, 0, 255);  /* тонкие разделители */
+  --st-border:      #b337cb;  /* заметные границы */
+  --st-border-soft: #4d0080;  /* мягкие границы */
+
+  /* Текст */
+  --st-txt:         #987ac8;  /* основной тёмный текст */
+  --st-txt-2:       rgb(0, 0, 0);  /* вторичный текст */
+  --st-txt-dim:     rgb(81, 20, 147);  /* приглушённый текст, подсказки */
+  --st-accent:      #7c3aed;  /* основной акцент */
+  --st-accent-2:    #4f46e5;  /* второй цвет градиентов */
+  --st-accent-d:    #6429d6;  /* тёмный акцент для текста на светлом */
+  --st-accent-soft: rgba(124, 58, 237, 0.12); /* лёгкая подсветка */
+
+  /* --- Прочее --- */
+  --st-grid-line:   rgb(7, 6, 5);  /* линии сетки таймлайна */
+  --st-track-bg:    rgb(243, 232, 201);  /* фон дорожки таймлайна */
+  --st-playhead:    #faf7ff;  /* полоса воспроизведения*/
+  --st-danger:      #ef4444;  /* удаление */
+}
+
+/* Header.css */
+
+.studio-theme-light .app-header {
+  background-color: var(--st-panel);
+  border-bottom: 1px solid var(--st-line);
+}
+
+.studio-theme-light .bpm-label {
+  color: var(--st-accent-d);
+}
+
+/* Кнопка Play */
+
+.studio-theme-light .icon-button {
+  color: var(--st-accent-d);
+}
+.studio-theme-light .icon-button:hover {
+  color: var(--st-accent);
+}
+
+/* Табло BPM (PatBpmCounter.css) */
+.studio-theme-light .pat-bpm-counter {
+  background-color: var(--st-panel-2);
+  border: 2px solid var(--st-border);
+}
+.studio-theme-light .pat-bpm-counter .bpm-label {
+  color: var(--st-accent-d);
+}
+.studio-theme-light .bpm-arrow-btn {
+  color: var(--st-txt);
+}
+.studio-theme-light .bpm-arrow-btn:hover {
+  color: var(--st-accent);
+}
+.studio-theme-light .bpm-input {
+  color: var(--st-txt);
+}
+
+/* Projects.css */
+
+.studio-theme-light .app-projects {
+  background-color: var(--st-panel);
+}
+
+.studio-theme-light .projects-topbar {
+  border-bottom: 1px solid var(--st-line);
+}
+
+.studio-theme-light .projects-toggle-btn-minus {
+  color: var(--st-txt-2);
+  border: 1px solid var(--st-border);
+}
+.studio-theme-light .projects-toggle-btn-minus:hover {
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+
+.studio-theme-light .projects-toggle-btn-note {
+  background: var(--st-panel);
+  border: 2px solid var(--st-border);
+  color: var(--st-accent);
+}
+.studio-theme-light .projects-toggle-btn-note:hover {
+  background: var(--st-accent-soft);
+}
+
+.studio-theme-light .create_project {
+  border-bottom: 1.5px solid var(--st-line);
+}
+
+/* Кнопка создания проекта */
+
+.studio-theme-light .create_project a.disabled {
+  background: var(--st-panel-3);
+  color: var(--st-txt-dim);
+}
+
+.studio-theme-light .project_counter {
+  color: var(--st-txt-dim);
+}
+
+/* Карточка проекта*/
+.studio-theme-light .project_item {
+  border: 1.5px solid var(--st-border-soft);
+  color: var(--st-txt);
+}
+.studio-theme-light .project_item:hover {
+  border-color: var(--st-accent);
+}
+.studio-theme-light .project_item.selected {
+  border-color: var(--st-accent);
+  box-shadow: 0 0 0 1px var(--st-accent), 0 4px 16px rgba(124, 58, 237, 0.25);
+}
+.studio-theme-light .delete_btn {
+  color: var(--st-border);
+}
+
+/* Скроллбар списка проектов */
+.studio-theme-light .projects::-webkit-scrollbar-track { background: var(--st-panel-2); }
+.studio-theme-light .projects::-webkit-scrollbar-thumb { background: #cfc8b8; }
+
+/* Модальное окно создания проекта */
+.studio-theme-light .modal_content {
+  background: var(--st-panel);
+  border: 1.5px solid var(--st-border);
+  box-shadow: 0 12px 40px rgba(60, 50, 30, 0.25);
+}
+.studio-theme-light .modal_content h3 {
+  color: var(--st-txt);
+}
+.studio-theme-light .modal_input {
+  background: var(--st-panel-2);
+  border: 1.5px solid var(--st-border);
+  color: var(--st-txt);
+}
+.studio-theme-light .modal_input::placeholder {
+  color: var(--st-txt-dim);
+}
+.studio-theme-light .modal_input:focus {
+  border-color: var(--st-accent);
+}
+.studio-theme-light .modal_btn.cancel {
+  background: var(--st-panel-2);
+  color: var(--st-txt-2);
+  border: 1.5px solid var(--st-border);
+}
+
+/* TimeLine.css*/
+
+.studio-theme-light .app-timeline {
+  background-color: var(--st-bg);
+}
+
+.studio-theme-light .timeline_header {
+  background: var(--st-panel);
+  border-bottom: 1px solid var(--st-line);
+}
+.studio-theme-light .header_label_spacer {
+  background: var(--st-panel);
+  border-right: 1px solid var(--st-line);
+}
+.studio-theme-light .header_block:not(:last-child)::after {
+  background: var(--st-line);
+}
+.studio-theme-light .block_number_main {
+  color: var(--st-txt-2);
+}
+
+.studio-theme-light .timeline_track {
+  background: var(--st-track-bg);
+  border-bottom: 1px solid var(--st-line);
+}
+.studio-theme-light .track_label {
+  background: var(--st-panel-2);
+  border-right: 1px solid var(--st-border-soft);
+}
+.studio-theme-light .track_number {
+  color: var(--st-txt-2);
+}
+
+/* Линии сетки блоков */
+.studio-theme-light .track_block:not(:last-child)::after {
+  background: var(--st-grid-line);
+}
+.studio-theme-light .track_block.beat_start {
+  border-left: 2px solid #c2bbac;
+}
+.studio-theme-light .track_block:hover {
+  background: rgba(60, 50, 30, 0.04);
+}
+
+/* Подсветка блока-дропзоны при перетаскивании */
+.studio-theme-light .track_block.cell_over {
+  background: var(--st-accent-soft);
+  box-shadow: inset 0 0 0 2px rgba(124, 58, 237, 0.5);
+}
+
+.studio-theme-light .placed_pattern_full {
+  background-color: var(--st-card) !important;
+}
+.studio-theme-light .placed_pattern_full.active {
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+}
+
+/* Полоса воспроизведения */
+.studio-theme-light .playhead {
+  background-color: var(--st-playhead);
+  box-shadow: 0 0 8px rgba(100, 41, 214, 0.6);
+}
+
+/* Превью паттерна под курсором */
+.studio-theme-light .timeline-drag-overlay {
+  background-color: var(--st-card) !important;
+}
+
+/* Заглушка "проект не выбран" */
+.studio-theme-light .timeline-empty-hint {
+  color: var(--st-txt-dim);
+}
+
+/* Скроллбар дорожек */
+.studio-theme-light .timeline_tracks::-webkit-scrollbar-track { background: var(--st-panel-2); }
+.studio-theme-light .timeline_tracks::-webkit-scrollbar-thumb { background: #cfc8b8; }
+
+/* LineSettings.css */
+
+.studio-theme-light .app-linesettings {
+  background-color: var(--st-panel);
+}
+
+.studio-theme-light .settings-toggle-btn-minus {
+  color: var(--st-txt-2);
+  border: 1px solid var(--st-border);
+}
+.studio-theme-light .settings-toggle-btn-minus:hover {
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+}
+.studio-theme-light .settings-toggle-btn-gear {
+  background: var(--st-panel);
+  border: 2px solid var(--st-border);
+}
+.studio-theme-light .settings-toggle-btn-gear:hover {
+  background: var(--st-accent-soft);
+}
+
+.studio-theme-light .settings-section-title,
+.studio-theme-light .eq-title {
+  color: var(--st-txt-2);
+  border-bottom: 1px solid var(--st-line);
+}
+.studio-theme-light .slider-label {
+  color: var(--st-txt);
+}
+.studio-theme-light .slider-value {
+  color: var(--st-accent-d);
+}
+.studio-theme-light .eq-fader-label {
+  color: var(--st-txt-dim);
+}
+
+/* Жёлоб ползунков */
+.studio-theme-light .slider-horizontal,
+.studio-theme-light .slider-vertical {
+  background: #d8d2c4;
+}
+
+/* Иконки-подсказки */
+.studio-theme-light .help-icon {
+  background-color: var(--st-panel-2);
+  border: 1px solid var(--st-border);
+  color: var(--st-txt-dim);
+}
+.studio-theme-light .help-icon:hover {
+  border-color: var(--st-accent);
+  color: var(--st-accent);
+}
+.studio-theme-light .help-tooltip {
+  background-color: var(--st-panel);
+  border: 1px solid var(--st-accent);
+  color: var(--st-txt);
+}
+.studio-theme-light .help-tooltip::after {
+  border-top-color: var(--st-accent);
+}
+
+/* Patterns.css */
+
+.studio-theme-light .app-patterns {
+  background-color: var(--st-panel);
+}
+
+/* Кнопка Create pattern - фирменный градиент остаётся */
+
+.studio-theme-light .patterns-field {
+  border: 1.5px solid var(--st-border-soft);
+  background-color: var(--st-panel-3);
+}
+
+.studio-theme-light .patterns-empty-hint {
+  color: var(--st-txt-dim);
+}
+
+/* Карточка паттерна.*/
+.studio-theme-light .pattern-card {
+  background-color: var(--st-card);
+  border-color: var(--st-border-soft);
+}
+.studio-theme-light .pattern-card:hover {
+  box-shadow: 0 4px 14px rgba(60, 50, 30, 0.18);
+}
+.studio-theme-light .pattern-card-name {
+  color: var(--st-txt);
+}
+
+/* Скроллбар списка паттернов */
+.studio-theme-light .patterns-list::-webkit-scrollbar-track { background: var(--st-panel-2); }
+.studio-theme-light .patterns-list::-webkit-scrollbar-thumb { background: #cfc8b8; }

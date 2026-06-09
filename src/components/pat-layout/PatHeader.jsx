@@ -17,8 +17,8 @@ export default function PatHeader({ theme, onToggleTheme }) {
       <div className="pat-header-right">
         <button className="pat-icon-button" title="Help">?</button>
 
-        {/* Переключатель темы. В светлой теме показываем луну (клик - в тёмную),
-            в тёмной - солнце (клик - обратно в светлую). */}
+        {/* Переключатель темы. В светлой теме показываем луну,
+            в тёмной - солнце*/}
         <button
           className="pat-icon-button"
           title={isLight ? 'Тёмная тема' : 'Светлая тема'}

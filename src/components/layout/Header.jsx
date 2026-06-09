@@ -3,7 +3,8 @@ import './Header.css';
 import PatBpmCounter from './PatBpmCounter';
 import { editorStore } from '../../app/store/editorStore.js';
 
-export default function Header() {
+// theme - текущая тема ('light' | 'dark'), onToggleTheme - переключатель из App
+export default function Header({ theme, onToggleTheme }) {
   const isPlaying = editorStore((s) => s.isPlaying);
   const setIsPlaying = editorStore((s) => s.setIsPlaying);
 
@@ -11,9 +12,11 @@ export default function Header() {
     setIsPlaying(!isPlaying);
   };
 
+  const isLight = theme === 'light';
+
   return (
     <header className="app-header">
-      
+
       {/* Левая часть: Логотип и BPM */}
       <div className="header-left">
         <div className="logo-container">
@@ -49,10 +52,23 @@ export default function Header() {
           <span className="help-text">?</span>
         </button>
 
-        <button className="icon-button" title="Переключить тему">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-          </svg>
+        {/* Переключатель темы. В светлой теме - луна (клик уводит в тёмную),
+            в тёмной - солнце (клик возвращает в светлую). Общий для обеих страниц. */}
+        <button
+          className="icon-button"
+          title={isLight ? 'Тёмная тема' : 'Светлая тема'}
+          onClick={onToggleTheme}
+        >
+          {isLight ? (
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+            </svg>
+          )}
         </button>
 
         <button className="icon-button" title="Сохранить проект">
