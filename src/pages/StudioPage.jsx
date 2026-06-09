@@ -95,10 +95,11 @@ export default function StudioPage({ onNavigate, selectedProjectId, onSelectProj
     el.classList.toggle('studio-theme-dark', theme === 'dark');
   }, [theme]);
 
-  // Порог 6px: клик по карточке-паттерну не считается перетаскиванием,
-  // drag начинается только если зажать и потянуть.
+  // Drag начинается сразу после нажатия на карточку паттерна.
+  // Это улучшает мобильный опыт, где тач должен инициировать перенос без
+  // дополнительного перемещения пальцем.
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 0 } })
   );
 
   // Свободен ли блок (учитываем, что один блок вмещает один паттерн).
