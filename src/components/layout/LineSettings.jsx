@@ -93,8 +93,7 @@ export default function LineSettings() {
       )}
 
       <div className={`settings-content ${collapsed ? 'hidden' : ''}`}>
-        {/* Оверлей "work in progress": затемняет настройки и показывает кота
-            по центру - сигнал, что раздел пока не работает. */}
+        {/* Оверлей "work in progress": затемняет настройки и показывает кота-строителя*/}
         <div className="settings-wip-overlay">
           <img src={wipCat} alt="work in progress" className="settings-wip-img" />
         </div>

@@ -17,6 +17,7 @@
   "homepage": "https://MaestroEvar.github.io/MewSik-Studio-2271",
   "scripts": {
     "dev": "vite",
+    "build": "vite build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   }

@@ -59,6 +59,8 @@
   overflow-y: hidden;
   align-items: flex-start;
   width: 100%;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 
 /* Стилизованный скроллбар под тёмный фон(завайбкоджено, я не знал как сделать скролл, но теперь знаю)*/
@@ -81,6 +83,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.12s, box-shadow 0.15s;
+  touch-action: pan-x;
 }
 
 .pattern-card:hover {

@@ -96,6 +96,7 @@
 .header-center {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .play-button {
@@ -143,7 +144,7 @@
   align-items: center;
   justify-content: center;
   padding: 4px;
-  transition: color 0.2s, transform 0.1s;
+  transition: all 0.2s ease;
 }
 
 .icon-button:hover {
