@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -16,6 +16,9 @@ import { getPatternBorderStyle } from '../components/layout/patternStyle.js';
 import { editorStore } from '../app/store/editorStore.js';
 import './StudioLightTheme.css'; // Светлая тема главного редактора (переопределяет цвета)
 
+// База данных для сохранения расстановки паттернов в проекте
+import { db } from '../db/db.js';
+
 export default function StudioPage({ onNavigate, selectedProjectId, onSelectProject, theme, onToggleTheme }) {
   // Размещённые на таймлайне паттерны - плоский массив.
   // Каждый: { id, trackIndex, blockIndex, pattern }. Один блок = один паттерн.
@@ -27,10 +30,58 @@ export default function StudioPage({ onNavigate, selectedProjectId, onSelectProj
   // Текущий шаг таймлайна из стора - для полосы воспроизведения
   const timelineStep = editorStore((s) => s.timelineStep);
 
-  // Сбрасываем расстановку при смене проекта (у каждого проекта своя)
+  // Флаг: расстановка уже загружена из БД для текущего проекта.
+  // Нужен, чтобы первый useEffect (загрузка) не перетёрся вторым (сохранение)
+  // на пустой массив до того, как реальные данные приедут из Dexie.
+  const loadedProjectIdRef = useRef(null);
+
+  // 1. Загрузка расстановки из БД при смене проекта
   useEffect(() => {
-    setPlacements([]);
+    if (!selectedProjectId) {
+      loadedProjectIdRef.current = null;
+      setPlacements([]);
+      return;
+    }
+
+    let cancelled = false;
+    loadedProjectIdRef.current = null;
+
+    (async () => {
+      try {
+        const project = await db.projects.get(selectedProjectId);
+        if (cancelled) return;
+        setPlacements(
+          project && Array.isArray(project.placements) ? project.placements : []
+        );
+        loadedProjectIdRef.current = selectedProjectId;
+      } catch (err) {
+        console.error('Ошибка загрузки расстановки паттернов:', err);
+        if (!cancelled) {
+          setPlacements([]);
+          loadedProjectIdRef.current = selectedProjectId;
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [selectedProjectId]);
+
+  // 2. Автосохранение в БД при любом изменении расстановки.
+  // Срабатывает только после того, как для текущего проекта расстановка уже
+  // загружена из БД - иначе мы бы сразу записали пустой массив поверх данных.
+  useEffect(() => {
+    if (!selectedProjectId) return;
+    if (loadedProjectIdRef.current !== selectedProjectId) return;
+
+    db.projects
+      .update(selectedProjectId, {
+        placements,
+        updatedAt: Date.now(),
+      })
+      .catch((err) => console.error('Ошибка сохранения расстановки:', err));
+  }, [placements, selectedProjectId]);
 
   // Класс темы вешаем на .app-container через classList, а не через className
   // в JSX. Причина: панели сворачивания (LineSettings/Projects) тоже правят
@@ -77,8 +128,14 @@ export default function StudioPage({ onNavigate, selectedProjectId, onSelectProj
     const data = active.data.current;
     if (!data) return;
 
-    // Бросили не на ячейку
-    if (!over) return;
+    // Бросили мимо таймлайна.
+    // Если тащили уже размещённый паттерн - удаляем его из проекта.
+    if (!over) {
+      if (data.type === 'placed') {
+        setPlacements((prev) => prev.filter((p) => p.id !== data.placementId));
+      }
+      return;
+    }
 
     const cell = over.data.current;
     if (!cell || cell.trackIndex === undefined) return;
@@ -93,12 +150,15 @@ export default function StudioPage({ onNavigate, selectedProjectId, onSelectProj
         )
       );
     } else if (data.type === 'pattern') {
-      // Новое размещение из нижней панели
+      // Новое размещение из нижней панели.
+      // Без сохранения в БД, если проект не выбран - чтобы не плодить "ничейные" данные.
+      if (!selectedProjectId) return;
       if (!isBlockFree(cell.trackIndex, cell.blockIndex)) return; // занято
       setPlacements((prev) => [
         ...prev,
         {
-          id: Date.now() + Math.random(),
+          // Стабильный строковый id - надёжнее сериализуется в IndexedDB
+          id: `placement-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
           trackIndex: cell.trackIndex,
           blockIndex: cell.blockIndex,
           pattern: data.pattern,
