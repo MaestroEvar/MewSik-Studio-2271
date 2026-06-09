@@ -76,7 +76,7 @@ export default function PatRedactor({ onBackToStudio, theme, onToggleTheme }) {
     setActiveDrag(null);
     const { active, over } = event;
 
-    const data = active.data.current;        // данные перетаскиваемого (звук или готовый блок)
+    const data = active.data.current;        // данные перетаскиваемого
 
     if (!over) {
       // Бросили не на клетку и не в избранное. Если это уже размещённый блок

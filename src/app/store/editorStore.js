@@ -9,15 +9,22 @@ function generateCatSounds(cat) {
     return cat.sounds.map((sound, index) => ({
       id: index + 1,
       name: drumNames[index],
-      sound: sound
+      sound: sound,
+      // Затемнение по позиции сверху вниз: верхний светлый (0), ниже темнее
+      noteDarken: index * 6
     }));
   }
+  // Ноты идут от низкой к высокой по индексу файла: sounds[0]=C ... sounds[4]=G.
+  // В меню показываем их сверху вниз начиная с самой высокой: G, F, E, D, C.
   const notes = ['C', 'D', 'E', 'F', 'G'];
-  return cat.sounds.map((sound, index) => ({
-    id: index + 1,
-    name: notes[index],
-    sound: sound
-  }));
+  return cat.sounds
+    .map((sound, index) => ({
+      id: index + 1,
+      name: notes[index],
+      sound: sound
+    }))
+    .reverse()
+    .map((s, position) => ({ ...s, noteDarken: position * 6 }));
 }
 
 // Кол-во дорожек и клеток в секвенсоре (нужно для проверок размещения)

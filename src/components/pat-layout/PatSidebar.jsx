@@ -94,9 +94,9 @@ function useLongPressSelect({ isSelected, onSelect, onUnselect }) {
   // Для остальных категорий - ИмяКота-Нота (например Jony-C).
   const label = category === 'Drums' ? sound.name : `${catName}-${sound.name}`;
 
-  // Затемнение оттенка по высоте ноты: C (id 1) самый яркий, каждая
-  // следующая нота чуть темнее. Шаг 6% подмешивания чёрного на ноту.
-  const noteDarken = (sound.id - 1) * 6;
+  // Затемнение оттенка берётся готовым из звука (считается в сторе по позиции
+  // сверху вниз): верхняя нота самая светлая, нижняя самая тёмная.
+  const noteDarken = sound.noteDarken ?? 0;
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `sound-${catName}-${sound.id}`,
@@ -165,8 +165,10 @@ function DraggableFavorite({ fav, isPlaying, onPlay, onRemove, isSelected, onSel
     ? fav.soundName
     : `${fav.catName}-${fav.soundName}`;
 
-  // Затемнение по высоте ноты - такое же, как в меню кота (id 1..5)
-  const noteDarken = fav.noteDarken ?? (fav.soundId - 1) * 6;
+  // Затемнение берём сохранённое в БД. Фолбэк (для старых записей без поля):
+  // у барабанов прямой порядок, у нот обратный - G(id5) сверху самая светлая.
+  const noteDarken = fav.noteDarken ??
+    (fav.catCategory === 'Drums' ? (fav.soundId - 1) * 6 : (5 - fav.soundId) * 6);
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `fav-${fav.id}`,
@@ -291,7 +293,7 @@ export default function PatSidebar({ onBackToStudio }) {
           soundPath : sound.sound,
           catName: selectedCat.name,
           catCategory: selectedCat.category,
-          noteDarken: (sound.id - 1) * 6
+          noteDarken: sound.noteDarken ?? 0
         });
       }
   
@@ -410,7 +412,7 @@ export default function PatSidebar({ onBackToStudio }) {
           const label = selectedCat.category === 'Drums'
             ? sound.name
             : `${selectedCat.name}-${sound.name}`;
-          const noteDarken = (sound.id - 1) * 6;
+          const noteDarken = sound.noteDarken ?? 0;
           const soundKey = `sound-${selectedCat.name}-${sound.id}`;
 
           return (
@@ -454,7 +456,8 @@ export default function PatSidebar({ onBackToStudio }) {
             const label = fav.catCategory === 'Drums'
               ? fav.soundName
               : `${fav.catName}-${fav.soundName}`;
-            const noteDarken = fav.noteDarken ?? (fav.soundId - 1) * 6;
+            const noteDarken = fav.noteDarken ??
+              (fav.catCategory === 'Drums' ? (fav.soundId - 1) * 6 : (5 - fav.soundId) * 6);
             const favKeyId = `fav-${fav.id}`;
 
             return (
