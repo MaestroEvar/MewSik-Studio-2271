@@ -79,24 +79,24 @@
 }
 
 
-/* PNG спрайт ушек — общая база */
+/* PNG спрайт ушек */
 .card-cat-ears-sprite {
     position: absolute;
     top: -50px;
-    width: 60px;           /* фиксированная ширина вместо % */
+    width: 60px;
     pointer-events: none;
     aspect-ratio: auto;
 }
 
 /* Левое ухо (оригинал) */
 .card-cat-ears-sprite.left {
-    left: 5px;            /* фиксированный отступ слева */
+    left: 5px;
     transform: none;
 }
 
 /* Правое ухо (отражённое) */
 .card-cat-ears-sprite.right {
-    right: 5px;           /* фиксированный отступ справа */
+    right: 5px;
     transform: scaleX(-1);
 }
 

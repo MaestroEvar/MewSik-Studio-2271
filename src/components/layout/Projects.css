@@ -35,16 +35,17 @@
   display: flex;
   align-items: center;
   padding: 5px 8px;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #202020;
   flex-shrink: 0;
 }
 
 .projects-toggle-btn-minus {
   width: 20px;
   height: 20px;
+  user-select: none;
   background: transparent;
   color: #aaaaaa;
-  border: 1px solid #444;
+  border: 1px solid #424242;
   border-radius: 3px;
   cursor: pointer;
   display: flex;
@@ -140,7 +141,7 @@
 .project_counter {
   text-align: center;
   font-size: 10px;
-  color: #666666;
+  color: #686767;
   padding: 5px 0 7px 0;
   letter-spacing: 0.3px;
   transition: color 0.2s;

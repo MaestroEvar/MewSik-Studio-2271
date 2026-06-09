@@ -131,7 +131,7 @@
   color: #fff;
 }
 
-/* Мини-сетка 16 шагов ===== */
+/* Мини-сетка 16 шагов */
 .pattern-mini-grid {
   display: grid;
   grid-template-columns: repeat(16, 1fr);
@@ -163,7 +163,7 @@
   text-overflow: ellipsis;
 }
 
-/* Подсказка пустого поля(пока нет) */
+/* Подсказка пустого поля */
 .patterns-empty-hint {
   margin: auto;
   display: flex;

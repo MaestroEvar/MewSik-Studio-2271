@@ -16,6 +16,7 @@
 /* Кнопка сворачивания */
 .settings-toggle-btn-minus {
   position: absolute;
+  user-select: none;
   top: 5px;
   right: 5px;
   width: 20px;
