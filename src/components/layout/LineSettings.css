@@ -164,7 +164,7 @@
 .slider-horizontal::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  background-image: url('../sprites/cat_slider_sprite.png');
+  background-image: url('/sprites/cat_slider_sprite.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -176,7 +176,7 @@
 
 .slider-horizontal::-moz-range-thumb {
   appearance: none; 
-  background-image: url('../sprites/cat_slider_sprite.png');
+  background-image: url('/sprites/cat_slider_sprite.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -246,7 +246,7 @@
 .slider-vertical::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  background-image: url('../sprites/cat_slider_sprite.png');
+  background-image: url('/sprites/cat_slider_sprite.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -258,7 +258,7 @@
 
 .slider-vertical::-moz-range-thumb {
   appearance: none;
-  background-image: url('../sprites/cat_slider_sprite.png');
+  background-image: url('/sprites/cat_slider_sprite.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

@@ -28,7 +28,7 @@
 .cat-img {
   width: 32px;
   height: 32px;
-  background-image: url('../sprites/boss.png');
+  background-image: url('/sprites/boss.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -38,7 +38,7 @@
 
 /* При зажатии меняем картинку на гифку */
 .cat-img:active {
-  background-image: url('../sprites/pat_pat_boss.gif');
+  background-image: url('/sprites/pat_pat_boss.gif');
 }
 
 /* Запасной вариант, если картинка кота еще не подгрузилась */

@@ -157,7 +157,7 @@
     appearance: none;
     width: var(--thumb-size);
     height: var(--thumb-size);
-    background-image: url('../sprites/cat_slider_pat_pg_orange.png');
+    background-image: url('/sprites/cat_slider_pat_pg_orange.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -169,7 +169,7 @@
   .volume-slider::-moz-range-thumb {
     width: var(--thumb-size);
     height: var(--thumb-size);
-    background-image: url('../sprites/cat_slider_pat_pg_orange.png');
+    background-image: url('/sprites/cat_slider_pat_pg_orange.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -364,7 +364,7 @@
   .volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none; appearance: none;
     width: var(--thumb-size); height: var(--thumb-size);
-    background-image: url('../sprites/cat_slider_pat_pg_orange.png');
+    background-image: url('/sprites/cat_slider_pat_pg_orange.png');
     background-size: contain; background-repeat: no-repeat;
     background-position: center; background-color: transparent;
     border: none; cursor: pointer;
@@ -372,7 +372,7 @@
   }
   .volume-slider::-moz-range-thumb {
     width: var(--thumb-size); height: var(--thumb-size);
-    background-image: url('../sprites/cat_slider_pat_pg_orange.png');
+    background-image: url('/sprites/cat_slider_pat_pg_orange.png');
     background-size: contain; background-repeat: no-repeat;
     background-position: center; background-color: transparent;
     border: none; cursor: pointer;
