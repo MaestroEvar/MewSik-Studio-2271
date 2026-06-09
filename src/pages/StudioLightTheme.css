@@ -1,37 +1,42 @@
 .studio-theme-light {
   /* Фоны и панели */
-  --st-bg:          #d3bcf6;  /* общий фон зон */
-  --st-panel:       #cba2fa;  /* шапка, боковые панели */
-  --st-panel-2:     #efece3;  /* вторичные панели, поля */
-  --st-panel-3:     rgb(186, 158, 248);  /* утопленные зоны (поле паттернов, таймлайн) */
-  --st-card:        #ffffff;  /* карточки проектов и паттернов */
+  --st-bg:          #f0eef8;  /* общий фон зон */
+  --st-panel:       #eeecf5;  /* шапка, боковые панели */
+  --st-panel-2:     #e8e5f0;  /* вторичные панели, поля */
+  --st-panel-3:     #ddd8ee;  /* утопленные зоны (поле паттернов, таймлайн) */
+  --st-card:        #f2f0fa;  /* карточки проектов и паттернов */
 
   /* Линии и границы */
-  --st-line:        rgb(144, 0, 255);  /* тонкие разделители */
-  --st-border:      #b337cb;  /* заметные границы */
-  --st-border-soft: #4d0080;  /* мягкие границы */
+  --st-line:        #ccc7e0;  /* тонкие разделители */
+  --st-border:      #b8a8e0;  /* заметные границы */
+  --st-border-soft: #cbc3e8;  /* мягкие границы */
 
   /* Текст */
-  --st-txt:         #987ac8;  /* основной тёмный текст */
-  --st-txt-2:       rgb(0, 0, 0);  /* вторичный текст */
-  --st-txt-dim:     rgb(81, 20, 147);  /* приглушённый текст, подсказки */
+  --st-txt:         #bd92ff;  /* основной текст */
+  --st-txt-2:       #2d2550;  /* вторичный текст */
+  --st-txt-dim:     #8b82b0;  /* приглушённый текст, подсказки */
   --st-accent:      #7c3aed;  /* основной акцент */
   --st-accent-2:    #4f46e5;  /* второй цвет градиентов */
-  --st-accent-d:    #6429d6;  /* тёмный акцент для текста на светлом */
-  --st-accent-soft: rgba(124, 58, 237, 0.12); /* лёгкая подсветка */
+  --st-accent-d:    #5b21b6;  /* тёмный акцент для текста на светлом */
+  --st-accent-soft: rgba(124, 58, 237, 0.1); /* лёгкая подсветка */
 
   /* --- Прочее --- */
-  --st-grid-line:   rgb(7, 6, 5);  /* линии сетки таймлайна */
-  --st-track-bg:    rgb(243, 232, 201);  /* фон дорожки таймлайна */
-  --st-playhead:    #faf7ff;  /* полоса воспроизведения*/
-  --st-danger:      #ef4444;  /* удаление */
+  --st-grid-line:   #ccc7e0;  /* линии сетки таймлайна */
+  --st-track-bg:    #e8e5f2;  /* фон дорожки таймлайна */
+  --st-playhead:    #5b21b6;  /* полоса воспроизведения */
+  --st-danger:      #16a34a;  /* удаление */
+
+  /* Паттерны */
+  --pat-card-bg:    #f2f0fa;  /* фон карточки паттерна (для градиентной рамки) */
+  --pat-cell-empty: #d4cff0;  /* пустая клетка в превью паттерна */
 }
 
 /* Header.css */
 
 .studio-theme-light .app-header {
   background-color: var(--st-panel);
-  border-bottom: 1px solid var(--st-line);
+  border-bottom: 1.5px solid var(--st-border);
+  box-shadow: 0 2px 14px rgba(100, 60, 200, 0.1);
 }
 
 .studio-theme-light .bpm-label {
@@ -69,6 +74,8 @@
 
 .studio-theme-light .app-projects {
   background-color: var(--st-panel);
+  border-right: 1.5px solid var(--st-border);
+  box-shadow: 2px 0 14px rgba(100, 60, 200, 0.1);
 }
 
 .studio-theme-light .projects-topbar {
@@ -110,18 +117,28 @@
 
 /* Карточка проекта*/
 .studio-theme-light .project_item {
-  border: 1.5px solid var(--st-border-soft);
-  color: var(--st-txt);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
 }
 .studio-theme-light .project_item:hover {
-  border-color: var(--st-accent);
+  border-color: rgba(255, 255, 255, 0.45);
 }
 .studio-theme-light .project_item.selected {
-  border-color: var(--st-accent);
-  box-shadow: 0 0 0 1px var(--st-accent), 0 4px 16px rgba(124, 58, 237, 0.25);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.5), 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+.studio-theme-light .project_note_icon {
+  opacity: 0.7;
+}
+.studio-theme-light .edit_btn {
+  color: rgba(255, 255, 255, 0.6);
+}
+.studio-theme-light .edit_btn:hover {
+  color: #ffffff;
+  opacity: 1;
 }
 .studio-theme-light .delete_btn {
-  color: var(--st-border);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 /* Скроллбар списка проектов */
@@ -235,6 +252,8 @@
 
 .studio-theme-light .app-linesettings {
   background-color: var(--st-panel);
+  border-left: 1.5px solid var(--st-border);
+  box-shadow: -2px 0 14px rgba(100, 60, 200, 0.1);
 }
 
 .studio-theme-light .settings-toggle-btn-minus {
@@ -297,6 +316,8 @@
 
 .studio-theme-light .app-patterns {
   background-color: var(--st-panel);
+  border-top: 1.5px solid var(--st-border);
+  box-shadow: 0 -2px 14px rgba(100, 60, 200, 0.1);
 }
 
 /* Кнопка Create pattern - фирменный градиент остаётся */
@@ -325,3 +346,4 @@
 /* Скроллбар списка паттернов */
 .studio-theme-light .patterns-list::-webkit-scrollbar-track { background: var(--st-panel-2); }
 .studio-theme-light .patterns-list::-webkit-scrollbar-thumb { background: #cfc8b8; }
+

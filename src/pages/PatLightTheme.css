@@ -13,7 +13,7 @@
   --lt-edge:      #d0a541;  /* отдельные грани */
   --lt-border:    #cb9f37;  /* границы  */
   --lt-txt:       #2e2c28;  /* основной текст */
-  --lt-txt-dim:   #8a8478;  /* приглушённый текст */
+  --lt-txt-dim:   #4f4f4f;  /* приглушённый текст */
   --lt-amber:     #d9a441;  /* рамки дорожки */
   --lt-amber-d:   #cb8d1b;  /* границы дорожек */
 }
@@ -73,10 +73,6 @@
    но светлее), чтобы меню выбранного кота читалось его цветом. */
 .pat-theme-light .cat-menu-box {
   background-color: var(--lt-panel);
-  background-image: linear-gradient(
-    color-mix(in srgb, var(--role), #fff 80%),
-    color-mix(in srgb, var(--role), #fff 80%)
-  );
   border: 1px solid var(--role);
   box-shadow: 0 4px 14px rgba(60, 50, 30, 0.12);
 }

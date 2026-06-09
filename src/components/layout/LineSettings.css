@@ -41,24 +41,25 @@
 /* Кнопка разворота панели */
 .settings-toggle-btn-gear {
   position: absolute;
-  top: 10px;
+  fill: #7c3aed;
+  top: 4px;
   right: 10px;
   width: 32px;
   height: 32px;
-  background: #ffffff;
-  border: 2px solid #282828;
+  background: #282828;
+  border: 1px solid #7c3aed;
   border-radius: 50%;
   cursor: pointer;
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
 
 .settings-toggle-btn-gear:hover {
-  background: #5433cc44;
-  
+  fill: #ad7eff;
+  transform: scale(1.1);
 }
 
 /*Контейнер для настроек панели*/

@@ -65,12 +65,12 @@
 /* Кнопка разворота*/
 .projects-toggle-btn-note {
   position: absolute;
-  top: 10px;
+  top: 4px;
   left: 10px;
   width: 32px;
   height: 32px;
-  background: #ffffff;
-  border: 2px solid #282828;
+  background: #282828;
+  border: 1px solid #7c3aed;
   border-radius: 50%;
   cursor: pointer;
   z-index: 1000;
@@ -78,11 +78,16 @@
   align-items: center;
   justify-content: center;
   color: #7c3aed;
-  transition: background 0.2s, color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .projects-toggle-btn-note:hover {
-  background: #5433cc44;
+  color: #ad7eff;
+  transform: scale(1.1);
+}
+
+.projects-toggle-btn-note:action {
+  transform: scale(1.0);
 }
 
 /* шапка: кнопка + счётчик*/
