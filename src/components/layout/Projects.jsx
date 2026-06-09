@@ -19,8 +19,7 @@ export default function Projects({ selectedProjectId, onSelectProject }) {
   const [selectedId, setSelectedId] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
-  // На узких экранах (мобилка) панель проектов стартует свёрнутой, чтобы
-  // не закрывать рабочую область. На десктопе - развёрнута как раньше.
+  // На узких экранах  панель проектов стартует свёрнутой. На ПК - развёрнута 
   const [collapsed, setCollapsed] = useState(
     typeof window !== 'undefined' && window.innerWidth <= 900
   );

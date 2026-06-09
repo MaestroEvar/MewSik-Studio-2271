@@ -5,6 +5,7 @@ import cnf from '../sprites/Cat_not_found.png';
 import { initAudio, playSound } from '../../audio/engine/toneEngine.js';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { db } from '../../db/db.js';
+import WipPopover from '../WipPopover.jsx';
 
 // Сколько держать без движения, чтобы звук выбрался (мс)
 const LONG_PRESS_MS = 1500;
@@ -486,9 +487,11 @@ export default function PatSidebar({ onBackToStudio }) {
 
       {/* Кнопки снизу */}
       <div className="sidebar-buttons-container">
-        <button className="sidebar-btn btn-add-sound">
-          + Add sound
-        </button>
+        <WipPopover placement="top" block>
+          <button className="sidebar-btn btn-add-sound">
+            + Add sound
+          </button>
+        </WipPopover>
         <button className="sidebar-btn btn-back-main" onClick={onBackToStudio}>
           ← Back to Studio
         </button>

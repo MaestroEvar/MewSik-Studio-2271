@@ -1,5 +1,6 @@
 import React from 'react';
 import './PatHeader.css';
+import WipPopover from '../WipPopover.jsx';
 
 // theme - текущая тема ('light' | 'dark'), onToggleTheme - переключатель из PatRedactor
 export default function PatHeader({ theme, onToggleTheme }) {
@@ -15,7 +16,9 @@ export default function PatHeader({ theme, onToggleTheme }) {
       </div>
 
       <div className="pat-header-right">
-        <button className="pat-icon-button" title="Help">?</button>
+        <WipPopover placement="bottom">
+          <button className="pat-icon-button" title="Help">?</button>
+        </WipPopover>
 
         {/* Переключатель темы. В светлой теме показываем луну,
             в тёмной - солнце*/}
