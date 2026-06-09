@@ -206,10 +206,12 @@
   , а при 100 она доходит ровно до кота и не вылезает
      справа. Бегунок ходит на (ширина_дорожки - размер_кота), отсюда и формула.
      --val - доля 0..1 (ставится в JS). */
-  background:
-    linear-gradient(var(--amber), var(--amber))
-      0 / calc(var(--val, 0.5) * (110% - var(--thumb-size))) 100% no-repeat,
-    var(--st-line);
+  background: linear-gradient(
+      to right,
+      var(--amber) 0%,
+      var(--amber) calc(var(--val) * 100%),
+      var(--st-line) calc(var(--val) * 100%)
+  );
   border-radius: 2px;
   outline: none;
 }
