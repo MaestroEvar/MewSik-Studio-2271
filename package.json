@@ -11,9 +11,13 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.2",
+    "gh-pages": "^6.3.0",
     "vite": "^8.0.16"
   },
+  "homepage": "https://MaestroEvar.github.io/MewSik-Studio-2271",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }
