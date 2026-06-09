@@ -1,0 +1,244 @@
+/* =====================================================================
+   StudioMobile.css - мобильная адаптация ГЛАВНОГО редактора (StudioPage).
+
+   Принцип тот же, что и у мобилки редактора паттернов: НИКАКОГО отдельного
+   React-кода, только медиазапросы. Один и тот же DOM, вся логика (DnD,
+   сохранение в БД, воспроизведение) остаётся нетронутой - меняется лишь
+   раскладка под узкий экран.
+
+   Раскладка на мобилке:
+   - Header сверху (компактный)
+   - TimeLine занимает основное место, прокручивается по горизонтали
+   - Patterns - невысокая полоса снизу
+   - Projects и LineSettings превращаются в выезжающие панели (drawer)
+     поверх контента, вызываются своими кнопками разворота (нота / шестерёнка).
+   ===================================================================== */
+
+@media (max-width: 900px) {
+
+  /* ---------- 1. Разрешаем вертикальный скролл страницы ---------- */
+  html, body, #root {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  /* ---------- 2. Контейнер: из grid в вертикальный flex ---------- */
+  /* Перебиваем grid-раскладку и все варианты свёрнутых колонок. */
+  .app-container,
+  .app-container.settings-collapsed,
+  .app-container.projects-collapsed,
+  .app-container.projects-collapsed.settings-collapsed {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+    grid-template-rows: none;
+    grid-template-areas: none;
+    height: 100vh;
+    height: 100dvh; /* учитываем адресную строку мобильных браузеров */
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* ---------- 3. Header ---------- */
+  .app-header {
+    flex-shrink: 0;
+    height: 52px;
+    padding: 0 10px;
+    gap: 6px;
+  }
+
+  /* Логотип чуть меньше, чтобы освободить место */
+  .app-header .logo-container {
+    width: 30px;
+    height: 30px;
+  }
+  .app-header .cat-img {
+    width: 26px;
+    height: 26px;
+  }
+
+  /* BPM-табло компактнее */
+  .app-header .header-left {
+    gap: 10px;
+  }
+
+  /* Кнопка Play - крупный тач-таргет */
+  .app-header .play-button {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  /* Правые иконки крупнее для пальца */
+  .app-header .icon-button {
+    padding: 6px;
+  }
+
+  /* ---------- 4. TimeLine - основная рабочая зона ---------- */
+  .app-timeline {
+    flex: 1;
+    min-height: 0;
+    /* Горизонтальный скролл всей таймлайн-зоны: шапка с номерами и дорожки
+       уезжают вместе (оба - flex-дети одинаковой ширины), выравнивание цело. */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Внутреннему содержимому задаём минимальную ширину, чтобы 16 блоков
+     были достаточно крупными для пальца. 36px(лейбл) + 16*44px ≈ 740px. */
+  .app-timeline .timeline_header,
+  .app-timeline .timeline_body {
+    min-width: 740px;
+  }
+
+  /* Блоки сохраняют минимальную ширину при горизонтальном скролле */
+  .app-timeline .track_block {
+    min-width: 44px;
+  }
+
+  /* Внутри дорожек вертикальный скролл, если 10 дорожек не влезают */
+  .app-timeline .timeline_body {
+    overflow-y: auto;
+  }
+  .app-timeline .timeline_tracks {
+    min-height: 100%;
+  }
+
+  /* Дорожки чуть выше для удобного попадания пальцем */
+  .app-timeline .timeline_track {
+    min-height: 46px;
+  }
+
+  /* Подсказка "проект не выбран" - центрируем по компактной зоне */
+  .app-timeline .timeline-empty-hint {
+    padding: 30px 16px;
+    text-align: center;
+  }
+
+  /* ---------- 5. Patterns - компактная полоса снизу ---------- */
+  .app-patterns {
+    flex-shrink: 0;
+    height: 150px;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .app-patterns .patterns-create-btn {
+    padding: 10px 0;
+    font-size: 13px;
+  }
+
+  /* Карточки паттернов крупнее для тача */
+  .app-patterns .pattern-card {
+    width: 100px;
+  }
+
+  /* ---------- 6. Projects - выезжающая панель слева (drawer) ---------- */
+  /* Развёрнутая панель - оверлей поверх контента. Свёрнутая не уезжает
+     трансформом (иначе её дочерняя кнопка-нота уехала бы тоже из-за
+     transform-контекста), а схлопывается: фон убираем, остаётся только
+     плавающая кнопка-нота для разворота. */
+  .app-projects {
+    position: fixed;
+    top: 52px; /* под шапкой */
+    left: 0;
+    bottom: 0;
+    width: 80%;
+    max-width: 300px;
+    z-index: 900;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+  }
+
+  /* Развёрнутая панель видна целиком */
+  .app-projects:not(.collapsed) {
+    transform: translateX(0);
+  }
+
+  /* Свёрнутая: панель не занимает места и не перехватывает тапы,
+     виден только её контент-нуль и плавающая кнопка-нота. */
+  .app-projects.collapsed {
+    width: auto;
+    max-width: none;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  /* Кнопка-нота (разворот) остаётся кликабельной и видимой в углу */
+  .app-projects.collapsed .projects-toggle-btn-note {
+    position: fixed;
+    top: 60px;
+    left: 8px;
+    z-index: 950;
+    width: 38px;
+    height: 38px;
+    pointer-events: auto;
+  }
+
+  /* ---------- 7. LineSettings - выезжающая панель справа (drawer) ---------- */
+  .app-linesettings {
+    position: fixed;
+    top: 52px;
+    right: 0;
+    bottom: 0;
+    width: 80%;
+    max-width: 300px;
+    z-index: 900;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+  }
+
+  .app-linesettings:not(.collapsed) {
+    transform: translateX(0);
+  }
+
+  /* Свёрнутая: схлопываем, остаётся плавающая кнопка-шестерёнка */
+  .app-linesettings.collapsed {
+    width: auto;
+    max-width: none;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  .app-linesettings.collapsed .settings-toggle-btn-gear {
+    position: fixed;
+    top: 60px;
+    right: 8px;
+    z-index: 950;
+    width: 38px;
+    height: 38px;
+    pointer-events: auto;
+  }
+
+  /* Контент настроек прокручивается, если не влезает по высоте */
+  .app-linesettings .settings-content {
+    overflow-y: auto;
+  }
+}
+
+/* ---------- Очень узкие экраны (телефоны в портрете) ---------- */
+@media (max-width: 560px) {
+
+  /* Ещё компактнее шапка, чтобы Play и иконки не сталкивались */
+  .app-header .play-button span {
+    display: none; /* оставляем только иконку play/stop */
+  }
+  .app-header .play-button {
+    padding: 8px 12px;
+  }
+
+  /* Drawer-панели почти на всю ширину */
+  .app-projects,
+  .app-linesettings {
+    width: 88%;
+  }
+
+  /* Patterns ещё ниже */
+  .app-patterns {
+    height: 132px;
+  }
+}

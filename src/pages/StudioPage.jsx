@@ -15,6 +15,7 @@ import PatternPreview from '../components/layout/PatternPreview';
 import { getPatternBorderStyle } from '../components/layout/patternStyle.js';
 import { editorStore } from '../app/store/editorStore.js';
 import './StudioLightTheme.css'; // Светлая тема главного редактора (переопределяет цвета)
+import './StudioMobile.css'; // Мобильная адаптация главного редактора (только @media)
 
 // База данных для сохранения расстановки паттернов в проекте
 import { db } from '../db/db.js';

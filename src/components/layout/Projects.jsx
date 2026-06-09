@@ -19,7 +19,19 @@ export default function Projects({ selectedProjectId, onSelectProject }) {
   const [selectedId, setSelectedId] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
-  const [collapsed, setCollapsed] = useState(false);
+  // На узких экранах (мобилка) панель проектов стартует свёрнутой, чтобы
+  // не закрывать рабочую область. На десктопе - развёрнута как раньше.
+  const [collapsed, setCollapsed] = useState(
+    typeof window !== 'undefined' && window.innerWidth <= 900
+  );
+
+  // Синхронизируем класс контейнера с начальным состоянием свёрнутости
+  useEffect(() => {
+    const appContainer = document.querySelector('.app-container');
+    if (appContainer) {
+      appContainer.classList.toggle('projects-collapsed', collapsed);
+    }
+  }, []);
 
   const projects = useLiveQuery(() => db.projects.toArray(), []);
   const isLimitReached = projects && projects.length >= 5;
