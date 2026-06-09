@@ -152,7 +152,7 @@ export default function Projects({ selectedProjectId, onSelectProject }) {
             onClick={handleOpenModal}
             className={isLimitReached ? 'disabled' : ''}
           >
-            Create project
+            + Create project
             
           </a>
           <div className={`project_counter ${isLimitReached ? 'limit' : ''}`}>

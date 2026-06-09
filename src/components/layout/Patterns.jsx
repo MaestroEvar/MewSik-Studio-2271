@@ -56,7 +56,7 @@ export default function Patterns({ onOpenColors }) {
 
       {/* кнопка создания паттерна */}
       <button className="patterns-create-btn" onClick={onOpenColors}>
-        Create pattern +
+        + Create pattern
       </button>
 
       {/* поле с паттернами */}
