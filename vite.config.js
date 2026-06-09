@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/MewSik-Studio-2271/',
+  base: './',          // относительные пути
   build: {
     outDir: 'build'
   }
