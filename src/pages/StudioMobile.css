@@ -34,6 +34,24 @@
     gap: 6px;
   }
 
+  .app-header .header-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0; 
+  }
+
+  .app-header {
+    padding-right: 12px;
+  }
+
+  .app-header .header-right {
+    gap: 8px;
+    min-width: 0;
+  }
+
   /* Логотип */
   .app-header .logo-container {
     width: 30px;
@@ -104,9 +122,11 @@
   /* Patterns */
   .app-patterns {
     flex-shrink: 0;
-    height: 150px;
+    height: auto;
+    max-height: 40vh; /* ограничиваем высоту в ландшафте, даём вертикальную прокрутку */
     padding: 8px 10px;
     gap: 8px;
+    overflow-y: auto;
   }
 
   .app-patterns .patterns-create-btn {
@@ -219,6 +239,8 @@
 
   /* Patterns ещё ниже */
   .app-patterns {
-    height: 132px;
+    height: auto;
+    max-height: 36vh;
+    overflow-y: auto;
   }
 }
